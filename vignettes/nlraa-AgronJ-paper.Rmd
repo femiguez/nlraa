@@ -1,0 +1,248 @@
+---
+title: "Nonlinear Regression (Archontoulis and Miguez) paper"
+author: "Fernando Miguez"
+date: "`r Sys.Date()`"
+fig_width: 6
+fig_height: 4
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Archontoulis and Miguez paper}
+  %\VignetteEngine{knitr::rmarkdown}
+  \usepackage[utf8]{inputenc}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, fig.width = 7, fig.height = 6)
+library(lattice)
+library(nlme)
+library(ggplot2)
+library(nlraa)
+```
+
+# Introduction
+
+The **nlraa** is distributed as part of a publication that illustrates the
+fit of nonlinear regression models. The old version of the package can be installed using R-forge. 
+\texttt{install.packages("nlraa", repos="http://R-Forge.R-project.org")}.
+
+The new version of the package will be in github.
+
+## Example
+
+We start by looking at biomass accumulation data from an experiment conducted in
+Greece by Danalatos, Archontoulis and . 
+
+```{r strsm}
+data(sm)
+str(sm)
+head(sm)
+```
+
+The data represents Yield as harvested biomass for three crops: maize
+(M), fiber sorghum (F) and sweet sorghum (S).
+
+```{r sm-ggplot, echo = FALSE}
+ggplot(data = sm, aes(y = Yield, x = DOY)) +
+   facet_grid(. ~ Input) +
+   geom_point(aes(fill=Crop, shape=Crop), size=2) +
+   scale_shape_manual(values=c(24,21,1)) +
+   scale_fill_manual(values = c("grey","black","black")) +
+   scale_x_continuous("Day of the Year") +
+   scale_y_continuous("Dry biomass (Mg/ha)") +
+   theme_bw()
+```
+
+Before starting with the model fit we need to manipulate the data by creating an
+index which describes the experimental unit (eu).  We also delete the DOY 141
+when crops where planted.
+
+```{r create-eu}
+sm$eu <- with(sm, factor(Block):factor(Input):factor(Crop))
+sm2 <- subset(sm, DOY != 141)
+```
+
+The next step is to create the **groupedData** which is a convenient structre
+to be used throughout the fitting process in **nlme**.
+
+```{r grouped-data}
+smG <- groupedData(Yield ~ DOY | eu, data = sm2)
+```
+
+Originally, Danalatos et al. (2009) fitted the beta growth function as
+described by Yin et al. (2003). In **nlraa** we provide **selfStart**
+function **SSbgf** to improve the fitting process.
+
+```{r nls-list-sm}
+fit.lis <- nlsList(Yield ~ SSbgf(DOY, w.max, t.e, t.m), data = smG)
+```
+
+There are three crops, two levels of agronomic input and four blocks
+which results in 24 possible combinations. We fitted the model to
+these 24 experimental units and obtained apparent convergence in only
+10. This suggests that some modifications are needed.
+
+```{r nls-list-plot, echo = FALSE}
+print(plot(fit.lis))
+print(plot(intervals(fit.lis)))
+```
+
+From the residuals plot we see some evidence of the inadequacy of the
+model. In particular the model over predicts at low values. We relax
+the convergence criteria to achieve a fitted model.
+
+```{r relax-control}
+fit.me <- nlme(fit.lis, control = list(minScale =1e-50, pnlsTol=0.01))
+```
+
+```{r plot-resid-nlme, echo = FALSE}
+print(plot(fit.me))
+print(plot(augPred(fit.me, level = 0:1)))
+```
+
+A modified beta growth function proposed by Yin et. al (2003) -- included in the
+errata -- allows for a delayed start of growth by modifying the $t_b$ parameter.
+
+$$ 
+y = w_b + (w_{max} - w_b) \left (1 + \frac{t_e - t}{t_e - t_m} \right ) \left (\frac{t - t_b}{t_e - t_b} \right )^\frac{t_e - t_b}{t_e - t_m}
+$$
+
+$$
+t_b < t_m < t_e 
+$$
+
+We include this as **bgf2** but not the selfStart version at this
+point. We also fix the $w_b$ and the $t_b$ parameters, so they are not
+part of the fitting process. There are good reasons for this: We know
+the initial biomass is minimal (seed weight) and we know the day of
+planting (it does not need to be optimized).
+
+```{r bgf2}
+fit.lis2 <- nlsList(Yield ~ bgf2(DOY, w.max, w.b = 0, t.e, t.m, t.b = 141),
+                    data = smG,
+                    start = c(w.max = 30, t.e=280, t.m=240))
+```
+
+```{r plot-bgf2, echo = FALSE}
+print(plot(fit.lis2))
+```
+
+Figure **insert-label** shows a much lower bias at lower values.
+
+We proceed to fit the non-linear mixed model and then we simplify the
+variance-covariance random effects structure.
+
+```{r nlme-update}
+fit.me2 <- nlme(fit.lis2)
+fit2.me2 <- update(fit.me2, random = pdDiag(w.max + t.e + t.m ~ 1))
+anova(fit.me2, fit2.me2)
+```
+
+Some of the covariances might be significant, but we'll look at this later. We
+will next include the effects of Crop type and Input in the fixed part of the
+model. We want to know how the parameters are affected by the treatment effects.
+
+```{r nlme-update-two}
+fe <- fixef(fit2.me2) ## Some starting values with visual help
+fit3.me2 <- update(fit2.me2, fixed = list(w.max + t.e + t.m ~ Crop),
+                  start = c(fe[1], -10, 20, fe[2], -40, 0, fe[3], -40, 0))
+## We next include the Input
+fe2 <- fixef(fit3.me2)
+fit4.me2 <- update(fit3.me2, fixed = list(w.max + t.e + t.m
+                               ~ Crop + Input),
+                  start = c(fe2[1:3], 0, fe2[4:6], 0, fe2[7:9], 0))
+## and the interaction
+fe3 <- fixef(fit4.me2)
+fit5.me2 <- update(fit4.me2,
+                   fixed = list(w.max + t.e + t.m
+                     ~ Crop + Input + Crop:Input),
+                  start = c(fe3[1:4], 0, 0,
+                            fe3[5:8], 0, 0,
+                            fe3[9:12], 0, 0))
+```
+
+The current model displays some evidence of unequal variance as shown
+in (Fig. **insert-label**). The amount of dispersion around zero
+is larger for low fitted values and the amount for large fitted values
+is larger.
+
+```{r fit5-plot, echo = FALSE}
+print(plot(fit5.me2))
+```
+
+We fit two models one where the variance depends on the Crop (since visually the
+crops are so different) and another one where it does not depend on the Crop.
+
+```{r fit6-and-fit7}
+fit6.me2 <- update(fit5.me2,
+                   weights = varPower(form = ~ fitted(.) | Crop))
+
+fit7.me2 <- update(fit6.me2, weights = varPower(form = ~ fitted(.)))
+
+anova(fit6.me2, fit7.me2)
+```
+
+Model **fit6.me2** is better according to the AIC criteria and the likelihood
+ratio test.
+
+```{r fit6.me2}
+fit6.me2
+```
+
+Since random effects are almost zero. We remove them from the model and use the
+**gnls** function which is specifically written for models without random effects.
+
+```{r gnls}
+## Random effects are almost zero
+fit8.me2 <- gnls(Yield ~ bgf2(DOY, w.max, t.e, t.m, w.b=0, t.b=141),
+                 data = smG,
+                 params = list(w.max + t.e + t.m ~ Crop + Input
+                                                   + Crop:Input),
+                 weights = varPower(form = ~ fitted(.) | Crop),
+                 start = fixef(fit7.me2))
+anova(fit6.me2, fit8.me2)
+```
+
+Model \code{fit8.me2} is better than \code{fit6.me2} according to AIC and BIC.
+
+```{r anova-fit8}
+anova(fit8.me2)
+```
+
+This shows that the Crop, Input and interaction are significant for
+all terms except for the **t.m** parameter.
+
+Residuals look good with much less overprediction at lower values. The
+autocorrelation does not appear to be a concern (not shown).
+
+```{r plot-fit8}
+print(plot(fit8.me2))
+```
+
+We finalize the fitting exercise by plotting observed and predicted **insert-label**.
+
+```{r fit8-fitted}
+smG$prds <- fitted(fit8.me2)
+
+doys <- 168:303
+ndat <- expand.grid(DOY=doys, Crop= unique(smG$Crop), Input=c(1,2))
+ndat$preds <- predict(fit8.me2, newdata = ndat)
+
+ndat2 <- ndat
+ndat2[ndat2$Crop == "M" & ndat2$DOY > 270,"preds"] <- NA
+ndat2 <- na.omit(ndat2)
+```
+
+```{r fit8-fitted-plot, echo = FALSE}
+ ggplot(data = smG, aes(y = Yield, x = DOY)) +
+  facet_grid(. ~ Input) +
+   geom_point(aes(fill=Crop, shape=Crop), size=2) +
+   geom_line(aes(x = DOY, y = preds, linetype = Crop), data=ndat2) +
+   scale_shape_manual(values=c(24,21,1)) +
+   scale_fill_manual(values = c("grey","black","black")) +
+   scale_x_continuous("Day of the Year") +
+   scale_y_continuous("Dry biomass (Mg/ha)") +
+   theme_bw()
+```
+
+
+

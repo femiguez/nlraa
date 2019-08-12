@@ -1,0 +1,19 @@
+Package: nlraa
+Version: 0.11
+Authors@R: person("Fernando", "Miguez", email = "femiguezt@iastate.edu", role = c("aut", "cre"))
+Title: Non-linear regression for agricultural applications
+Description: This is a supporting package for the publication "Nonlinear regression Models and applications in agricultural research".
+             It porvides a few self starting functions and a vignette with an extended example.
+Depends: R (>= 3.5.0)
+License: GPL-3
+Encoding: UTF-8
+VignetteBuilder: knitr
+Imports:
+        stats,
+        nlme,
+	nlstools
+Suggests:
+	ggplot2,
+	lattice
+LazyData: true
+RoxygenNote: 6.1.1
