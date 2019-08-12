@@ -1,7 +1,7 @@
 # nlraa: R pacakge for Nonlinear Regression for Agricultural
-# applications
+# Applications
 
-This package support the following publications:
+This package supports the following publications:
 
 1. Archontoulis, S. V., and F. E. Miguez. 2015. Nonlinear Regression
    Models and Applications in Agricultural
@@ -20,6 +20,6 @@ This package support the following publications:
 
 To install
 
-> library(devtools)
-> devtools::install_github("femiguez/nlraa")
+> library(devtools) \
+> devtools::install_github("femiguez/nlraa") \
 > library(nlraa)
