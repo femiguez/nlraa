@@ -352,6 +352,7 @@ nl.fe.2 <- nls(lfmc ~ ((A[group] - w[group])/(1 + exp((m - time)/s))) + w[group]
 AICtab(nl.fe.0, nl.fe.1, nl.fe.2) # including leaf type and plot as predictor variables imrpoves the model fit 
 
 # Residual checking:
+par(mfrow=c(1,1))
 plot(nl.fe.2) # heterocedasticity in the residuals
 hist(resid(nl.fe.2), main="", xlab="Residuals") # slightly skew distribution   
 qqnorm(resid(nl.fe.2))
@@ -446,6 +447,7 @@ summary(M4)
 
 
 # Residual checking:
+par(mfrow=c(2,2))
 plot(M4) # a clear pattern in the residuals is observed (model assumptions are not met) 
 
 # 6 - NULL MODEL (M5) ######################################################################################

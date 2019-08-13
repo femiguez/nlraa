@@ -19,7 +19,7 @@ library(nlraa)
 
 # Nonlinear Regression
 
-For an introduction to this topic see the publication by Archontoulis and Miguez (doi:10.2134/agronj2012.0506) and the book chapter by Miguez, Archontoulis and Dokoohaki (doi:10.2134/appliedstatistics.2016.0003).
+For an introduction to this topic see the publication by Archontoulis and Miguez (https://doi.org/10.2134/agronj2012.0506) and the book chapter by Miguez, Archontoulis and Dokoohaki (https://doi.org/10.2134/appliedstatistics.2016.0003).
 
 One of the objectives of those publications was to introduce a large family of nonlinear functions
 to practicioners in the agricultural research area to a variety of tools that can use to fit data
@@ -46,7 +46,8 @@ which does not conform to a linear relationship. The feature that distinguishes 
 
 1. SSbgf (Beta-Growth Function)
 
-For reference on Beta-Growth Function see Yin et al. 2003 (10.1093/aob/mcg029)
+For reference on Beta-Growth Function see Yin et al. 2003 (https://doi.org/10.1093/aob/mcg029).
+
 Erratum: https://doi.org/10.1093/aob/mcg091
 
 2. SSdlf (Declining Logistic Function)
