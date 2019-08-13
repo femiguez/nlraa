@@ -49,3 +49,7 @@
  #' }
  #' @source Simluated data (much cleaner than original) based on the above publication
  "swpg"
+ 
+ #' Import packages needed for nlraa to work correctly
+ #' @import knitr nlme stats
+ NULL

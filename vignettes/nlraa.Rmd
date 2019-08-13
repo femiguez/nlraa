@@ -53,9 +53,15 @@ Erratum: https://doi.org/10.1093/aob/mcg091
 
 For reference on the implementation see Oddi et al. (2019) 
 
+## Which function are available?
+
+```{r apropos}
+apropos("^SS")
+```
+
 # Datasets
 
-These are the available datasets in the package so far:
+These are the available datasets in the package (so far):
 
 1. "sm"
 2. "lfmc"
@@ -85,6 +91,37 @@ ggplot(data = swpg, aes(x = ftsw, y = lfgr)) +
   xlab("Fraction Transpirable Soil Water") + 
   ylab("Relative Leaf Growth")
 ```
+
+# What to do when convergence fails?
+
+Convergence problems in nonlinear models are often because of a number of reasons:
+
+1. The model is not appropriate for the observed data
+2. The model is conceptually correct but there is an error in the formula
+3. The model is too complex; a simpler model should be used
+4. Starting values are too far from the solution
+
+Model specification (choosing the correct model) is clearly very important when using 
+nonlinar models. For convergence problems related to poor starting values there are some 
+alternatives:
+
+1. Use function 'nls2' in package 'nls2' which uses a 'brute-force' approach of searching over a grid
+2. Use an alternative algorithm 'nlsLM' in package 'minpack.lm', which is more robust
+3. Define a custom optimization problem and use function 'optim' in 'stats' package (also 'nlm' or 'nlminb')
+
+This last option extend the possibility of available algorithms.
+
+## Other modeling approaches
+
+Other modleing approaches do not use such a direct rigid specification as the models classically used in nonlinear relationships. Some examples are:
+
+1. **splines** (packages 'splines' or 'splines2')
+2. **gams** (package 'mgcv')
+3. **loess** (package 'stats')
+4. **quantile regression** (packages 'quantreg*')
+5. **polynomials** (poly in package 'stats')
+
+Although these previous methods are much more flexible than classical nonlinear regression, the traditional approaches have the benefit of being simple and providing parameters with a straight-forward interpretation.
 
 # Contributed packages
 

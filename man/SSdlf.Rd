@@ -12,11 +12,13 @@ SSdlf(time, asym, a2, xmid, scal)
 \arguments{
 \item{time}{input vector (x) which is normally 'time', the smalles value should be close to zero.}
 
-\item{w.max}{value of weight or mass at its peak}
+\item{asym}{value of weight or mass at its peak (maximum)}
 
-\item{t.m}{time at which half of the maximum weight or mass has bean reached.}
+\item{a2}{value of weight or mass at its trough (minimum)}
 
-\item{t.e}{time at which the weight or mass reaches its peak.}
+\item{xmid}{time at which half of the maximum weight or mass has bean reached.}
+
+\item{scal}{scale parameter which controls the spread also interpreted in terms of time to go from xmid to approx. 0.63 asym}
 }
 \value{
 a numeric vector of the same length as x (time) containing parameter estimates for equation specified
@@ -37,13 +39,11 @@ Response function:  y = (asym - a2) / (1 + exp((xmid - time)/scal))) + a2
  .- scal: controls the slope
  .- a2: lower asymptote 
 For details see the publication by Yin et al. (2003) "A Flexible Sigmoid Function of Determinate Growth"
-
-Given this function weight is expected to decay and reach zero again at 2*t.e - t.m
 }
 \examples{
 \dontrun{
-data(sm)
-Examples from old vignette
+data(lfmc)
+Extended example in the vignette 'LFMC'
 }
 x <- seq(0, 17, by = 0.25)
 y <- dlf(x, 2, 10, 8, 1)

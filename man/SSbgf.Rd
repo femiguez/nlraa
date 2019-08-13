@@ -20,6 +20,10 @@ bgf2(time, w.max, w.b, t.e, t.m, t.b)
 \item{t.e}{time at which the weight or mass reaches its peak.}
 
 \item{t.m}{time at which half of the maximum weight or mass has bean reached.}
+
+\item{w.b}{weight or biomass at initial time}
+
+\item{t.b}{initial time offset}
 }
 \value{
 a numeric vector of the same length as x (time) containing parameter estimates for equation specified

@@ -13,16 +13,16 @@
 #' @rdname SSdlf
 #' @description Self starter for Beta Growth function with parameters w.max, t.m and t.e
 #' @param time input vector (x) which is normally 'time', the smalles value should be close to zero.
-#' @param w.max value of weight or mass at its peak
-#' @param t.m time at which half of the maximum weight or mass has bean reached.
-#' @param t.e time at which the weight or mass reaches its peak.
+#' @param asym value of weight or mass at its peak (maximum)
+#' @param a2 value of weight or mass at its trough (minimum)
+#' @param xmid time at which half of the maximum weight or mass has bean reached.
+#' @param scal scale parameter which controls the spread also interpreted in terms of time to go from xmid to approx. 0.63 asym
 #' @return a numeric vector of the same length as x (time) containing parameter estimates for equation specified
-#' @details Given this function weight is expected to decay and reach zero again at 2*t.e - t.m
 #' @export
 #' @examples 
 #' \dontrun{
-#' data(sm)
-#' Examples from old vignette
+#' data(lfmc)
+#' Extended example in the vignette 'LFMC'
 #' }
 NULL
 

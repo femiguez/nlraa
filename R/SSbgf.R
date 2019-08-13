@@ -88,6 +88,8 @@ SSbgf <- selfStart(bgf, initial = bgfInit, c("w.max", "t.e", "t.m"))
 
 #' @rdname SSbgf
 #' @return a numeric vector of the same length as x (time) containing parameter estimates for equation specified
+#' @param w.b weight or biomass at initial time
+#' @param t.b initial time offset
 #' @export
 bgf2 <- function(time, w.max, w.b, t.e, t.m, t.b){
 
