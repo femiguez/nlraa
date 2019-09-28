@@ -1,5 +1,5 @@
 Package: nlraa
-Version: 0.19
+Version: 0.23
 Authors@R: person("Fernando", "Miguez", email = "femiguezt@iastate.edu", role = c("aut", "cre"))
 Title: Non-linear regression for agricultural applications
 Description: This package supports the publication "Nonlinear regression Models and applications in agricultural research". A book chapter with similar material and a publication by Oddi et. al. (2019) in Ecology and Evolution. It porvides a few self starting functions and vignettes with extended examples.

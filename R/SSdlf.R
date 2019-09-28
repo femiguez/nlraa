@@ -4,14 +4,13 @@
 #' Response function:  y = (asym - a2) / (1 + exp((xmid - time)/scal))) + a2 
 #'  .- asym: upper asymptote
 #'  .- xmid: time when y is midway between w and a 
-#'  .- scal: controls the slope
+#'  .- scal: controls the spread
 #'  .- a2: lower asymptote 
-#' For details see the publication by Yin et al. (2003) "A Flexible Sigmoid Function of Determinate Growth"
 #' 
 #' @title self start for Declining Logistic Function
 #' @name SSdlf
 #' @rdname SSdlf
-#' @description Self starter for Beta Growth function with parameters w.max, t.m and t.e
+#' @description Self starter for declining logistic function with parameters asym, a2, xmid and scal
 #' @param time input vector (x) which is normally 'time', the smalles value should be close to zero.
 #' @param asym value of weight or mass at its peak (maximum)
 #' @param a2 value of weight or mass at its trough (minimum)

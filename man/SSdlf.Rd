@@ -28,7 +28,7 @@ vector of the same length as x (time) using the declining logistic function
 vector of the same length as x (time) using the declining logistic function
 }
 \description{
-Self starter for Beta Growth function with parameters w.max, t.m and t.e
+Self starter for declining logistic function with parameters asym, a2, xmid and scal
 }
 \details{
 Declining Logistic
@@ -36,9 +36,8 @@ Declining Logistic
 Response function:  y = (asym - a2) / (1 + exp((xmid - time)/scal))) + a2 
  .- asym: upper asymptote
  .- xmid: time when y is midway between w and a 
- .- scal: controls the slope
- .- a2: lower asymptote 
-For details see the publication by Yin et al. (2003) "A Flexible Sigmoid Function of Determinate Growth"
+ .- scal: controls the spread
+ .- a2: lower asymptote
 }
 \examples{
 \dontrun{

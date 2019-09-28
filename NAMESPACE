@@ -2,9 +2,13 @@
 
 export(SSbgf)
 export(SSdlf)
+export(SSprofd)
+export(SSricker)
 export(bgf)
 export(bgf2)
 export(dlf)
+export(profd)
+export(ricker)
 import(knitr)
 import(nlme)
 import(stats)

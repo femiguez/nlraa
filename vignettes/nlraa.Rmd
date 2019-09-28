@@ -54,7 +54,15 @@ Erratum: https://doi.org/10.1093/aob/mcg091
 
 For reference on the implementation see Oddi et al. (2019) 
 
-## Which function are available?
+3. SSricker (Ricker population growth)
+
+See: https://en.wikipedia.org/wiki/Ricker_model
+
+4. SSprofd (Profile of protein distribution)
+
+See: Johnson et al. (2010) doi:10.1093/aob/mcq183
+
+## Which functions are available?
 
 ```{r apropos}
 apropos("^SS")
@@ -149,7 +157,7 @@ This package has functions for fitting water retention curves. Interestingly, it
 uses the 'minpack.lm' package which has a different implementation of the 
 minimization algorithm (Levenberg-Marquardt).
 
-There are some selfStart functions:
+This package has the following selfStart functions:
 
 1. SSfredlund
 2. SSgampt
@@ -168,7 +176,7 @@ And additional models, such as:
 3. Campbel
 4. Expo
 
-# Papers I need to read
+# Additional references
 
 1. https://www.ncbi.nlm.nih.gov/pubmed/20831877
 2. https://www.ncbi.nlm.nih.gov/pubmed/28582419
