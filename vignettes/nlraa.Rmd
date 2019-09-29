@@ -151,6 +151,14 @@ Not a good sign
 
 Package still available at https://github.com/wilkelab/sicegar
 
+## **drc** package 
+
+Dose-response curves package
+
+Ritz C, Baty F, Streibig JC, Gerhard D
+(2015) Dose-Response Analysis Using R. PLoS ONE
+10(12): e0146021. doi:10.1371/journal.pone.0146021
+
 ## **HydroMe** package
 
 This package has functions for fitting water retention curves. Interestingly, it
