@@ -1,0 +1,184 @@
+---
+title: "Nonlinear Regression Agricultural Applications"
+author: "Fernando Miguez"
+date: "`r Sys.Date()`"
+fig_width: 6
+fig_height: 4
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{nlraa: An R package for Nonlinear Regression Applications in Agricultural Research}
+  %\VignetteEngine{knitr::rmarkdown}
+  \usepackage[utf8]{inputenc}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, fig.width = 7, fig.height = 6)
+library(ggplot2)
+library(nlraa)
+```
+
+# Nonlinear Regression
+
+For an introduction to this topic see the publication by Archontoulis and Miguez (https://doi.org/10.2134/agronj2012.0506) and the book chapter by Miguez, Archontoulis and Dokoohaki (https://doi.org/10.2134/appliedstatistics.2016.0003).
+
+One of the objectives of those publications was to introduce a large family of nonlinear functions
+to practicioners in the agricultural research area to a variety of tools that can use to fit data
+which does not conform to a linear relationship. The feature that distinguishes this approach from others such as ploynomials, splines or gams (to name a few) is that the parameters of the model have biologically meaningful interpretations. In R the approach that makes fitting nonlinear mixed models almost as easy as fitting linear mixed models is the use of self starting functions.
+
+# Index of self starting functions
+
+## Functions in 'base' R
+
+**stats* package
+
+1. SSasymp (Asymptotic)
+2. SSasympOff (Asymptotic with an offset)
+3. SSasympOrig (Asymptotic through the Origin)
+4. SSbiexp (Bi-exponential)
+5. SSfol (First order compartment)
+6. SSfpl (Four parameter logistic)
+7. SSgompertz (Gompertz)
+8. SSlogis (Logistic)
+9. SSmicmen (Michaelis-Menten)
+10. SSweibull (Weibull)
+
+## Functions in this package (nlraa)
+
+1. SSbgf (Beta-Growth Function)
+
+For reference on Beta-Growth Function see Yin et al. 2003 (https://doi.org/10.1093/aob/mcg029).
+
+Erratum: https://doi.org/10.1093/aob/mcg091
+
+2. SSdlf (Declining Logistic Function)
+
+For reference on the implementation see Oddi et al. (2019) 
+
+3. SSricker (Ricker population growth)
+
+See: https://en.wikipedia.org/wiki/Ricker_model
+
+4. SSprofd (Profile of protein distribution)
+
+See: Johnson et al. (2010) doi:10.1093/aob/mcq183
+
+## Which functions are available?
+
+```{r apropos}
+apropos("^SS")
+```
+
+# Datasets
+
+These are the available datasets in the package (so far):
+
+1. "sm"
+2. "lfmc"
+3. "swpg"
+
+```{r sm}
+## Sorghum and Maize dataset
+data(sm)
+ggplot(data = sm, aes(x = DOY, y = Yield, color = Crop)) + 
+  geom_point() + 
+  facet_wrap(~ Input)
+```
+
+```{r lfmc}
+## Live fuel moisture content
+data(lfmc)
+ggplot(data = lfmc, aes(x = time, y = lfmc, color = leaf.type)) +
+  geom_point() + 
+  ylab("Live fuel moisture content (%)")
+```
+
+```{r swpg}
+## Soil water and plant growth
+data(swpg)
+ggplot(data = swpg, aes(x = ftsw, y = lfgr)) +
+  geom_point() + 
+  xlab("Fraction Transpirable Soil Water") + 
+  ylab("Relative Leaf Growth")
+```
+
+# What to do when convergence fails?
+
+Convergence problems in nonlinear models are often because of a number of reasons:
+
+1. The model is not appropriate for the observed data
+2. The model is conceptually correct but there is an error in the formula
+3. The model is too complex; a simpler model should be used
+4. Starting values are too far from the solution
+
+Model specification (choosing the correct model) is clearly very important when using 
+nonlinar models. For convergence problems related to poor starting values there are some 
+alternatives:
+
+1. Use function 'nls2' in package 'nls2' which uses a 'brute-force' approach of searching over a grid
+2. Use an alternative algorithm 'nlsLM' in package 'minpack.lm', which is more robust
+3. Define a custom optimization problem and use function 'optim' in 'stats' package (also 'nlm' or 'nlminb')
+
+This last option extend the possibility of available algorithms.
+
+## Other modeling approaches
+
+Other modleing approaches do not use such a direct rigid specification as the models classically used in nonlinear relationships. Some examples are:
+
+1. **splines** (packages 'splines' or 'splines2')
+2. **gams** (package 'mgcv')
+3. **loess** (package 'stats')
+4. **quantile regression** (packages 'quantreg*')
+5. **polynomials** (poly in package 'stats')
+
+Although these previous methods are much more flexible than classical nonlinear regression, the traditional approaches have the benefit of being simple and providing parameters with a straight-forward interpretation.
+
+# Contributed packages
+
+I have not tested any of these packages. They are here for reference.
+
+## **FlexParamCurve** package
+
+See Oswald, Nisbet, Chiaradia and Arnold, MEE, (2012) ( https://doi.org/10.1111/j.2041-210X.2012.00231.x).
+
+1. SSposnegRichards (Positive-Negative Richards)
+
+## **sicegar** package
+
+See Umut Caglar, Teufel and Wilke (https://peerj.com/articles/4251/)
+
+It was removed from CRAN because errors were not resolved. 
+Not a good sign
+
+Package still available at https://github.com/wilkelab/sicegar
+
+## **HydroMe** package
+
+This package has functions for fitting water retention curves. Interestingly, it
+uses the 'minpack.lm' package which has a different implementation of the 
+minimization algorithm (Levenberg-Marquardt).
+
+This package has the following selfStart functions:
+
+1. SSfredlund
+2. SSgampt
+3. SSgard
+4. SSgardner
+5. SShorton
+6. SSkosugi
+7. SSomuto
+8. SSphilip
+9. SSvgm
+
+And additional models, such as:
+
+1. Tani
+2. Brook
+3. Campbel
+4. Expo
+
+# Additional references
+
+1. https://www.ncbi.nlm.nih.gov/pubmed/20831877
+2. https://www.ncbi.nlm.nih.gov/pubmed/28582419
+
+
