@@ -62,6 +62,10 @@ See: https://en.wikipedia.org/wiki/Ricker_model
 
 See: Johnson et al. (2010) doi:10.1093/aob/mcq183
 
+5. SSblin (linear plus plateau)
+
+6. SSquadp (quadratic-plateau)
+
 ## Which functions are available?
 
 ```{r apropos}

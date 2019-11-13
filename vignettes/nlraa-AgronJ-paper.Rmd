@@ -91,8 +91,10 @@ model. In particular the model over predicts at low values. We relax
 the convergence criteria to achieve a fitted model.
 
 ```{r relax-control}
-fit.me <- nlme(fit.lis, control = list(minScale =1e-50, pnlsTol=0.01))
+fit.me <- nlme(fit.lis, control = list(maxIter = 100, msMaxIter = 300, pnlsMaxIter = 20))
 ```
+
+Despite the message, we do obtain a 'partially' fitted model.
 
 ```{r plot-resid-nlme, echo = FALSE}
 print(plot(fit.me))
@@ -133,8 +135,12 @@ variance-covariance random effects structure.
 
 ```{r nlme-update}
 fit.me2 <- nlme(fit.lis2)
+## Error message, but the next model is the one we care about
 fit2.me2 <- update(fit.me2, random = pdDiag(w.max + t.e + t.m ~ 1))
 anova(fit.me2, fit2.me2)
+## The second model is simpler and it seems to be marginally better than 
+## the orginial, but we need to keep in mind that the simpler model
+## converges much more easily
 ```
 
 Some of the covariances might be significant, but we'll look at this later. We
