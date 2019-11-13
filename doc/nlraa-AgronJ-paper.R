@@ -35,7 +35,7 @@ print(plot(fit.lis))
 print(plot(intervals(fit.lis)))
 
 ## ----relax-control-------------------------------------------------------
-fit.me <- nlme(fit.lis, control = list(minScale =1e-50, pnlsTol=0.01))
+fit.me <- nlme(fit.lis, control = list(maxIter = 100, msMaxIter = 300, pnlsMaxIter = 20))
 
 ## ----plot-resid-nlme, echo = FALSE---------------------------------------
 print(plot(fit.me))
@@ -51,8 +51,12 @@ print(plot(fit.lis2))
 
 ## ----nlme-update---------------------------------------------------------
 fit.me2 <- nlme(fit.lis2)
+## Error message, but the next model is the one we care about
 fit2.me2 <- update(fit.me2, random = pdDiag(w.max + t.e + t.m ~ 1))
 anova(fit.me2, fit2.me2)
+## The second model is simpler and it seems to be marginally better than 
+## the orginial, but we need to keep in mind that the simpler model
+## converges much more easily
 
 ## ----nlme-update-two-----------------------------------------------------
 fe <- fixef(fit2.me2) ## Some starting values with visual help
