@@ -34,22 +34,28 @@ blinInit <- function(mCall, LHS, data){
 
   ## Dumb guess for a and b is to fit a linear regression to all the data
   fit <- lm(xy[,"y"] ~ xy[,"x"])
-  ## If I fix a and b maybe I can try to optimze xs only
-  objfun <- function(xs, a, b){
-    pred <- blin(xy[,"x"], a, b, xs)
+  ## Atomic bomb approach to kill a mosquito
+  objfun <- function(cfs){
+    pred <- blin(xy[,"x"], a=cfs[1], b=cfs[2], xs=cfs[3])
     ans <- sum((xy[,"y"] - pred)^2)
     ans
   }
-  op.xs <- try(optimize(objfun, range(xy[,"x"]), a = coef(fit)[1], b = coef(fit)[2]), silent = TRUE)
-  a <- coef(fit)[1]
-  b <- coef(fit)[2]
-  if(class(op.xs) != "try-error"){
-    xs <- op.xs$minimum
+  cfs <- c(mean(xy[,"x"]),coef(fit))
+  op <- try(optim(cfs, objfun, method = "L-BFGS-U",
+                  upper = c(Inf, Inf, max(xy[,"x"])),
+                  lower = c(-Inf, -Inf, min(xy[,"x"]))), silent = TRUE)
+  
+  if(class(op) != "try-error"){
+    a <- op$par[1]
+    b <- op$par[2]
+    xs <- op$par[3]
   }else{
     ## If everything fails I use the mean
+    a <- coef(fit)[1]
+    b <- coef(fit)[2]
     xs <- mean(xy[,"x"])
   }
-  ## Guess xs
+  
   value <- c(a, b, xs)
   names(value) <- mCall[c("a","b","xs")]
   value
@@ -64,27 +70,29 @@ blin <- function(x, a, b, xs){
   
   .value <- (x < xs) * (a + b * x) + (x >= xs) * .asym
   
-  ## Derivative with respect to a
-  ## .exp1 <- deriv(~ a * time * exp(-b * time), "a")
-  .exp1 <- (x <= xs) 
+  ## Derivative with respect to a when (x < xs)
+  ## .exp1 <- deriv(~ a +  b * x, "a")
+  .exp1 <- ifelse(x <= xs, 1, 0)
   
   ## Derivative with respect to b
-  ## .exp2 <- deriv(~ a * time * exp(-b * time), "b")
-  .exp2 <- (x <= xs) * b
+  ## .exp2 <- deriv(~ a +  b * x, "b")
+  .exp2 <- ifelse(x <= xs, x, xs)
   
   ## Derivative with respect to xs
-  .exp3 <- (x >= xs) * .asym
+  ## .exp3 <- deriv(~ a +  b * xs, "xs")
+  .exp3 <- ifelse(x <= xs, 0, b)
   
   .actualArgs <- as.list(match.call()[c("a","b","xs")])
   
   ##  Gradient
-  ## if (all(unlist(lapply(.actualArgs, is.name)))) {
-  ##  .grad <- array(0, c(length(.value), 2L), list(NULL, c("a", "b")))
-  ##  .grad[, "a"] <- .exp1
-  ##  .grad[, "b"] <- .exp2
-  ##  dimnames(.grad) <- list(NULL, .actualArgs)
-  ##  attr(.value, "gradient") <- .grad
-  ## }
+  if (all(unlist(lapply(.actualArgs, is.name)))) {
+    .grad <- array(0, c(length(.value), 3L), list(NULL, c("a","b","xs")))
+    .grad[, "a"] <- .exp1
+    .grad[, "b"] <- .exp2
+    .grad[, "xs"] <- .exp3
+    dimnames(.grad) <- list(NULL, .actualArgs)
+    attr(.value, "gradient") <- .grad
+   }
   .value
 }
 

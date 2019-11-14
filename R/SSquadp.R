@@ -35,6 +35,9 @@ quadpInit <- function(mCall, LHS, data){
   
   ## Dumb guess for a and b is to fit a linear regression to all the data
   fit <- lm(xy[,"y"] ~ xy[,"x"] + I(xy[,"x"]^2))
+  a <- coef(fit)[1]
+  b <- coef(fit)[2]
+  c <- coef(fit)[3]
   ## If I fix a and b maybe I can try to optimze xs only
   objfun <- function(xs, a, b, c){
     pred <- quadp(xy[,"x"], a, b, c, xs)
@@ -42,11 +45,9 @@ quadpInit <- function(mCall, LHS, data){
     ans
   }
   op.xs <- try(optimize(objfun, range(xy[,"x"]), 
-                        a = coef(fit)[1], b = coef(fit)[2],
-                        c = coef(fit)[3]), silent = TRUE)
-  a <- coef(fit)[1]
-  b <- coef(fit)[2]
-  c <- coef(fit)[3]
+                        a = a, b = b,
+                        c = c, silent = TRUE)
+
   if(class(op.xs) != "try-error"){
     xs <- op.xs$minimum
   }else{
