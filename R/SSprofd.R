@@ -29,6 +29,7 @@
 #'   geom_point() + 
 #'   geom_line(aes(y = fitted(fit)))
 #' }
+#' 
 NULL
 
 profdInit <- function(mCall, LHS, data){
@@ -48,8 +49,7 @@ profdInit <- function(mCall, LHS, data){
   fit <- try(nls(ry ~ 1 - (1 - exp(-c * x))^d, data = dat, 
                  start = list(c = 0.5, d = 1),
                  algorithm = "port",
-                 lower = c(0,0))
-                 , silent = TRUE)
+                 lower = c(0,0)), silent = TRUE)
   
   if(class(fit) == "try-error"){
     c <- 0.5
@@ -62,7 +62,6 @@ profdInit <- function(mCall, LHS, data){
   value <- c(a, b, c, d)
   names(value) <- mCall[c("a","b","c","d")]
   value
-  
 }
 
 #' @rdname SSprofd

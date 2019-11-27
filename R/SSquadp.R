@@ -46,7 +46,7 @@ quadpInit <- function(mCall, LHS, data){
   }
   op.xs <- try(optimize(objfun, range(xy[,"x"]), 
                         a = a, b = b,
-                        c = c, silent = TRUE)
+                        c = c), silent = TRUE)
 
   if(class(op.xs) != "try-error"){
     xs <- op.xs$minimum

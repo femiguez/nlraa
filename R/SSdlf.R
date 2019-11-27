@@ -23,9 +23,9 @@
 #' data(lfmc)
 #' Extended example in the vignette 'LFMC'
 #' }
-NULL
 
-## This function is not exported
+#' @rdname SSdlf
+#' @export
 dlfInit <- function(mCall, LHS, data){
   
   xy <- sortedXyData(mCall[["time"]], LHS, data)

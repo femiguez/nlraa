@@ -66,6 +66,8 @@ See: Johnson et al. (2010) doi:10.1093/aob/mcq183
 
 6. SSquadp (quadratic-plateau)
 
+7. SSexpf (exponential function)
+
 ## Which functions are available?
 
 ```{r apropos}

@@ -2,9 +2,12 @@
 % Please edit documentation in R/SSdlf.R
 \name{SSdlf}
 \alias{SSdlf}
+\alias{dlfInit}
 \alias{dlf}
 \title{self start for Declining Logistic Function}
 \usage{
+dlfInit(mCall, LHS, data)
+
 dlf(time, asym, a2, xmid, scal)
 
 SSdlf(time, asym, a2, xmid, scal)
