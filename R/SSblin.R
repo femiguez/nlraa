@@ -2,11 +2,12 @@
 #' @title self start for Bilinear Function
 #' @name SSblin
 #' @rdname SSblin
-#' @description Self starter for Bilinear function with parameters a (intercept), b (slope), xs (break-point)
+#' @description Self starter for Bilinear function with parameters a (intercept), b (first slope), xs (break-point), c (second slope)
 #' @param x input vector 
 #' @param a the intercept
 #' @param b the slope
-#' @param xs break point of transition between linear and plateau 
+#' @param xs break point of transition between first-phase linear and second-phase linear
+#' @param c second-phase linear 
 #' @return a numeric vector of the same length as x containing parameter estimates for equation specified
 #' @details This function is described in Archontoulis and Miguez (2015) - (doi:10.2134/agronj2012.0506) 
 #' @export
@@ -15,9 +16,9 @@
 #' require(ggplot2)
 #' set.seed(123)
 #' x <- 1:30
-#' y <- blin(x, 0, 1, 20) + rnorm(30, 0, 0.5)
+#' y <- blin(x, 0, 0.75, 15, 1.75) + rnorm(30, 0, 0.5)
 #' dat <- data.frame(x = x, y = y)
-#' fit <- nls(y ~ SSblin(x, a, b, xs), data = dat)
+#' fit <- nls(y ~ SSblin(x, a, b, xs, c), data = dat)
 #' ## plot
 #' ggplot(data = dat, aes(x = x, y = y)) + 
 #'   geom_point() + 
@@ -32,64 +33,79 @@ blinInit <- function(mCall, LHS, data){
     stop("Too few distinct input values to fit a blinear")
   }
 
-  ## Dumb guess for a and b is to fit a linear regression to all the data
-  fit <- lm(xy[,"y"] ~ xy[,"x"])
+  ## Dumb guess for a and b is to fit a linear regression to the first
+  ## half and another linear regression to the second half
+  xy1 <- xy[1:(floor(nrow(xy)/2)),]
+  xy2 <- xy[floor(nrow(xy)/2):nrow(xy),]
+  fit1 <- lm(xy1[,"y"] ~ xy1[,"x"])
+  fit2 <- lm(xy2[,"y"] ~ xy2[,"x"])
   ## Atomic bomb approach to kill a mosquito
   objfun <- function(cfs){
-    pred <- blin(xy[,"x"], a=cfs[1], b=cfs[2], xs=cfs[3])
+    pred <- blin(xy[,"x"], a=cfs[1], b=cfs[2], xs=cfs[3], c = cfs[4])
     ans <- sum((xy[,"y"] - pred)^2)
     ans
   }
-  cfs <- c(mean(xy[,"x"]),coef(fit))
+  cfs <- c(coef(fit1),mean(xy[,"x"]),coef(fit2)[2])
   op <- try(optim(cfs, objfun, method = "L-BFGS-U",
-                  upper = c(Inf, Inf, max(xy[,"x"])),
-                  lower = c(-Inf, -Inf, min(xy[,"x"]))), silent = TRUE)
+                  upper = c(Inf, Inf, max(xy[,"x"]),Inf),
+                  lower = c(-Inf, -Inf, min(xy[,"x"])),-Inf), silent = TRUE)
   
   if(class(op) != "try-error"){
     a <- op$par[1]
     b <- op$par[2]
     xs <- op$par[3]
+    c <- op$par[4]
   }else{
     ## If everything fails I use the mean
-    a <- coef(fit)[1]
-    b <- coef(fit)[2]
+    a <- coef(fit1)[1]
+    b <- coef(fit1)[2]
     xs <- mean(xy[,"x"])
+    c <- coef(fit2)[2]
   }
   
-  value <- c(a, b, xs)
-  names(value) <- mCall[c("a","b","xs")]
+  value <- c(a, b, xs, c)
+  names(value) <- mCall[c("a","b","xs","c")]
   value
 }
 
 #' @rdname SSblin
 #' @return vector of the same length as x using the bilinear function
 #' @export
-blin <- function(x, a, b, xs){
+blin <- function(x, a, b, xs, c){
   
-  .asym <- a + b * xs
+  .a2 <- a + b * xs ## This is the second intercept
   
-  .value <- (x < xs) * (a + b * x) + (x >= xs) * .asym
+  .value <- (x < xs) * (a + b * x) + (x >= xs) * (.a2 + c * (x - xs))
   
   ## Derivative with respect to a when (x < xs)
-  ## .exp1 <- deriv(~ a +  b * x, "a")
-  .exp1 <- ifelse(x <= xs, 1, 0)
+  ## exp1 <- deriv(~ a +  b * x, "a")
+  ## exp1 <- deriv(~((a + b * xs) + c * (x - xs)), "a")
+  .exp1 <- 1 ## ifelse(x <= xs, 1, 1)
   
   ## Derivative with respect to b
-  ## .exp2 <- deriv(~ a +  b * x, "b")
+  ## exp2 <- deriv(~ a +  b * x, "b")
+  ## exp2 <- deriv(~((a + b * xs) + c * (x - xs)), "a")
   .exp2 <- ifelse(x <= xs, x, xs)
   
   ## Derivative with respect to xs
-  ## .exp3 <- deriv(~ a +  b * xs, "xs")
-  .exp3 <- ifelse(x <= xs, 0, b)
+  ## exp3 <- deriv(~ a +  b * xs, "xs")
+  ## exp3 <- deriv(~ (a + b*xs) +  c * (x - xs), "xs")
+  .exp3 <- ifelse(x <= xs, 0, b - c)
   
-  .actualArgs <- as.list(match.call()[c("a","b","xs")])
+  ## Derivative with respect to c
+  ## exp4 <- deriv(~ a +  b * xs, "c")
+  ## exp4 <- deriv(~ (a + b*xs) +  c * (x - xs), "c")
+  .exp4 <- ifelse(x <= xs, 0, x - xs)
+  
+  .actualArgs <- as.list(match.call()[c("a","b","xs","c")])
   
   ##  Gradient
   if (all(unlist(lapply(.actualArgs, is.name)))) {
-    .grad <- array(0, c(length(.value), 3L), list(NULL, c("a","b","xs")))
+    .grad <- array(0, c(length(.value), 4L), list(NULL, c("a","b","xs","c")))
     .grad[, "a"] <- .exp1
     .grad[, "b"] <- .exp2
     .grad[, "xs"] <- .exp3
+    .grad[, "c"] <- .exp4
     dimnames(.grad) <- list(NULL, .actualArgs)
     attr(.value, "gradient") <- .grad
    }
@@ -99,5 +115,5 @@ blin <- function(x, a, b, xs){
 #' @rdname SSblin
 #' @return a numeric vector of the same length as x containing parameter estimates for equation specified
 #' @export
-SSblin <- selfStart(blin, initial = blinInit, c("a","b","xs"))
+SSblin <- selfStart(blin, initial = blinInit, c("a","b","xs","c"))
 
