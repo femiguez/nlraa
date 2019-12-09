@@ -6,7 +6,7 @@
 #' @name SSbgf
 #' @rdname SSbgf
 #' @description Self starter for Beta Growth function with parameters w.max, t.m and t.e
-#' @param time input vector (x) which is normally 'time', the smalles value should be close to zero.
+#' @param time input vector (x) which is normally 'time', the smallest value should be close to zero.
 #' @param w.max value of weight or mass at its peak
 #' @param t.m time at which half of the maximum weight or mass has bean reached.
 #' @param t.e time at which the weight or mass reaches its peak.
@@ -94,7 +94,6 @@ SSbgf <- selfStart(bgf, initial = bgfInit, c("w.max", "t.e", "t.m"))
 bgf2 <- function(time, w.max, w.b, t.e, t.m, t.b){
 
   .expr1 <- (t.e - t.b) / (t.e - t.m) 
-#  .expr11 <- pmax(c(0, time - t.b))
   .expr11 <- (time - t.b) 
   .expr2 <- .expr11/(t.e-t.b)
   .expr3 <- .expr2 ^ (.expr1) 
@@ -102,31 +101,5 @@ bgf2 <- function(time, w.max, w.b, t.e, t.m, t.b){
   .value <- w.b + (w.max - w.b) * .expr4 * .expr3
 
   .value[is.nan(.value)] <- 0
-  
-##   ## Derivative with respect to t.e
-##   .exp1 <- ((time/t.e)^(t.e/(t.e - t.m))) * ((t.e-time)/(t.e-t.m) + 1)
-##   .exp2 <- (log(time/t.e)*((1/(t.e-t.m) - (t.e/(t.e-t.m)^2) - (1/(t.e - t.m)))))*w.max
-##   .exp3 <- (time/t.e)^(t.e/(t.e-t.m))
-##   .exp4 <- w.max * ((1/(t.e-t.m)) - ((t.e - time)/(t.e-t.m)^2))
-##   .exp5 <- .exp1 * .exp2 + .exp3 * .exp4 
-
-##   ## Derivative with respect to t.m
-##   .ex1 <- t.e * (time/t.e)^((t.e/(t.e - t.m))) * log(time/t.e) * ((t.e - time)/(t.e - t.m) + 1) * w.max
-##   .ex2 <- (t.e - time) * w.max * (time/t.e)^(t.e/(t.e-t.m))
-##   .ex3 <- (t.e - t.m)^2
-##   .ex4 <- .ex1 / .ex3 + .ex2 / .ex3
-  
-##   .actualArgs <- as.list(match.call()[c("w.max", "t.e", "t.m")])
-
-## ##  Gradient
-##   if (all(unlist(lapply(.actualArgs, is.name)))) {
-##     .grad <- array(0, c(length(.value), 3L), list(NULL, c("w.max", 
-##                                                           "t.e", "t.m")))
-##     .grad[, "w.max"] <- .expr3 * .expr2
-##     .grad[, "t.e"] <- .exp5
-##     .grad[, "t.m"] <- .ex4 
-##     dimnames(.grad) <- list(NULL, .actualArgs)
-##     attr(.value, "gradient") <- .grad
-##   }
-    .value
+  .value
 }

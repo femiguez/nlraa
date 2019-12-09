@@ -5,9 +5,9 @@
 \alias{blin}
 \title{self start for Bilinear Function}
 \usage{
-blin(x, a, b, xs)
+blin(x, a, b, xs, c)
 
-SSblin(x, a, b, xs)
+SSblin(x, a, b, xs, c)
 }
 \arguments{
 \item{x}{input vector}
@@ -16,7 +16,9 @@ SSblin(x, a, b, xs)
 
 \item{b}{the slope}
 
-\item{xs}{break point of transition between linear and plateau}
+\item{xs}{break point of transition between first-phase linear and second-phase linear}
+
+\item{c}{second-phase linear}
 }
 \value{
 a numeric vector of the same length as x containing parameter estimates for equation specified
@@ -26,7 +28,7 @@ vector of the same length as x using the bilinear function
 a numeric vector of the same length as x containing parameter estimates for equation specified
 }
 \description{
-Self starter for Bilinear function with parameters a (intercept), b (slope), xs (break-point)
+Self starter for Bilinear function with parameters a (intercept), b (first slope), xs (break-point), c (second slope)
 }
 \details{
 This function is described in Archontoulis and Miguez (2015) - (doi:10.2134/agronj2012.0506)
@@ -36,9 +38,9 @@ This function is described in Archontoulis and Miguez (2015) - (doi:10.2134/agro
 require(ggplot2)
 set.seed(123)
 x <- 1:30
-y <- blin(x, 0, 1, 20) + rnorm(30, 0, 0.5)
+y <- blin(x, 0, 0.75, 15, 1.75) + rnorm(30, 0, 0.5)
 dat <- data.frame(x = x, y = y)
-fit <- nls(y ~ SSblin(x, a, b, xs), data = dat)
+fit <- nls(y ~ SSblin(x, a, b, xs, c), data = dat)
 ## plot
 ggplot(data = dat, aes(x = x, y = y)) + 
   geom_point() + 

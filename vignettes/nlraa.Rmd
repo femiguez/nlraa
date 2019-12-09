@@ -29,7 +29,7 @@ which does not conform to a linear relationship. The feature that distinguishes 
 
 ## Functions in 'base' R
 
-**stats* package
+**stats** package
 
 1. SSasymp (Asymptotic)
 2. SSasympOff (Asymptotic with an offset)
@@ -137,6 +137,7 @@ Other modleing approaches do not use such a direct rigid specification as the mo
 3. **loess** (package 'stats')
 4. **quantile regression** (packages 'quantreg*')
 5. **polynomials** (poly in package 'stats')
+6. **segmented regression** (segmented in package 'segmented')
 
 Although these previous methods are much more flexible than classical nonlinear regression, the traditional approaches have the benefit of being simple and providing parameters with a straight-forward interpretation.
 

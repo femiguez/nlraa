@@ -62,11 +62,13 @@ See: https://en.wikipedia.org/wiki/Ricker_model
 
 See: Johnson et al. (2010) doi:10.1093/aob/mcq183
 
-5. SSblin (linear plus plateau)
+5. SSlinp (linear plus plateau)
 
 6. SSquadp (quadratic-plateau)
 
-7. SSexpf (exponential function)
+7. SSblin (bilinear)
+
+8. SSexpf (exponential function)
 
 ## Which functions are available?
 
