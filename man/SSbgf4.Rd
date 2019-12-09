@@ -34,16 +34,27 @@ Self starter for Beta Growth function with parameters w.max, t.e, t.m and t.b
 Beta Growth Function
 
 For details see the publication by Yin et al. (2003) "A Flexible Sigmoid Function of Determinate Growth"
+This is a difficult function to fit because the linear constrains are not explicitly introduced 
+in the optimization process
 
-Given this function weight is expected to decay and reach zero again at 2*t.e - t.m
+Given this function weight is expected to decay and reach zero again at 2*t.e - t.m. This is equation
+11 (pg. 368) in the Yin paper. With the difference that w.b equals zero.
 }
 \examples{
 \dontrun{
 data(sm)
-Examples from old vignette
+## Let's just pick one crop
+sm2 <- subset(sm, Crop == "M")
+## default 'nls' fails so we are using 'minpack.lm'
+require(minpack.lm)
+fit <- nlsLM(Yield ~ SSbgf4(DOY, w.max, t.e, t.m, t.b), data = sm2)
+plot(Yield ~ DOY, data = sm2)
+lines(sm2$DOY,fitted(fit))
+## For this particular problem it is easier to 'fix' t.b and w.b
+fit0 <- nls(Yield ~ bgf2(DOY, w.max, w.b = 0, t.e, t.m, t.b = 141), 
+           data = sm2, start = list(w.max = 16, t.e= 240, t.m = 200))
 }
 x <- seq(0, 17, by = 0.25)
-y <- bgf4(x, 5, 10, 3, 1)
+y <- bgf4(x, 20, 15, 10, 2)
 plot(x, y)
-y <- bgf4(1:10, 20, 10, 5, 2)
 }

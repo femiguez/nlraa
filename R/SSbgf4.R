@@ -1,6 +1,8 @@
 #' Beta Growth Function
 #' 
 #' For details see the publication by Yin et al. (2003) "A Flexible Sigmoid Function of Determinate Growth"
+#' This is a difficult function to fit because the linear constrains are not explicitly introduced 
+#' in the optimization process
 #' 
 #' @title self start for Beta Growth Function with four parameters
 #' @name SSbgf4
@@ -12,12 +14,22 @@
 #' @param t.m time at which half of the maximum weight or mass has bean reached.
 #' @param t.b time at which biomass growth starts
 #' @return a numeric vector of the same length as x (time) containing parameter estimates for equation specified
-#' @details Given this function weight is expected to decay and reach zero again at 2*t.e - t.m
+#' @details Given this function weight is expected to decay and reach zero again at 2*t.e - t.m. This is equation
+#' 11 (pg. 368) in the Yin paper. With the difference that w.b equals zero.
 #' @export
 #' @examples 
 #' \dontrun{
 #' data(sm)
-#' Examples from old vignette
+#' ## Let's just pick one crop
+#' sm2 <- subset(sm, Crop == "M")
+#' ## default 'nls' fails so we are using 'minpack.lm'
+#' require(minpack.lm)
+#' fit <- nlsLM(Yield ~ SSbgf4(DOY, w.max, t.e, t.m, t.b), data = sm2)
+#' plot(Yield ~ DOY, data = sm2)
+#' lines(sm2$DOY,fitted(fit))
+#' ## For this particular problem it is easier to 'fix' t.b and w.b
+#' fit0 <- nls(Yield ~ bgf2(DOY, w.max, w.b = 0, t.e, t.m, t.b = 141), 
+#'            data = sm2, start = list(w.max = 16, t.e= 240, t.m = 200))
 #' }
 NULL
 
@@ -44,8 +56,13 @@ bgf4Init <- function(mCall, LHS, data){
 #' y <- bgf4(x, 20, 15, 10, 2)
 #' plot(x, y)
 #' @export
+#' 
 bgf4 <- function(time, w.max, t.e, t.m, t.b){
 
+  if(t.m > t.e) stop("t.m should be smaller than t.e")
+  if(t.b > t.m) stop("t.b should be smaller than t.m")
+  if(t.b > t.e) stop("t.b should be smaller than t.e")
+  
   .expre1 <- (t.e - t.b)/(t.e - t.m)
   .expre11 <- (time - t.b)
   .expre2 <- .expre11/(t.e - t.b)
@@ -56,6 +73,7 @@ bgf4 <- function(time, w.max, t.e, t.m, t.b){
   ## This function returns zero when time is less than t.b
   .value <- ifelse(time < t.b, 0, .value)  
   .value[is.nan(.value)] <- 0
+  .value[.value < 0] <- 0
 
   err.val <- 0
   ## Derivative with respect to w.max
@@ -113,8 +131,7 @@ bgf4 <- function(time, w.max, t.e, t.m, t.b){
 
 ##  Gradient
   if (all(unlist(lapply(.actualArgs, is.name)))) {
-    .grad <- array(0, c(length(.value), 4L), list(NULL, c("w.max", 
-                                                          "t.e", "t.m","t.b")))
+    .grad <- array(0, c(length(.value), 4L), list(NULL, c("w.max", "t.e", "t.m","t.b")))
     .grad[, "w.max"] <- .exp1
     .grad[, "t.e"] <- .exp2
     .grad[, "t.m"] <- .exp3

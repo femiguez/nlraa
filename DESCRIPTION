@@ -19,6 +19,7 @@ Suggests:
 	easynls,
 	nls2,
 	bbmle,
-	emmeans
+	emmeans,
+	minpack.lm
 LazyData: true
 RoxygenNote: 6.1.1
