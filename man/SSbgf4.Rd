@@ -28,7 +28,7 @@ vector of the same length as x (time) using the beta growth function with four p
 a numeric vector of the same length as x (time) containing parameter estimates for equation specified
 }
 \description{
-Self starter for Beta Growth function with parameters w.max, t.m, t.e and t.b
+Self starter for Beta Growth function with parameters w.max, t.e, t.m and t.b
 }
 \details{
 Beta Growth Function
@@ -45,5 +45,5 @@ Examples from old vignette
 x <- seq(0, 17, by = 0.25)
 y <- bgf4(x, 5, 10, 3, 1)
 plot(x, y)
-y <- bgf4(1:10, 5, 3, 10, 1)
+y <- bgf4(1:10, 20, 10, 5, 2)
 }

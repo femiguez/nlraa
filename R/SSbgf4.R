@@ -5,11 +5,11 @@
 #' @title self start for Beta Growth Function with four parameters
 #' @name SSbgf4
 #' @rdname SSbgf4
-#' @description Self starter for Beta Growth function with parameters w.max, t.m, t.e and t.b
+#' @description Self starter for Beta Growth function with parameters w.max, t.e, t.m and t.b
 #' @param time input vector (x) which is normally 'time'.
 #' @param w.max value of weight or mass at its peak
-#' @param t.m time at which half of the maximum weight or mass has bean reached.
 #' @param t.e time at which the weight or mass reaches its peak.
+#' @param t.m time at which half of the maximum weight or mass has bean reached.
 #' @param t.b time at which biomass growth starts
 #' @return a numeric vector of the same length as x (time) containing parameter estimates for equation specified
 #' @details Given this function weight is expected to decay and reach zero again at 2*t.e - t.m
@@ -41,7 +41,7 @@ bgf4Init <- function(mCall, LHS, data){
 #' @return vector of the same length as x (time) using the beta growth function with four parameters
 #' @examples 
 #' x <- seq(0, 17, by = 0.25)
-#' y <- bgf4(x, 5, 10, 3, 1)
+#' y <- bgf4(x, 20, 15, 10, 2)
 #' plot(x, y)
 #' @export
 bgf4 <- function(time, w.max, t.e, t.m, t.b){
@@ -52,10 +52,11 @@ bgf4 <- function(time, w.max, t.e, t.m, t.b){
   .expre3 <- .expre2^(.expre1)
   .expre4 <- 1 + (t.e - time)/(t.e - t.m)
   .value <- w.max * .expre4 * .expre3
-  
+
+  ## This function returns zero when time is less than t.b
+  .value <- ifelse(time < t.b, 0, .value)  
   .value[is.nan(.value)] <- 0
-  .value[.value < 0] <- 0
-  
+
   err.val <- 0
   ## Derivative with respect to w.max
   ## deriv(~w.max * (1 + (t.e - time)/(t.e - t.m)) * ((time - t.b)/(t.e - t.b))^((t.m - t.b)/(t.e - t.m)),"w.max")
@@ -126,54 +127,7 @@ bgf4 <- function(time, w.max, t.e, t.m, t.b){
 
 #' @rdname SSbgf4
 #' @return a numeric vector of the same length as x (time) containing parameter estimates for equation specified
-#' @examples 
-#' y <- bgf4(1:10, 5, 3, 10, 1)
 #' @export
 SSbgf4 <- selfStart(bgf4, initial = bgf4Init, c("w.max", "t.e", "t.m", "t.b"))
 
-## Beta growth initial growth
 
-#' @rdname SSbgf
-#' @return a numeric vector of the same length as x (time) containing parameter estimates for equation specified
-#' @param w.b weight or biomass at initial time
-#' @param t.b initial time offset
-#' @export
-bgf2 <- function(time, w.max, w.b, t.e, t.m, t.b){
-
-  .expr1 <- (t.e - t.b) / (t.e - t.m) 
-#  .expr11 <- pmax(c(0, time - t.b))
-  .expr11 <- (time - t.b) 
-  .expr2 <- .expr11/(t.e-t.b)
-  .expr3 <- .expr2 ^ (.expr1) 
-  .expr4 <- 1 + (t.e - time)/(t.e - t.m)
-  .value <- w.b + (w.max - w.b) * .expr4 * .expr3
-
-  .value[is.nan(.value)] <- 0
-  
-##   ## Derivative with respect to t.e
-##   .exp1 <- ((time/t.e)^(t.e/(t.e - t.m))) * ((t.e-time)/(t.e-t.m) + 1)
-##   .exp2 <- (log(time/t.e)*((1/(t.e-t.m) - (t.e/(t.e-t.m)^2) - (1/(t.e - t.m)))))*w.max
-##   .exp3 <- (time/t.e)^(t.e/(t.e-t.m))
-##   .exp4 <- w.max * ((1/(t.e-t.m)) - ((t.e - time)/(t.e-t.m)^2))
-##   .exp5 <- .exp1 * .exp2 + .exp3 * .exp4 
-
-##   ## Derivative with respect to t.m
-##   .ex1 <- t.e * (time/t.e)^((t.e/(t.e - t.m))) * log(time/t.e) * ((t.e - time)/(t.e - t.m) + 1) * w.max
-##   .ex2 <- (t.e - time) * w.max * (time/t.e)^(t.e/(t.e-t.m))
-##   .ex3 <- (t.e - t.m)^2
-##   .ex4 <- .ex1 / .ex3 + .ex2 / .ex3
-  
-##   .actualArgs <- as.list(match.call()[c("w.max", "t.e", "t.m")])
-
-## ##  Gradient
-##   if (all(unlist(lapply(.actualArgs, is.name)))) {
-##     .grad <- array(0, c(length(.value), 3L), list(NULL, c("w.max", 
-##                                                           "t.e", "t.m")))
-##     .grad[, "w.max"] <- .expr3 * .expr2
-##     .grad[, "t.e"] <- .exp5
-##     .grad[, "t.m"] <- .ex4 
-##     dimnames(.grad) <- list(NULL, .actualArgs)
-##     attr(.value, "gradient") <- .grad
-##   }
-    .value
-}
