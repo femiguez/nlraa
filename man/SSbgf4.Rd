@@ -3,7 +3,7 @@
 \name{SSbgf4}
 \alias{SSbgf4}
 \alias{bgf4}
-\title{self start for Beta Growth Function with four parameters}
+\title{self start for Beta growth function with four parameters}
 \usage{
 bgf4(time, w.max, t.e, t.m, t.b)
 
@@ -23,9 +23,7 @@ SSbgf4(time, w.max, t.e, t.m, t.b)
 \value{
 a numeric vector of the same length as x (time) containing parameter estimates for equation specified
 
-vector of the same length as x (time) using the beta growth function with four parameters
-
-a numeric vector of the same length as x (time) containing parameter estimates for equation specified
+bgf4: vector of the same length as x (time) using the beta growth function with four parameters
 }
 \description{
 Self starter for Beta Growth function with parameters w.max, t.e, t.m and t.b
@@ -33,11 +31,11 @@ Self starter for Beta Growth function with parameters w.max, t.e, t.m and t.b
 \details{
 Beta Growth Function
 
-For details see the publication by Yin et al. (2003) "A Flexible Sigmoid Function of Determinate Growth"
+For details see the publication by Yin et al. (2003) "A Flexible Sigmoid Function of Determinate Growth".
 This is a difficult function to fit because the linear constrains are not explicitly introduced 
-in the optimization process
+in the optimization process.
 
-Given this function weight is expected to decay and reach zero again at 2*t.e - t.m. This is equation
+Given this function weight is expected to decay and reach zero again at \eqn{2*t.e - t.m}. This is equation
 11 (pg. 368) in the Yin paper. With the difference that w.b equals zero.
 }
 \examples{

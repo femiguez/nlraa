@@ -31,7 +31,7 @@ a numeric vector of the same length as x containing parameter estimates for equa
 Self starter for Bilinear function with parameters a (intercept), b (first slope), xs (break-point), c (second slope)
 }
 \details{
-This function is described in Archontoulis and Miguez (2015) - (doi:10.2134/agronj2012.0506)
+This is a special case with just two parts but a more general approach is to consider a segmented function with several breakpoints and linear segments.
 }
 \examples{
 \dontrun{

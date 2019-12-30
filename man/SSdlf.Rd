@@ -26,9 +26,7 @@ SSdlf(time, asym, a2, xmid, scal)
 \value{
 a numeric vector of the same length as x (time) containing parameter estimates for equation specified
 
-vector of the same length as x (time) using the declining logistic function
-
-vector of the same length as x (time) using the declining logistic function
+dlf: vector of the same length as x (time) using the declining logistic function
 }
 \description{
 Self starter for declining logistic function with parameters asym, a2, xmid and scal
@@ -36,7 +34,7 @@ Self starter for declining logistic function with parameters asym, a2, xmid and 
 \details{
 Declining Logistic
 
-Response function:  y = (asym - a2) / (1 + exp((xmid - time)/scal))) + a2 
+Response function:  \eqn{y = (asym - a2) / (1 + exp((xmid - time)/scal))) + a2}. 
  .- asym: upper asymptote
  .- xmid: time when y is midway between w and a 
  .- scal: controls the spread
@@ -44,8 +42,7 @@ Response function:  y = (asym - a2) / (1 + exp((xmid - time)/scal))) + a2
 }
 \examples{
 \dontrun{
-data(lfmc)
-Extended example in the vignette 'LFMC'
+## Extended example in the vignette 'LFMC'
 }
 x <- seq(0, 17, by = 0.25)
 y <- dlf(x, 2, 10, 8, 1)

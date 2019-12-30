@@ -10,8 +10,8 @@
 #' @param w.max value of weight or mass at its peak
 #' @param t.m time at which half of the maximum weight or mass has bean reached.
 #' @param t.e time at which the weight or mass reaches its peak.
-#' @return a numeric vector of the same length as x (time) containing parameter estimates for equation specified
-#' @details Given this function weight is expected to decay and reach zero again at 2*t.e - t.m
+#' @details The form of the equation is: \eqn{w.max * (1 + (t.e - time)/(t.e - t.m)) * (time/t.e)^t.e / (t.e - t.m)}.
+#' Given this function weight is expected to decay and reach zero again at \eqn{2*t.e - t.m}.
 #' @export
 #' @examples 
 #' \dontrun{
@@ -36,7 +36,7 @@ bgfInit <- function(mCall, LHS, data){
 }
 
 #' @rdname SSbgf
-#' @return vector of the same length as x (time) using the beta growth function
+#' @return bgf: vector of the same length as x (time) using the beta growth function
 #' @examples 
 #' x <- seq(0, 17, by = 0.25)
 #' y <- bgf(x, 5, 10, 3)
@@ -78,16 +78,13 @@ bgf <- function(time, w.max, t.e, t.m){
 }
 
 #' @rdname SSbgf
-#' @return a numeric vector of the same length as x (time) containing parameter estimates for equation specified
-#' @examples 
-#' y <- bgf(1:10, 5, 3, 10)
 #' @export
 SSbgf <- selfStart(bgf, initial = bgfInit, c("w.max", "t.e", "t.m"))
 
 ## Beta growth initial growth
 
 #' @rdname SSbgf
-#' @return a numeric vector of the same length as x (time) containing parameter estimates for equation specified
+#' @return bgf2: a numeric vector of the same length as x (time) containing parameter estimates for equation specified
 #' @param w.b weight or biomass at initial time
 #' @param t.b initial time offset
 #' @export

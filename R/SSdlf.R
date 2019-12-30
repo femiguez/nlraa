@@ -1,7 +1,7 @@
 #' Declining Logistic
 #'
 #' 
-#' Response function:  y = (asym - a2) / (1 + exp((xmid - time)/scal))) + a2 
+#' Response function:  \eqn{y = (asym - a2) / (1 + exp((xmid - time)/scal))) + a2}. 
 #'  .- asym: upper asymptote
 #'  .- xmid: time when y is midway between w and a 
 #'  .- scal: controls the spread
@@ -20,8 +20,7 @@
 #' @export
 #' @examples 
 #' \dontrun{
-#' data(lfmc)
-#' Extended example in the vignette 'LFMC'
+#' ## Extended example in the vignette 'LFMC'
 #' }
 
 #' @rdname SSdlf
@@ -30,7 +29,7 @@ dlfInit <- function(mCall, LHS, data){
   
   xy <- sortedXyData(mCall[["time"]], LHS, data)
   if(nrow(xy) < 4){
-    stop("Too few distinct input values to fit a dlf")
+    stop("Too few distinct input values to fit a dlf.")
   }
   z <- xy[["y"]]
   x1 <- xy[["x"]]
@@ -45,7 +44,7 @@ dlfInit <- function(mCall, LHS, data){
   scal2 <- try(coef(nls(zz ~ SSlogis(-x1, asym, xmid, scal)))[3], silent = TRUE)
   ## If the previous line returns an error we are silent about it and maintain the crude 
   ## guess for scal
-  if(class(scal2) != "try-error")  scal <- -scal2;## print(c(-scal2,scal))
+  if(class(scal2) != "try-error")  scal <- -scal2
   value <- c(asym, a2, xmid, scal)
   names(value) <- mCall[c("asym","a2","xmid","scal")]
   value
@@ -54,7 +53,7 @@ dlfInit <- function(mCall, LHS, data){
 
 
 #' @rdname SSdlf
-#' @return vector of the same length as x (time) using the declining logistic function
+#' @return dlf: vector of the same length as x (time) using the declining logistic function
 #' @examples 
 #' x <- seq(0, 17, by = 0.25)
 #' y <- dlf(x, 2, 10, 8, 1)
@@ -101,7 +100,6 @@ dlf <- function(time, asym, a2, xmid, scal){
 }
 
 #' @rdname SSdlf
-#' @return vector of the same length as x (time) using the declining logistic function
 #' @examples 
 #' x <- seq(0, 17, by = 0.25)
 #' y <- dlf(x, 2, 10, 8, 1)
@@ -109,7 +107,7 @@ dlf <- function(time, asym, a2, xmid, scal){
 #' @export
 SSdlf <- selfStart(dlf, initial = dlfInit, c("asym","a2","xmid","scal"))
 
-## How to calculate partial derivatives
+## How to calculate partial derivatives:
 ##  deriv(~ (asym - a2)/(1 + exp((xmid - time)/scal)) + a2, "asym")
 ##  deriv(~ (asym - a2)/(1 + exp((xmid - time)/scal)) + a2, "a2")
 ##  deriv(~ (asym - a2)/(1 + exp((xmid - time)/scal)) + a2, "xmid")

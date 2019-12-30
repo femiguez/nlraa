@@ -9,7 +9,7 @@
 #' @param xs break point of transition between first-phase linear and second-phase linear
 #' @param c second-phase linear 
 #' @return a numeric vector of the same length as x containing parameter estimates for equation specified
-#' @details This function is described in Archontoulis and Miguez (2015) - (doi:10.2134/agronj2012.0506) 
+#' @details This is a special case with just two parts but a more general approach is to consider a segmented function with several breakpoints and linear segments.
 #' @export
 #' @examples 
 #' \dontrun{
@@ -32,7 +32,6 @@ blinInit <- function(mCall, LHS, data){
   if(nrow(xy) < 4){
     stop("Too few distinct input values to fit a blinear")
   }
-
   ## Dumb guess for a and b is to fit a linear regression to the first
   ## half and another linear regression to the second half
   xy1 <- xy[1:(floor(nrow(xy)/2)),]
@@ -46,7 +45,7 @@ blinInit <- function(mCall, LHS, data){
     ans
   }
   cfs <- c(coef(fit1),mean(xy[,"x"]),coef(fit2)[2])
-  op <- try(optim(cfs, objfun, method = "L-BFGS-U",
+  op <- try(optim(cfs, objfun, method = "L-BFGS-B",
                   upper = c(Inf, Inf, max(xy[,"x"]),Inf),
                   lower = c(-Inf, -Inf, min(xy[,"x"])),-Inf), silent = TRUE)
   
@@ -85,17 +84,17 @@ blin <- function(x, a, b, xs, c){
   ## Derivative with respect to b
   ## exp2 <- deriv(~ a +  b * x, "b")
   ## exp2 <- deriv(~((a + b * xs) + c * (x - xs)), "a")
-  .exp2 <- ifelse(x <= xs, x, xs)
+  .exp2 <- ifelse(x < xs, x, xs)
   
   ## Derivative with respect to xs
   ## exp3 <- deriv(~ a +  b * xs, "xs")
   ## exp3 <- deriv(~ (a + b*xs) +  c * (x - xs), "xs")
-  .exp3 <- ifelse(x <= xs, 0, b - c)
+  .exp3 <- ifelse(x < xs, 0, b - c)
   
   ## Derivative with respect to c
   ## exp4 <- deriv(~ a +  b * xs, "c")
   ## exp4 <- deriv(~ (a + b*xs) +  c * (x - xs), "c")
-  .exp4 <- ifelse(x <= xs, 0, x - xs)
+  .exp4 <- ifelse(x < xs, 0, x - xs)
   
   .actualArgs <- as.list(match.call()[c("a","b","xs","c")])
   

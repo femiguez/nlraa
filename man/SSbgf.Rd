@@ -26,13 +26,9 @@ bgf2(time, w.max, w.b, t.e, t.m, t.b)
 \item{t.b}{initial time offset}
 }
 \value{
-a numeric vector of the same length as x (time) containing parameter estimates for equation specified
+bgf: vector of the same length as x (time) using the beta growth function
 
-vector of the same length as x (time) using the beta growth function
-
-a numeric vector of the same length as x (time) containing parameter estimates for equation specified
-
-a numeric vector of the same length as x (time) containing parameter estimates for equation specified
+bgf2: a numeric vector of the same length as x (time) containing parameter estimates for equation specified
 }
 \description{
 Self starter for Beta Growth function with parameters w.max, t.m and t.e
@@ -42,7 +38,8 @@ Beta Growth Function
 
 For details see the publication by Yin et al. (2003) "A Flexible Sigmoid Function of Determinate Growth"
 
-Given this function weight is expected to decay and reach zero again at 2*t.e - t.m
+The form of the equation is: \eqn{w.max * (1 + (t.e - time)/(t.e - t.m)) * (time/t.e)^t.e / (t.e - t.m)}.
+Given this function weight is expected to decay and reach zero again at \eqn{2*t.e - t.m}.
 }
 \examples{
 \dontrun{
@@ -52,5 +49,4 @@ Examples from old vignette
 x <- seq(0, 17, by = 0.25)
 y <- bgf(x, 5, 10, 3)
 plot(x, y)
-y <- bgf(1:10, 5, 3, 10)
 }

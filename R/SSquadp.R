@@ -1,15 +1,15 @@
 #' 
-#' @title self start for Quadratic Plateua Function
+#' @title self start for quadratic plateau function
 #' @name SSquadp
 #' @rdname SSquadp
-#' @description Self starter for Quadratic Plateau function with parameters a (intercept), b (slope), c (quadratic), xs (break-point)
+#' @description Self starter for quadratic plateau function with parameters a (intercept), b (slope), c (quadratic), xs (break-point)
 #' @param x input vector 
 #' @param a the intercept
 #' @param b the slope
 #' @param c quadratic term
 #' @param xs break point of transition between quadratic and plateau 
 #' @return a numeric vector of the same length as x containing parameter estimates for equation specified
-#' @details This function is described in Archontoulis and Miguez (2015) - (doi:10.2134/agronj2012.0506) 
+#' @details Reference for nonlinear regression Archontoulis and Miguez (2015) - (doi:10.2134/agronj2012.0506) 
 #' @export
 #' @examples 
 #' \dontrun{
@@ -32,8 +32,7 @@ quadpInit <- function(mCall, LHS, data){
   if(nrow(xy) < 5){
     stop("Too few distinct input values to fit a quadratic-platueau")
   }
-  
-  ## Dumb guess for a and b is to fit a linear regression to all the data
+  ## Dumb guess for a and b is to fit a quadratic linear regression to all the data
   fit <- lm(xy[,"y"] ~ xy[,"x"] + I(xy[,"x"]^2))
   a <- coef(fit)[1]
   b <- coef(fit)[2]
@@ -51,10 +50,9 @@ quadpInit <- function(mCall, LHS, data){
   if(class(op.xs) != "try-error"){
     xs <- op.xs$minimum
   }else{
-    ## If everything fails I use the mean
+    ## If it fails I use the mean
     xs <- mean(xy[,"x"])
   }
-  ## Guess xs
   value <- c(a, b, c, xs)
   names(value) <- mCall[c("a","b","c","xs")]
   value
@@ -70,26 +68,32 @@ quadp <- function(x, a, b, c, xs){
   .value <- (x < xs) * (a + b * x + c * x^2) + (x >= xs) * .asym
   
   ## Derivative with respect to a
-  ## .exp1 <- deriv(~ a * time * exp(-b * time), "a")
-  .exp1 <- (x <= xs) 
+  .exp1 <- 1 # ifelse(x < xs, 1, 1) 
   
   ## Derivative with respect to b
-  ## .exp2 <- deriv(~ a * time * exp(-b * time), "b")
-  .exp2 <- (x <= xs) * b
+  ## .exp2 <- deriv(~ a  + b * x + c * x^2, "b")
+  .exp2 <- ifelse(x < xs, x, xs)
+  
+  ## Derivative with respect to c
+  ## .exp3 <- deriv(~ a  + b * x + c * x^2, "c")
+  .exp3 <- ifelse(x < xs, x^2, xs^2)
   
   ## Derivative with respect to xs
-  .exp3 <- (x >= xs) * .asym
+  ## .exp4 <- deriv(~ a  + b * xs + c * xs^2, "xs")
+  .exp4 <- ifelse(x < xs, 0, b + 2 * c * xs)
   
   .actualArgs <- as.list(match.call()[c("a","b","c","xs")])
   
   ##  Gradient
-  ## if (all(unlist(lapply(.actualArgs, is.name)))) {
-  ##  .grad <- array(0, c(length(.value), 2L), list(NULL, c("a", "b")))
-  ##  .grad[, "a"] <- .exp1
-  ##  .grad[, "b"] <- .exp2
-  ##  dimnames(.grad) <- list(NULL, .actualArgs)
-  ##  attr(.value, "gradient") <- .grad
-  ## }
+  if (all(unlist(lapply(.actualArgs, is.name)))) {
+    .grad <- array(0, c(length(.value), 4L), list(NULL, c("a","b","c","xs")))
+    .grad[, "a"] <- .exp1
+    .grad[, "b"] <- .exp2
+    .grad[, "c"] <- .exp3
+    .grad[, "xs"] <- .exp4
+    dimnames(.grad) <- list(NULL, .actualArgs)
+    attr(.value, "gradient") <- .grad
+   }
   .value
 }
 

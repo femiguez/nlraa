@@ -1,5 +1,5 @@
 #' 
-#' @title self start for linear-plateau Function
+#' @title self start for linear-plateau function
 #' @name SSlinp
 #' @rdname SSlinp
 #' @description Self starter for linear-plateau function with parameters a (intercept), b (slope), xs (break-point)
@@ -8,7 +8,7 @@
 #' @param b the slope
 #' @param xs break point of transition between linear and plateau 
 #' @return a numeric vector of the same length as x containing parameter estimates for equation specified
-#' @details This function is described in Archontoulis and Miguez (2015) - (doi:10.2134/agronj2012.0506) 
+#' @details This function is linear when \eqn{x < xs: (a + b * x)} and flat (\eqn{asymptote = a + b * xs}) when \eqn{x >= xs}.
 #' @export
 #' @examples 
 #' \dontrun{
@@ -22,7 +22,10 @@
 #' ggplot(data = dat, aes(x = x, y = y)) + 
 #'   geom_point() + 
 #'   geom_line(aes(y = fitted(fit)))
+#' ## Confidence intervals
+#' confint(fit)
 #' }
+#' 
 NULL
 
 linpInit <- function(mCall, LHS, data){
@@ -32,26 +35,26 @@ linpInit <- function(mCall, LHS, data){
     stop("Too few distinct input values to fit a linear-plateau")
   }
 
-  ## Dumb guess for a and b is to fit a linear regression to all the data
+  ## Dumb guess for a and b is to fit a linear regression to half the data
   xy1 <- xy[1:floor(nrow(xy)/2),]
-  fit1 <- lm(xy[,"y"] ~ xy[,"x"])
+  fit1 <- lm(xy1[,"y"] ~ xy1[,"x"])
   ## Atomic bomb approach to kill a mosquito
   objfun <- function(cfs){
-    pred <- blin(xy[,"x"], a=cfs[1], b=cfs[2], xs=cfs[3])
+    pred <- linp(xy[,"x"], a=cfs[1], b=cfs[2], xs=cfs[3])
     ans <- sum((xy[,"y"] - pred)^2)
     ans
   }
   cfs <- c(coef(fit1),mean(xy[,"x"]))
-  op <- try(optim(cfs, objfun, method = "L-BFGS-U",
+  op <- try(optim(cfs, objfun, method = "L-BFGS-B",
                   upper = c(Inf, Inf, max(xy[,"x"])),
                   lower = c(-Inf, -Inf, min(xy[,"x"]))), silent = TRUE)
-  
+
   if(class(op) != "try-error"){
     a <- op$par[1]
     b <- op$par[2]
     xs <- op$par[3]
   }else{
-    ## If everything fails I use the mean
+    ## If it fails I use the mean for the breakpoint
     a <- coef(fit1)[1]
     b <- coef(fit1)[2]
     xs <- mean(xy[,"x"])
@@ -72,16 +75,17 @@ linp <- function(x, a, b, xs){
   .value <- (x < xs) * (a + b * x) + (x >= xs) * .asym
   
   ## Derivative with respect to a when (x < xs)
-  ## .exp1 <- deriv(~ a +  b * x, "a")
-  .exp1 <- ifelse(x <= xs, 1, 0)
+  ## .exp1 <- deriv(~ a +  b * x + c * x^2, "a")
+  .exp1 <- 1 ## ifelse(x < xs, 1, 1)
   
   ## Derivative with respect to b
-  ## .exp2 <- deriv(~ a +  b * x, "b")
-  .exp2 <- ifelse(x <= xs, x, xs)
+  ## if x < xs: .exp2 <- deriv(~ a +  b * x + c * x^2, "b")
+  ## if x >= xs: .exp2 <- deriv(~ a +  b * xs + c * x^2, "b")
+  .exp2 <- ifelse(x < xs, x, xs)
   
   ## Derivative with respect to xs
   ## .exp3 <- deriv(~ a +  b * xs, "xs")
-  .exp3 <- ifelse(x <= xs, 0, b)
+  .exp3 <- ifelse(x < xs, 0, b)
   
   .actualArgs <- as.list(match.call()[c("a","b","xs")])
   

@@ -1,10 +1,10 @@
 #' Beta Growth Function
 #' 
-#' For details see the publication by Yin et al. (2003) "A Flexible Sigmoid Function of Determinate Growth"
+#' For details see the publication by Yin et al. (2003) "A Flexible Sigmoid Function of Determinate Growth".
 #' This is a difficult function to fit because the linear constrains are not explicitly introduced 
-#' in the optimization process
+#' in the optimization process. 
 #' 
-#' @title self start for Beta Growth Function with four parameters
+#' @title self start for Beta growth function with four parameters
 #' @name SSbgf4
 #' @rdname SSbgf4
 #' @description Self starter for Beta Growth function with parameters w.max, t.e, t.m and t.b
@@ -14,7 +14,7 @@
 #' @param t.m time at which half of the maximum weight or mass has bean reached.
 #' @param t.b time at which biomass growth starts
 #' @return a numeric vector of the same length as x (time) containing parameter estimates for equation specified
-#' @details Given this function weight is expected to decay and reach zero again at 2*t.e - t.m. This is equation
+#' @details Given this function weight is expected to decay and reach zero again at \eqn{2*t.e - t.m}. This is equation
 #' 11 (pg. 368) in the Yin paper. With the difference that w.b equals zero.
 #' @export
 #' @examples 
@@ -50,7 +50,7 @@ bgf4Init <- function(mCall, LHS, data){
 }
 
 #' @rdname SSbgf4
-#' @return vector of the same length as x (time) using the beta growth function with four parameters
+#' @return bgf4: vector of the same length as x (time) using the beta growth function with four parameters
 #' @examples 
 #' x <- seq(0, 17, by = 0.25)
 #' y <- bgf4(x, 20, 15, 10, 2)
@@ -143,7 +143,6 @@ bgf4 <- function(time, w.max, t.e, t.m, t.b){
 }
 
 #' @rdname SSbgf4
-#' @return a numeric vector of the same length as x (time) containing parameter estimates for equation specified
 #' @export
 SSbgf4 <- selfStart(bgf4, initial = bgf4Init, c("w.max", "t.e", "t.m", "t.b"))
 

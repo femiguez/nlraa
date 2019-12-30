@@ -7,7 +7,8 @@
 #' @param a which is related to the initial growth slope
 #' @param b which is related to the slowing down or decline
 #' @return a numeric vector of the same length as x (time) containing parameter estimates for equation specified
-#' @details This function is described in Archontoulis and Miguez (2015) - (doi:10.2134/agronj2012.0506) and originally in Ricker, W. E. (1954) Stock and Recruitment Journal of the Fisheries Research Board of Canada, 11(5): 559–623. doi:10.1139/f54-039
+#' @details This function is described in Archontoulis and Miguez (2015) - (doi:10.2134/agronj2012.0506) and originally in Ricker, W. E. (1954) Stock and Recruitment Journal of the Fisheries Research Board of Canada, 11(5): 559–623. doi:10.1139/f54-039.
+#' The equation is: \eqn{a * time * exp(-b * time)}.
 #' @export
 #' @examples 
 #' \dontrun{
@@ -44,7 +45,7 @@ rickerInit <- function(mCall, LHS, data){
 }
 
 #' @rdname SSricker
-#' @return vector of the same length as x (time) using the ricker function
+#' @return ricker: vector of the same length as x (time) using the ricker function
 #' @export
 ricker <- function(time, a, b){
   
@@ -72,7 +73,6 @@ ricker <- function(time, a, b){
 }
 
 #' @rdname SSricker
-#' @return a numeric vector of the same length as x (time) containing parameter estimates for equation specified
 #' @export
 SSricker <- selfStart(ricker, initial = rickerInit, c("a", "b"))
 

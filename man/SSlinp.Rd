@@ -3,7 +3,7 @@
 \name{SSlinp}
 \alias{SSlinp}
 \alias{linp}
-\title{self start for linear-plateau Function}
+\title{self start for linear-plateau function}
 \usage{
 linp(x, a, b, xs)
 
@@ -29,7 +29,7 @@ a numeric vector of the same length as x containing parameter estimates for equa
 Self starter for linear-plateau function with parameters a (intercept), b (slope), xs (break-point)
 }
 \details{
-This function is described in Archontoulis and Miguez (2015) - (doi:10.2134/agronj2012.0506)
+This function is linear when \eqn{x < xs: (a + b * x)} and flat (\eqn{asymptote = a + b * xs}) when \eqn{x >= xs}.
 }
 \examples{
 \dontrun{
@@ -43,5 +43,8 @@ fit <- nls(y ~ SSlinp(x, a, b, xs), data = dat)
 ggplot(data = dat, aes(x = x, y = y)) + 
   geom_point() + 
   geom_line(aes(y = fitted(fit)))
+## Confidence intervals
+confint(fit)
 }
+
 }
