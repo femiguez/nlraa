@@ -21,9 +21,7 @@ SSlinp(x, a, b, xs)
 \value{
 a numeric vector of the same length as x containing parameter estimates for equation specified
 
-vector of the same length as x using the linear-plateau function
-
-a numeric vector of the same length as x containing parameter estimates for equation specified
+linp: vector of the same length as x using the linear-plateau function
 }
 \description{
 Self starter for linear-plateau function with parameters a (intercept), b (slope), xs (break-point)

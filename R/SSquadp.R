@@ -59,7 +59,7 @@ quadpInit <- function(mCall, LHS, data){
 }
 
 #' @rdname SSquadp
-#' @return vector of the same length as x using the quadratic-plateau function
+#' @return quadp: vector of the same length as x using the quadratic-plateau function
 #' @export
 quadp <- function(x, a, b, c, xs){
   
@@ -98,7 +98,6 @@ quadp <- function(x, a, b, c, xs){
 }
 
 #' @rdname SSquadp
-#' @return a numeric vector of the same length as x containing parameter estimates for equation specified
 #' @export
 SSquadp <- selfStart(quadp, initial = quadpInit, c("a","b","c","xs"))
 

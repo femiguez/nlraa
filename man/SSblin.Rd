@@ -23,15 +23,14 @@ SSblin(x, a, b, xs, c)
 \value{
 a numeric vector of the same length as x containing parameter estimates for equation specified
 
-vector of the same length as x using the bilinear function
-
-a numeric vector of the same length as x containing parameter estimates for equation specified
+blin: vector of the same length as x using the bilinear function
 }
 \description{
 Self starter for Bilinear function with parameters a (intercept), b (first slope), xs (break-point), c (second slope)
 }
 \details{
-This is a special case with just two parts but a more general approach is to consider a segmented function with several breakpoints and linear segments.
+This is a special case with just two parts but a more general approach is to consider a segmented 
+function with several breakpoints and linear segments. Splines would be even more general.
 }
 \examples{
 \dontrun{

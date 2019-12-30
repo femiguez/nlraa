@@ -7,7 +7,7 @@
 #' @param a represents the value at x = 0
 #' @param c represents the exponential rate
 #' @return a numeric vector of the same length as x containing parameter estimates for equation specified
-#' @details This function is described in Archontoulis and Miguez (2015) - (doi:10.2134/agronj2012.0506) and originally Johnson et al. (2010) Annals of Botany 106: 735–749, 2010. doi:10.1093/aob/mcq183
+#' @details This function is described in Archontoulis and Miguez (2015) - (doi:10.2134/agronj2012.0506) 
 #' @export
 #' @examples 
 #' \dontrun{
@@ -49,7 +49,7 @@ expfInit <- function(mCall, LHS, data){
 }
 
 #' @rdname SSexpf
-#' @return vector of the same length as x using the profd function
+#' @return expf: vector of the same length as x using the profd function
 #' @export
 expf <- function(x, a, c){
   
@@ -77,7 +77,6 @@ expf <- function(x, a, c){
 }
 
 #' @rdname SSexpf
-#' @return a numeric vector of the same length as x containing parameter estimates for equation specified
 #' @export
 SSexpf <- selfStart(expf, initial = expfInit, c("a", "c"))
 

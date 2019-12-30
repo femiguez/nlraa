@@ -2,12 +2,9 @@
 % Please edit documentation in R/SSdlf.R
 \name{SSdlf}
 \alias{SSdlf}
-\alias{dlfInit}
 \alias{dlf}
 \title{self start for Declining Logistic Function}
 \usage{
-dlfInit(mCall, LHS, data)
-
 dlf(time, asym, a2, xmid, scal)
 
 SSdlf(time, asym, a2, xmid, scal)
@@ -44,9 +41,6 @@ Response function:  \eqn{y = (asym - a2) / (1 + exp((xmid - time)/scal))) + a2}.
 \dontrun{
 ## Extended example in the vignette 'LFMC'
 }
-x <- seq(0, 17, by = 0.25)
-y <- dlf(x, 2, 10, 8, 1)
-plot(x, y)
 x <- seq(0, 17, by = 0.25)
 y <- dlf(x, 2, 10, 8, 1)
 plot(x, y)

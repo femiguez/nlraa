@@ -23,9 +23,7 @@ SSprofd(x, a, b, c, d)
 \value{
 a numeric vector of the same length as x containing parameter estimates for equation specified
 
-vector of the same length as x using the profd function
-
-a numeric vector of the same length as x containing parameter estimates for equation specified
+profd: vector of the same length as x using the profd function
 }
 \description{
 Self starter for a 'decay' of a variable within a canopy
@@ -33,9 +31,6 @@ Self starter for a 'decay' of a variable within a canopy
 \details{
 Profile decay function for describing variables which 
 decay within a canopy profile
-
-Johnson et al. (2010)
-Ann Bot. 2010 Nov;106(5):735-49. doi: 10.1093/aob/mcq183
 
 This function is described in Archontoulis and Miguez (2015) - (doi:10.2134/agronj2012.0506) and originally Johnson et al. (2010) Annals of Botany 106: 735–749, 2010. doi:10.1093/aob/mcq183
 }

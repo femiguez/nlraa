@@ -1,9 +1,6 @@
 #' Profile decay function for describing variables which 
 #' decay within a canopy profile
 #' 
-#' Johnson et al. (2010)
-#' Ann Bot. 2010 Nov;106(5):735-49. doi: 10.1093/aob/mcq183
-#' 
 #' @title self start for profile decay Function
 #' @name SSprofd
 #' @rdname SSprofd
@@ -65,7 +62,7 @@ profdInit <- function(mCall, LHS, data){
 }
 
 #' @rdname SSprofd
-#' @return vector of the same length as x using the profd function
+#' @return profd: vector of the same length as x using the profd function
 #' @export
 profd <- function(x, a, b, c, d){
   
@@ -103,7 +100,6 @@ profd <- function(x, a, b, c, d){
 }
 
 #' @rdname SSprofd
-#' @return a numeric vector of the same length as x containing parameter estimates for equation specified
 #' @export
 SSprofd <- selfStart(profd, initial = profdInit, c("a", "b", "c", "d"))
 

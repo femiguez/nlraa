@@ -21,15 +21,13 @@ library(nlraa)
 
 For an introduction to this topic see the publication by Archontoulis and Miguez (https://doi.org/10.2134/agronj2012.0506) and the book chapter by Miguez, Archontoulis and Dokoohaki (https://doi.org/10.2134/appliedstatistics.2016.0003).
 
-One of the objectives of those publications was to introduce a large family of nonlinear functions
-to practicioners in the agricultural research area to a variety of tools that can use to fit data
-which does not conform to a linear relationship. The feature that distinguishes this approach from others such as ploynomials, splines or gams (to name a few) is that the parameters of the model have biologically meaningful interpretations. In R the approach that makes fitting nonlinear mixed models almost as easy as fitting linear mixed models is the use of self starting functions.
+One of the objectives of those publications was to introduce a large family of nonlinear functions to practicioners in the agricultural research area to a variety of tools that can use to fit data which does not conform to a linear relationship. The feature that distinguishes this approach from others such as ploynomials, splines or gams (to name a few) is that the parameters of the model have biologically meaningful interpretations. In R the approach that makes fitting nonlinear mixed models almost as easy as fitting linear mixed models is the use of self starting functions.
 
 # Index of self starting functions
 
 ## Functions in 'base' R
 
-**stats* package
+**stats** package
 
 1. SSasymp (Asymptotic)
 2. SSasympOff (Asymptotic with an offset)
@@ -45,30 +43,21 @@ which does not conform to a linear relationship. The feature that distinguishes 
 ## Functions in this package (nlraa)
 
 1. SSbgf (Beta-Growth Function)
+2. SSbgf4 (Four Parameter Beta-Growth Function)
+3. SSdlf (Declining Logistic Function)
+4. SSricker (Ricker population growth)
+5. SSprofd (Profile of protein distribution)
+6. SSlinp (linear-plateau)
+7. SSplin (plateau-linear)
+8. SSquadp (quadratic-plateau)
+9. SSpquad (plateau-quadratic)
+10. SSblin (bilinear)
+11. SSexpf (exponential function)
 
-For reference on Beta-Growth Function see Yin et al. 2003 (https://doi.org/10.1093/aob/mcg029).
+For the reference on the Beta growth function see Yin et al. 2003 (https://doi.org/10.1093/aob/mcg029) and Erratum: https://doi.org/10.1093/aob/mcg091.
+For a reference on a use of the declining logistic see Oddi et al. (2019). For the Ricker model see: https://en.wikipedia.org/wiki/Ricker_model. For the protein profile in the canopy see Johnson et al. (2010) doi:10.1093/aob/mcq183. 
 
-Erratum: https://doi.org/10.1093/aob/mcg091
-
-2. SSdlf (Declining Logistic Function)
-
-For reference on the implementation see Oddi et al. (2019) 
-
-3. SSricker (Ricker population growth)
-
-See: https://en.wikipedia.org/wiki/Ricker_model
-
-4. SSprofd (Profile of protein distribution)
-
-See: Johnson et al. (2010) doi:10.1093/aob/mcq183
-
-5. SSlinp (linear plus plateau)
-
-6. SSquadp (quadratic-plateau)
-
-7. SSblin (bilinear)
-
-8. SSexpf (exponential function)
+The main benefit of having these self starting functions is that they can be incorporated in the workflow of package 'nlme' which allows for fitting nonlinear mixed models. 
 
 ## Which functions are available?
 
@@ -113,30 +102,31 @@ ggplot(data = swpg, aes(x = ftsw, y = lfgr)) +
 
 Convergence problems in nonlinear models are often because of a number of reasons:
 
-1. The model is not appropriate for the observed data
+1. The model is not appropriate for the observed data (or viceversa)
 2. The model is conceptually correct but there is an error in the formula
 3. The model is too complex; a simpler model should be used
-4. Starting values are too far from the solution
+4. The model is too simple; a more complex model should be used
+5. Starting values are too far from the solution
 
 Model specification (choosing the correct model) is clearly very important when using 
-nonlinar models. For convergence problems related to poor starting values there are some 
-alternatives:
+nonlinear models. For convergence problems related to poor starting values there are some alternatives:
 
-1. Use function 'nls2' in package 'nls2' which uses a 'brute-force' approach of searching over a grid
-2. Use an alternative algorithm 'nlsLM' in package 'minpack.lm', which is more robust
-3. Define a custom optimization problem and use function 'optim' in 'stats' package (also 'nlm' or 'nlminb')
-
-This last option extend the possibility of available algorithms.
+1. Try algorithm 'port' in function 'nls'
+2. Use an alternative algorithm 'Levenberg-Marquardt' in package 'minpack.lm' through the function 'nlsLM', which can be more robust
+3. Use function 'nls2' in package 'nls2' which uses a 'brute-force' approach of searching over a grid
+4. Define a custom optimization and use function 'optim' in 'stats' package (also 'nlm' or 'nlminb'). This option extends the possibility of available algorithms.
+5. Manually construct a profile of residual sum of squares as a function of the parameters to understand the relationship which might lead to a better choice for starting values.
 
 ## Other modeling approaches
 
-Other modleing approaches do not use such a direct rigid specification as the models classically used in nonlinear relationships. Some examples are:
+Other modeling approaches do not use such a direct rigid specification as the models classically used in nonlinear relationships. Some examples are:
 
 1. **splines** (packages 'splines' or 'splines2')
 2. **gams** (package 'mgcv')
 3. **loess** (package 'stats')
 4. **quantile regression** (packages 'quantreg*')
 5. **polynomials** (poly in package 'stats')
+6. **segmented regression** (segmented in package 'segmented')
 
 Although these previous methods are much more flexible than classical nonlinear regression, the traditional approaches have the benefit of being simple and providing parameters with a straight-forward interpretation.
 
@@ -166,6 +156,10 @@ Dose-response curves package
 Ritz C, Baty F, Streibig JC, Gerhard D
 (2015) Dose-Response Analysis Using R. PLoS ONE
 10(12): e0146021. doi:10.1371/journal.pone.0146021
+
+## **easynls** pacakge
+
+Might make it easier to fit and plot a few different models.
 
 ## **HydroMe** package
 

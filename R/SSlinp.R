@@ -66,7 +66,7 @@ linpInit <- function(mCall, LHS, data){
 }
 
 #' @rdname SSlinp
-#' @return vector of the same length as x using the linear-plateau function
+#' @return linp: vector of the same length as x using the linear-plateau function
 #' @export
 linp <- function(x, a, b, xs){
   
@@ -102,7 +102,6 @@ linp <- function(x, a, b, xs){
 }
 
 #' @rdname SSlinp
-#' @return a numeric vector of the same length as x containing parameter estimates for equation specified
 #' @export
 SSlinp <- selfStart(linp, initial = linpInit, c("a","b","xs"))
 

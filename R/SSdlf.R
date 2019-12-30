@@ -22,9 +22,8 @@
 #' \dontrun{
 #' ## Extended example in the vignette 'LFMC'
 #' }
+NULL
 
-#' @rdname SSdlf
-#' @export
 dlfInit <- function(mCall, LHS, data){
   
   xy <- sortedXyData(mCall[["time"]], LHS, data)
@@ -100,10 +99,6 @@ dlf <- function(time, asym, a2, xmid, scal){
 }
 
 #' @rdname SSdlf
-#' @examples 
-#' x <- seq(0, 17, by = 0.25)
-#' y <- dlf(x, 2, 10, 8, 1)
-#' plot(x, y)
 #' @export
 SSdlf <- selfStart(dlf, initial = dlfInit, c("asym","a2","xmid","scal"))
 

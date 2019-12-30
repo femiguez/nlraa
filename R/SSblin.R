@@ -9,7 +9,8 @@
 #' @param xs break point of transition between first-phase linear and second-phase linear
 #' @param c second-phase linear 
 #' @return a numeric vector of the same length as x containing parameter estimates for equation specified
-#' @details This is a special case with just two parts but a more general approach is to consider a segmented function with several breakpoints and linear segments.
+#' @details This is a special case with just two parts but a more general approach is to consider a segmented 
+#' function with several breakpoints and linear segments. Splines would be even more general.
 #' @export
 #' @examples 
 #' \dontrun{
@@ -68,7 +69,7 @@ blinInit <- function(mCall, LHS, data){
 }
 
 #' @rdname SSblin
-#' @return vector of the same length as x using the bilinear function
+#' @return blin: vector of the same length as x using the bilinear function
 #' @export
 blin <- function(x, a, b, xs, c){
   
@@ -112,7 +113,6 @@ blin <- function(x, a, b, xs, c){
 }
 
 #' @rdname SSblin
-#' @return a numeric vector of the same length as x containing parameter estimates for equation specified
 #' @export
 SSblin <- selfStart(blin, initial = blinInit, c("a","b","xs","c"))
 
