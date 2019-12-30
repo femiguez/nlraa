@@ -50,6 +50,18 @@
  #' @source Simluated data (much cleaner than original) based on the above publication
  "swpg"
  
+ #' Data from a paper by Arild Vold on response of barley to nitrogen fertilizer
+ #' 
+ #'
+ #' @format A data frame with 76 rows and 3 columns
+ #' \describe{
+ #'   \item{year}{Year when the trial was conducted (1970-1988).}
+ #'   \item{NF}{Nitrogen fertilizer (g/m^2).}
+ #'   \item{yield}{Grain yield of barley (g/m^2).}
+ #' }
+ #' @source Aril Vold (1998). A generalization of ordinary yield response functions. Ecological Applications. 108:227-236.
+ "barley"
+ 
  #' Import packages needed for nlraa to work correctly
  #' @import knitr nlme stats
  NULL

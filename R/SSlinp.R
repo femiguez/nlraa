@@ -31,7 +31,7 @@ NULL
 linpInit <- function(mCall, LHS, data){
   
   xy <- sortedXyData(mCall[["x"]], LHS, data)
-  if(nrow(xy) < 4){
+  if(nrow(xy) < 3){
     stop("Too few distinct input values to fit a linear-plateau")
   }
 

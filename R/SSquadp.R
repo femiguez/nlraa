@@ -29,7 +29,7 @@ NULL
 quadpInit <- function(mCall, LHS, data){
   
   xy <- sortedXyData(mCall[["x"]], LHS, data)
-  if(nrow(xy) < 5){
+  if(nrow(xy) < 4){
     stop("Too few distinct input values to fit a quadratic-platueau")
   }
   ## Dumb guess for a and b is to fit a quadratic linear regression to all the data

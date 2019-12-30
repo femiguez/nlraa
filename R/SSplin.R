@@ -31,7 +31,7 @@ NULL
 plinInit <- function(mCall, LHS, data){
   
   xy <- sortedXyData(mCall[["x"]], LHS, data)
-  if(nrow(xy) < 4){
+  if(nrow(xy) < 3){
     stop("Too few distinct input values to fit a plateau-linear")
   }
   ## Split the data in half as an initial guess

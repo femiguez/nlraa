@@ -27,7 +27,7 @@ NULL
 expfInit <- function(mCall, LHS, data){
   
   xy <- sortedXyData(mCall[["x"]], LHS, data)
-  if(nrow(xy) < 4){
+  if(nrow(xy) < 2){
     stop("Too few distinct input values to fit an exponential")
   }
   

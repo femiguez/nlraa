@@ -98,6 +98,15 @@ ggplot(data = swpg, aes(x = ftsw, y = lfgr)) +
   ylab("Relative Leaf Growth")
 ```
 
+```{r barley}
+## Response of barley to nitrogen fertilizer
+data(barley)
+ggplot(data = barley, aes(x = NF, y = yield)) +
+  geom_point() +
+  xlab("Nitrogen fertilizer (g/m^2)") +
+  ylab("Grain (g/m^2)")
+```
+
 # What to do when convergence fails?
 
 Convergence problems in nonlinear models are often because of a number of reasons:

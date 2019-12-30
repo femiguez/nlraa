@@ -58,6 +58,6 @@ Ideas for future versions:
 
 To install
 
-> library(devtools) \
-> devtools::install_github("femiguez/nlraa") \
+> library(remotes) \
+> remotes::install_github("femiguez/nlraa") \
 > library(nlraa)

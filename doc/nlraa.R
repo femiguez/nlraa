@@ -28,3 +28,11 @@ ggplot(data = swpg, aes(x = ftsw, y = lfgr)) +
   xlab("Fraction Transpirable Soil Water") + 
   ylab("Relative Leaf Growth")
 
+## ----barley--------------------------------------------------------------
+## Response of barley to nitrogen fertilizer
+data(barley)
+ggplot(data = barley, aes(x = NF, y = yield)) +
+  geom_point() +
+  xlab("Nitrogen fertilizer (g/m^2)") +
+  ylab("Grain (g/m^2)")
+

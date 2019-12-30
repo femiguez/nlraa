@@ -28,7 +28,7 @@ NULL
 rickerInit <- function(mCall, LHS, data){
   
   xy <- sortedXyData(mCall[["time"]], LHS, data)
-  if(nrow(xy) < 4){
+  if(nrow(xy) < 3){
     stop("Too few distinct input values to fit a ricker")
   }
   ## Use the log transform
