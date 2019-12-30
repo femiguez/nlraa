@@ -31,8 +31,27 @@ ggplot(data = swpg, aes(x = ftsw, y = lfgr)) +
 ## ----barley--------------------------------------------------------------
 ## Response of barley to nitrogen fertilizer
 data(barley)
-ggplot(data = barley, aes(x = NF, y = yield)) +
+ggplot(data = barley, aes(x = NF, y = yield, color = as.factor(year))) +
   geom_point() +
   xlab("Nitrogen fertilizer (g/m^2)") +
   ylab("Grain (g/m^2)")
+
+## ----barleyG-------------------------------------------------------------
+library(nlme)
+data(barley)
+barley$yearf <- as.factor(barley$year)
+barleyG <- groupedData(yield ~ NF | yearf, data = barley)
+
+## ----barleyG-mixed-------------------------------------------------------
+## Fit the nonlinear model for each year
+fit.nlis <- nlsList(yield ~ SSasymp(NF, Asym, R0, lrc), data = barleyG)
+## Use this to fit a nonlinear mixed model
+fit.nlme <- nlme(fit.nlis)
+## Investigate residuals
+plot(fit.nlme)
+## Look at predictions
+plot(augPred(fit.nlme, level = 0:1))
+## Compute confidence intervals
+intervals(fit.nlme)
+## A simpler model is possible...
 

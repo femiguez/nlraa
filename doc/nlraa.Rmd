@@ -72,6 +72,7 @@ These are the available datasets in the package (so far):
 1. "sm"
 2. "lfmc"
 3. "swpg"
+4. "barley"
 
 ```{r sm}
 ## Sorghum and Maize dataset
@@ -101,7 +102,7 @@ ggplot(data = swpg, aes(x = ftsw, y = lfgr)) +
 ```{r barley}
 ## Response of barley to nitrogen fertilizer
 data(barley)
-ggplot(data = barley, aes(x = NF, y = yield)) +
+ggplot(data = barley, aes(x = NF, y = yield, color = as.factor(year))) +
   geom_point() +
   xlab("Nitrogen fertilizer (g/m^2)") +
   ylab("Grain (g/m^2)")
@@ -125,6 +126,33 @@ nonlinear models. For convergence problems related to poor starting values there
 3. Use function 'nls2' in package 'nls2' which uses a 'brute-force' approach of searching over a grid
 4. Define a custom optimization and use function 'optim' in 'stats' package (also 'nlm' or 'nlminb'). This option extends the possibility of available algorithms.
 5. Manually construct a profile of residual sum of squares as a function of the parameters to understand the relationship which might lead to a better choice for starting values.
+
+## Barley example
+
+For background see: http://miguezlab.agron.iastate.edu/OldWebsite/Research/Talks/ASA_Miguez.pdf
+
+```{r barleyG}
+library(nlme)
+data(barley)
+barley$yearf <- as.factor(barley$year)
+barleyG <- groupedData(yield ~ NF | yearf, data = barley)
+```
+
+First step is to create the grouped data object. Then fit the asymptotic regression to each year and the mixed model.
+
+```{r barleyG-mixed}
+## Fit the nonlinear model for each year
+fit.nlis <- nlsList(yield ~ SSasymp(NF, Asym, R0, lrc), data = barleyG)
+## Use this to fit a nonlinear mixed model
+fit.nlme <- nlme(fit.nlis)
+## Investigate residuals
+plot(fit.nlme)
+## Look at predictions
+plot(augPred(fit.nlme, level = 0:1))
+## Compute confidence intervals
+intervals(fit.nlme)
+## A simpler model is possible...
+```
 
 ## Other modeling approaches
 

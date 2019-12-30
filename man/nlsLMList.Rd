@@ -35,5 +35,5 @@ to use the 'nlsLM' function instead of 'nls'. By changing the algorithm argument
 to use 'nls' as well
 }
 \details{
-See funtion \code{\link{nlsList}} in the 'nlme' package.
+See function \code{\link{nlsList}} in the 'nlme' package.
 }

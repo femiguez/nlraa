@@ -35,7 +35,7 @@
 #' @param algorithm choice of algorithm default is 'LM' which uses 'nlsLM' from the minpack.lm package
 #' @param pool an optional logical value that is preserved as an attribute of the returned value. This will be used as the default for pool in calculations of standard deviations or standard errors for summaries.
 #' @param warn.nls logical indicating if nls errors (all of which are caught by tryCatch) should be signalled as a “summarizing” warning.
-#' @details See funtion \code{\link{nlsList}} in the 'nlme' package.
+#' @details See function \code{\link{nlsList}} in the 'nlme' package.
 #' @export
 #' 
 
@@ -77,6 +77,20 @@ nlsLMList.selfStart <-
   do.call("nlsLMList.formula", mCall)
 }
 
+#' @title Formula method for nls 'LM' list method
+#' @name nlsLMList.formula
+#' @description formula method for nlsLMList
+#' @param model see \code{\link{nlsList}}
+#' @param data see \code{\link{nlsList}}
+#' @param start see \code{\link{nlsList}}
+#' @param control see \code{\link{nls}}
+#' @param level see \code{\link{nlsList}}
+#' @param subset see \code{\link{nlsList}}
+#' @param na.action see \code{\link{nlsList}}
+#' @param algorithm choice of algorithm default is 'LM' which uses 'nlsLM' from the minpack.lm package.
+#' @param pool see \code{\link{nlsList}}
+#' @param warn.nls see \code{\link{nlsList}}
+#' @export
 nlsLMList.formula <-
   function(model, data, start = NULL, control, level, subset,
            na.action = na.fail, 
