@@ -53,6 +53,8 @@ One of the objectives of those publications was to introduce a large family of n
 9. SSpquad (plateau-quadratic)
 10. SSblin (bilinear)
 11. SSexpf (exponential function)
+12. SSexpfp (exponential-plateau)
+13. SSpexpf (plateau-exponential)
 
 For the reference on the Beta growth function see Yin et al. 2003 (https://doi.org/10.1093/aob/mcg029) and Erratum: https://doi.org/10.1093/aob/mcg091.
 For a reference on a use of the declining logistic see Oddi et al. (2019). For the Ricker model see: https://en.wikipedia.org/wiki/Ricker_model. For the protein profile in the canopy see Johnson et al. (2010) doi:10.1093/aob/mcq183. 
@@ -67,7 +69,7 @@ apropos("^SS")
 
 # Datasets
 
-These are the available datasets in the package (so far):
+These are the available datasets in the package:
 
 1. "sm"
 2. "lfmc"
@@ -179,12 +181,10 @@ See Oswald, Nisbet, Chiaradia and Arnold, MEE, (2012) ( https://doi.org/10.1111/
 
 ## **sicegar** package
 
+Available from CRAN. See:
 See Umut Caglar, Teufel and Wilke (https://peerj.com/articles/4251/)
 
-It was removed from CRAN because errors were not resolved. 
-Not a good sign
-
-Package still available at https://github.com/wilkelab/sicegar
+Package available at https://github.com/wilkelab/sicegar
 
 ## **drc** package 
 

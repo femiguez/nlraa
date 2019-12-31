@@ -158,7 +158,7 @@ nlsLMList.formula <-
                       }
                     }
                   }, error = function(e) e))
-  val <- warnErrList(val, warn = warn.nls)
+  val <- utils::warnErrList(val, warn = warn.nls)
   if (inherits(data, "groupedData")) {
     ## saving labels and units for plots
     attr(val, "units") <- attr(data, "units")

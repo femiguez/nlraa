@@ -1,5 +1,5 @@
 #' 
-#' @title self start for exponential unction
+#' @title self start for exponential function
 #' @name SSexpf
 #' @rdname SSexpf
 #' @description Self starter for a simple exponential function
@@ -13,8 +13,8 @@
 #' \dontrun{
 #' require(ggplot2)
 #' set.seed(1234)
-#' x <- 1:10
-#' y <- expf(x, 10, -0.1) + rnorm(10, 0, 0.2)
+#' x <- 1:15
+#' y <- expf(x, 10, -0.3) + rnorm(15, 0, 0.2)
 #' dat <- data.frame(x = x, y = y)
 #' fit <- nls(y ~ SSexpf(x, a, c), data = dat)
 #' ## plot
@@ -31,12 +31,15 @@ expfInit <- function(mCall, LHS, data){
     stop("Too few distinct input values to fit an exponential")
   }
   
-  ## On the log scale
-  fit <- try(lm(log(xy[,"y"]) ~ xy[,"x"]), silent = TRUE)
+  if(any(xy[,"y"] < 0)) stop("negative values are not allowed.")
+  
+  ## On the log scale for 'y'
+  fit <- try(lm(log(xy[,"y"]) ~ xy[,"x"], na.action = "na.omit"), silent = TRUE)
   
   if(class(fit) == "try-error"){
-    a <- 1
-    c <- 0.25
+    ## I don't see any reason why 'fit' should fail..., but in that case...
+    a <- xy[1,"y"] ## First observation in the sorted data
+    c <- (xy[nrow(xy),"y"] - xy[1,"y"])/(xy[nrow(xy),"x"] - xy[1,"x"]) ## Average slope
   }else{
     a <- exp(coef(fit)[1])
     c <- coef(fit)[2]

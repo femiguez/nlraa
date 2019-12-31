@@ -64,4 +64,5 @@
  
  #' Import packages needed for nlraa to work correctly
  #' @import knitr nlme stats
+ #' @importFrom utils warnErrList
  NULL
