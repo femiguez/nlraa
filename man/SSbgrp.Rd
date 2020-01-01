@@ -40,7 +40,7 @@ of the Beta-Growth function in which the parameters are unconstrained, but they 
 x <- 1:30
 y <- bgrp(x, 20, log(25), log(5)) + rnorm(30, 0, 1)
 dat <- data.frame(x = x, y = y)
-fit <- nls(y ~ SSbgrp(x, lt.e, ldt), data = dat)
+fit <- nls(y ~ SSbgrp(x, w.max, lt.e, ldt), data = dat)
 ## We are able to recover the original values
 exp(coef(fit)[2:3])
 ggplot(data = dat, aes(x = x, y = y)) + 
