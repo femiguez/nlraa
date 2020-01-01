@@ -164,9 +164,7 @@ fit5.me2 <- update(fit4.me2,
 ```
 
 The current model displays some evidence of unequal variance as shown
-in the figure.. The amount of dispersion around zero
-is larger for low fitted values and the amount for large fitted values
-is larger.
+in the figure. The amount of dispersion around zero is larger for low fitted values and the amount for large fitted values is larger.
 
 ```{r fit5-plot, echo = FALSE}
 print(plot(fit5.me2))
