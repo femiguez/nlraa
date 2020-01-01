@@ -13,7 +13,7 @@
 #' @examples 
 #' \dontrun{
 #' require(ggplot2)
-#' set.seed(1234)
+#' set.seed(12345)
 #' x <- 1:30
 #' y <- expfp(x, 10, 0.1, 15) + rnorm(30, 0, 1.5)
 #' dat <- data.frame(x = x, y = y)

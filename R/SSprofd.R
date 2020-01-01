@@ -1,7 +1,7 @@
 #' Profile decay function for describing variables which 
 #' decay within a canopy profile
 #' 
-#' @title self start for profile decay Function
+#' @title self start for profile decay function
 #' @name SSprofd
 #' @rdname SSprofd
 #' @description Self starter for a 'decay' of a variable within a canopy
@@ -33,7 +33,7 @@ profdInit <- function(mCall, LHS, data){
   
   xy <- sortedXyData(mCall[["x"]], LHS, data)
   if(nrow(xy) < 4){
-    stop("Too few distinct input values to fit a profd")
+    stop("Too few distinct input values to fit a profd.")
   }
   ## Use the log transform
   a <- max(xy[,"y"])

@@ -21,16 +21,13 @@ library(nlraa)
 
 # Introduction
 
-The **nlraa** is distributed as part of a publication that illustrates the
-fit of nonlinear regression models. The old version of the package can be installed using R-forge. 
-\texttt{install.packages("nlraa", repos="http://R-Forge.R-project.org")}.
-
-The new version of the package will be in github.
+The **nlraa** is distributed as part of publications that illustrates the
+fit of nonlinear regression models. 
 
 ## Example
 
 We start by looking at biomass accumulation data from an experiment conducted in
-Greece by Danalatos, Archontoulis and . 
+Greece by Danalatos and Archontoulis. 
 
 ```{r strsm}
 data(sm)
@@ -69,7 +66,7 @@ smG <- groupedData(Yield ~ DOY | eu, data = sm2)
 ```
 
 Originally, Danalatos et al. (2009) fitted the beta growth function as
-described by Yin et al. (2003). In **nlraa** we provide **selfStart**
+described by Yin et al. (2003). In **nlraa** we provide the **selfStart**
 function **SSbgf** to improve the fitting process.
 
 ```{r nls-list-sm}
@@ -128,7 +125,7 @@ fit.lis2 <- nlsList(Yield ~ bgf2(DOY, w.max, w.b = 0, t.e, t.m, t.b = 141),
 print(plot(fit.lis2))
 ```
 
-Figure **insert-label** shows a much lower bias at lower values.
+The previous figure shows a much lower bias at lower values.
 
 We proceed to fit the non-linear mixed model and then we simplify the
 variance-covariance random effects structure.
@@ -167,7 +164,7 @@ fit5.me2 <- update(fit4.me2,
 ```
 
 The current model displays some evidence of unequal variance as shown
-in (Fig. **insert-label**). The amount of dispersion around zero
+in the figure.. The amount of dispersion around zero
 is larger for low fitted values and the amount for large fitted values
 is larger.
 
@@ -224,7 +221,7 @@ autocorrelation does not appear to be a concern (not shown).
 print(plot(fit8.me2))
 ```
 
-We finalize the fitting exercise by plotting observed and predicted **insert-label**.
+We finalize the fitting exercise by plotting observed and predicted values.
 
 ```{r fit8-fitted}
 smG$prds <- fitted(fit8.me2)

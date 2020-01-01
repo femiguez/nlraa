@@ -3,7 +3,7 @@
 \name{SSprofd}
 \alias{SSprofd}
 \alias{profd}
-\title{self start for profile decay Function}
+\title{self start for profile decay function}
 \usage{
 profd(x, a, b, c, d)
 

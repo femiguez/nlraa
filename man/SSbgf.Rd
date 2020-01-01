@@ -19,7 +19,7 @@ bgf2(time, w.max, w.b, t.e, t.m, t.b)
 
 \item{t.e}{time at which the weight or mass reaches its peak.}
 
-\item{t.m}{time at which half of the maximum weight or mass has bean reached.}
+\item{t.m}{time at which half of the maximum weight or mass has been reached.}
 
 \item{w.b}{weight or biomass at initial time}
 
@@ -43,10 +43,9 @@ Given this function weight is expected to decay and reach zero again at \eqn{2*t
 }
 \examples{
 \dontrun{
-data(sm)
-Examples from old vignette
-}
+## See extended example in vignette 'nlraa-AgronJ-paper'
 x <- seq(0, 17, by = 0.25)
 y <- bgf(x, 5, 10, 3)
 plot(x, y)
+}
 }

@@ -27,7 +27,7 @@ pexpf: vector of the same length as x using the profd function
 Self starter for an plateau-exponential function
 }
 \details{
-This function is described in Archontoulis and Miguez (2015) - (doi:10.2134/agronj2012.0506)
+The equation is: \eqn{for x < xs: y = a and x >= xs: a * exp(c * (x-xs))}.
 }
 \examples{
 \dontrun{

@@ -20,7 +20,10 @@
 #' @export
 #' @examples 
 #' \dontrun{
-#' ## Extended example in the vignette 'LFMC'
+#' ## Extended example in the vignette 'nlraa-Oddi-LFMC'
+#' x <- seq(0, 17, by = 0.25)
+#' y <- dlf(x, 2, 10, 8, 1)
+#' plot(x, y, type = "l")
 #' }
 NULL
 
@@ -50,13 +53,8 @@ dlfInit <- function(mCall, LHS, data){
   
 }
 
-
 #' @rdname SSdlf
 #' @return dlf: vector of the same length as x (time) using the declining logistic function
-#' @examples 
-#' x <- seq(0, 17, by = 0.25)
-#' y <- dlf(x, 2, 10, 8, 1)
-#' plot(x, y)
 #' @export
 dlf <- function(time, asym, a2, xmid, scal){
   

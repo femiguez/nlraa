@@ -3,7 +3,7 @@
 \name{SSblin}
 \alias{SSblin}
 \alias{blin}
-\title{self start for Bilinear Function}
+\title{self start for a bilinear Function}
 \usage{
 blin(x, a, b, xs, c)
 
@@ -14,11 +14,11 @@ SSblin(x, a, b, xs, c)
 
 \item{a}{the intercept}
 
-\item{b}{the slope}
+\item{b}{the first-phase slope}
 
-\item{xs}{break point of transition between first-phase linear and second-phase linear}
+\item{xs}{break-point of transition between first-phase linear and second-phase linear}
 
-\item{c}{second-phase linear}
+\item{c}{the second-phase slope}
 }
 \value{
 a numeric vector of the same length as x containing parameter estimates for equation specified
@@ -26,11 +26,12 @@ a numeric vector of the same length as x containing parameter estimates for equa
 blin: vector of the same length as x using the bilinear function
 }
 \description{
-Self starter for Bilinear function with parameters a (intercept), b (first slope), xs (break-point), c (second slope)
+Self starter for a bilinear function with parameters a (intercept), b (first slope), xs (break-point), c (second slope)
 }
 \details{
 This is a special case with just two parts but a more general approach is to consider a segmented 
-function with several breakpoints and linear segments. Splines would be even more general.
+function with several breakpoints and linear segments. Splines would be even more general. Also this
+model assumes that there is a break-point that needs to be estimated.
 }
 \examples{
 \dontrun{

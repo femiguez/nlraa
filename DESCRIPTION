@@ -1,5 +1,5 @@
 Package: nlraa
-Version: 0.35
+Version: 0.37
 Authors@R: person("Fernando", "Miguez", email = "femiguezt@iastate.edu", role = c("aut", "cre"))
 Title: Non-linear regression for agricultural applications
 Description: This package supports the publication "Nonlinear regression Models and applications in agricultural research". A book chapter with similar material and a publication by Oddi et. al. (2019) in Ecology and Evolution. It porvides a self starting functions and vignettes with extended examples.
@@ -12,14 +12,13 @@ Imports:
 	nlme,
         stats
 Suggests:
-	ggplot2,
-	lattice,
-	HydroMe,
-	nlstools,
-	easynls,
-	nls2,
-	bbmle,
+        bbmle,
 	emmeans,
-	minpack.lm
+	ggplot2,
+	HydroMe,
+	lattice,
+	minpack.lm,
+	nlstools,
+	nls2
 LazyData: true
 RoxygenNote: 6.1.1

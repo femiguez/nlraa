@@ -8,7 +8,7 @@
 #' @param xs represents the breakpoint at which the plateau ends
 #' @param c represents the exponential rate
 #' @return a numeric vector of the same length as x containing parameter estimates for equation specified
-#' @details This function is described in Archontoulis and Miguez (2015) - (doi:10.2134/agronj2012.0506) 
+#' @details The equation is: \eqn{for x < xs: y = a and x >= xs: a * exp(c * (x-xs))}.
 #' @export
 #' @examples 
 #' \dontrun{

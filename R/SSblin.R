@@ -1,16 +1,17 @@
 #' 
-#' @title self start for Bilinear Function
+#' @title self start for a bilinear Function
 #' @name SSblin
 #' @rdname SSblin
-#' @description Self starter for Bilinear function with parameters a (intercept), b (first slope), xs (break-point), c (second slope)
+#' @description Self starter for a bilinear function with parameters a (intercept), b (first slope), xs (break-point), c (second slope)
 #' @param x input vector 
 #' @param a the intercept
-#' @param b the slope
-#' @param xs break point of transition between first-phase linear and second-phase linear
-#' @param c second-phase linear 
+#' @param b the first-phase slope
+#' @param xs break-point of transition between first-phase linear and second-phase linear
+#' @param c the second-phase slope 
 #' @return a numeric vector of the same length as x containing parameter estimates for equation specified
 #' @details This is a special case with just two parts but a more general approach is to consider a segmented 
-#' function with several breakpoints and linear segments. Splines would be even more general.
+#' function with several breakpoints and linear segments. Splines would be even more general. Also this
+#' model assumes that there is a break-point that needs to be estimated.
 #' @export
 #' @examples 
 #' \dontrun{
@@ -39,7 +40,7 @@ blinInit <- function(mCall, LHS, data){
   xy2 <- xy[floor(nrow(xy)/2):nrow(xy),]
   fit1 <- lm(xy1[,"y"] ~ xy1[,"x"])
   fit2 <- lm(xy2[,"y"] ~ xy2[,"x"])
-  ## Atomic bomb approach to kill a mosquito
+
   objfun <- function(cfs){
     pred <- blin(xy[,"x"], a=cfs[1], b=cfs[2], xs=cfs[3], c = cfs[4])
     ans <- sum((xy[,"y"] - pred)^2)
@@ -56,7 +57,7 @@ blinInit <- function(mCall, LHS, data){
     xs <- op$par[3]
     c <- op$par[4]
   }else{
-    ## If everything fails I use the mean
+    ## If it fails I use the mean
     a <- coef(fit1)[1]
     b <- coef(fit1)[2]
     xs <- mean(xy[,"x"])

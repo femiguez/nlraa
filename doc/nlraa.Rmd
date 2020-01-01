@@ -55,6 +55,7 @@ One of the objectives of those publications was to introduce a large family of n
 11. SSexpf (exponential function)
 12. SSexpfp (exponential-plateau)
 13. SSpexpf (plateau-exponential)
+14. SSbgrp (Beta-Growth Reparameterized)
 
 For the reference on the Beta growth function see Yin et al. 2003 (https://doi.org/10.1093/aob/mcg029) and Erratum: https://doi.org/10.1093/aob/mcg091.
 For a reference on a use of the declining logistic see Oddi et al. (2019). For the Ricker model see: https://en.wikipedia.org/wiki/Ricker_model. For the protein profile in the canopy see Johnson et al. (2010) doi:10.1093/aob/mcq183. 
