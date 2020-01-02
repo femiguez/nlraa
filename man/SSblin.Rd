@@ -47,3 +47,6 @@ ggplot(data = dat, aes(x = x, y = y)) +
   geom_line(aes(y = fitted(fit)))
 }
 }
+\seealso{
+package \pkg{segmented}.
+}

@@ -56,9 +56,12 @@ One of the objectives of those publications was to introduce a large family of n
 12. SSexpfp (exponential-plateau)
 13. SSpexpf (plateau-exponential)
 14. SSbgrp (Beta-Growth Reparameterized)
+15. SSbg4rp (Beta-Growth with four parameters Reparameterized)
 
 For the reference on the Beta growth function see Yin et al. 2003 (https://doi.org/10.1093/aob/mcg029) and Erratum: https://doi.org/10.1093/aob/mcg091.
 For a reference on a use of the declining logistic see Oddi et al. (2019). For the Ricker model see: https://en.wikipedia.org/wiki/Ricker_model. For the protein profile in the canopy see Johnson et al. (2010) doi:10.1093/aob/mcq183. 
+
+The \code{SSbgrp} function is a reparameterized version of \code{SSbgf}. The original \code{SSbgf} does not enforce the constraint that \code{t.m < t.e} and this makes it numerically unstable for routine use. To recover the original parameters from \code{SSbgrp}, take the exponential of \code{lt.e}, so \code{t.e = exp(lt.e)} and likewise \code{t.m = exp(lt.e) - exp(ldt)}. There is a similar function for the four parameter Beta growth \code{SSbg4rp}.
 
 The main benefit of having these self starting functions is that they can be incorporated in the workflow of package 'nlme' which allows for fitting nonlinear mixed models. 
 

@@ -36,7 +36,7 @@ This is a difficult function to fit because the linear constrains are not explic
 in the optimization process.
 
 Given this function weight is expected to decay and reach zero again at \eqn{2*t.e - t.m}. This is equation
-11 (pg. 368) in the Yin paper. With the difference that w.b equals zero.
+11 (pg. 368) in the Yin paper, but with errata correction (https://academic.oup.com/aob/article/91/6/753/211049) and with w.b equal to zero.
 }
 \examples{
 \dontrun{

@@ -29,6 +29,9 @@ smG <- groupedData(Yield ~ DOY | eu, data = sm2)
 
 ## ----nls-list-sm---------------------------------------------------------
 fit.lis <- nlsList(Yield ~ SSbgf(DOY, w.max, t.e, t.m), data = smG)
+## But this works much better
+## Added 2020/1/2
+fit.lis.rp <- nlsList(Yield ~ SSbgrp(DOY, w.max, lt.e, ldt), data = smG) 
 
 ## ----nls-list-plot, echo = FALSE-----------------------------------------
 print(plot(fit.lis))

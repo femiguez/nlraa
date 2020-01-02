@@ -11,8 +11,8 @@
 #' @param time input vector (x) which is normally 'time', the smallest value should be close to zero.
 #' @param w.max value of weight or mass at its peak
 #' @param lt.e log of the time at which the maximum weight or mass has been reached.
-#' @param ldt log of the difference between time at which the weight or mass reaches its peak and half its peak.
-#' @details The form of the equation is: \eqn{w.max * (1 + (exp(lt.e) - time)/exp(ldt)) * (time/exp(lt.e))^(exp(lt.e) / exp(ldt))}.
+#' @param ldt log of the difference between time at which the weight or mass reaches its peak and half its peak (\code{log(t.e - t.m)}).
+#' @details The form of the equation is: \deqn{w.max * (1 + (exp(lt.e) - time)/exp(ldt)) * (time/exp(lt.e))^(exp(lt.e) / exp(ldt))}.
 #' Given this function weight is expected to decay and reach zero again at \eqn{2*ldt}. This is a reparameterized version 
 #' of the Beta-Growth function in which the parameters are unconstrained, but they are expressed in the log-scale.
 #' @export

@@ -12,6 +12,7 @@
 #' @details This is a special case with just two parts but a more general approach is to consider a segmented 
 #' function with several breakpoints and linear segments. Splines would be even more general. Also this
 #' model assumes that there is a break-point that needs to be estimated.
+#' @seealso package \pkg{segmented}.
 #' @export
 #' @examples 
 #' \dontrun{

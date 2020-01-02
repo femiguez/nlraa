@@ -16,7 +16,7 @@ SSbgrp(time, w.max, lt.e, ldt)
 
 \item{lt.e}{log of the time at which the maximum weight or mass has been reached.}
 
-\item{ldt}{log of the difference between time at which the weight or mass reaches its peak and half its peak.}
+\item{ldt}{log of the difference between time at which the weight or mass reaches its peak and half its peak (\code{log(t.e - t.m)}).}
 }
 \value{
 bgrp: vector of the same length as x (time) using the beta growth function
@@ -31,7 +31,7 @@ For details see the publication by Yin et al. (2003) "A Flexible Sigmoid Functio
 This is a reparameterization of the beta growth function with guaranteed constraints, so it is expected to 
 behave numerically better than SSbgf
 
-The form of the equation is: \eqn{w.max * (1 + (exp(lt.e) - time)/exp(ldt)) * (time/exp(lt.e))^(exp(lt.e) / exp(ldt))}.
+The form of the equation is: \deqn{w.max * (1 + (exp(lt.e) - time)/exp(ldt)) * (time/exp(lt.e))^(exp(lt.e) / exp(ldt))}.
 Given this function weight is expected to decay and reach zero again at \eqn{2*ldt}. This is a reparameterized version 
 of the Beta-Growth function in which the parameters are unconstrained, but they are expressed in the log-scale.
 }

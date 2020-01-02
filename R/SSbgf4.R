@@ -15,7 +15,7 @@
 #' @param t.b time at which biomass growth starts
 #' @return a numeric vector of the same length as x (time) containing parameter estimates for equation specified
 #' @details Given this function weight is expected to decay and reach zero again at \eqn{2*t.e - t.m}. This is equation
-#' 11 (pg. 368) in the Yin paper. With the difference that w.b equals zero.
+#' 11 (pg. 368) in the Yin paper, but with errata correction (https://academic.oup.com/aob/article/91/6/753/211049) and with w.b equal to zero.
 #' @export
 #' @examples 
 #' \dontrun{
@@ -75,70 +75,70 @@ bgf4 <- function(time, w.max, t.e, t.m, t.b){
   .value[is.nan(.value)] <- 0
   .value[.value < 0] <- 0
 
-  err.val <- 0
-  ## Derivative with respect to w.max
-  ## deriv(~w.max * (1 + (t.e - time)/(t.e - t.m)) * ((time - t.b)/(t.e - t.b))^((t.m - t.b)/(t.e - t.m)),"w.max")
-  .exp01 <- .expre4 * .expre3
-  .exp1 <- ifelse(is.nan(.exp01),err.val,.exp01)
-  
-  ## Derivative with respect to t.e
-  ## deriv(~w.max * (1 + (t.e - time)/(t.e - t.m)) * ((time - t.b)/(t.e - t.b))^((t.m - t.b)/(t.e - t.m)),"t.e")
-  .expr1 <- t.e - time
-  .expr2 <- t.e - t.m
-  .expr5 <- w.max * (1 + .expr1/.expr2)
-  .expr6 <- time - t.b
-  .expr7 <- t.e - t.b
-  .expr8 <- .expr6/.expr7
-  .lexpr8 <- suppressWarnings(log(.expr8))
-  .expr9 <- t.m - t.b
-  .expr10 <- .expr9/.expr2
-  .expr11 <- .expr8^.expr10
-  .expr14 <- .expr2^2
-  .exp02 <- w.max * (1/.expr2 - .expr1/.expr14) * .expr11 - 
-    .expr5 * (.expr11 * (.lexpr8 * (.expr9/.expr14)) + 
-                .expr8^(.expr10 - 1) * (.expr10 * (.expr6/.expr7^2)))
-  .exp2 <- ifelse(is.nan(.exp02),err.val,.exp02)
-    
-  ## Derivative with respect to t.m
-  ## deriv(~w.max * (1 + (t.e - time)/(t.e - t.m)) * ((time - t.b)/(t.e - t.b))^((t.m - t.b)/(t.e - t.m)),"t.m")
-  .expr1 <- t.e - time
-  .expr2 <- t.e - t.m
-  .expr5 <- w.max * (1 + .expr1/.expr2)
-  .expr8 <- (time - t.b)/(t.e - t.b)
-  .lexpr8 <- suppressWarnings(log(.expr8))
-  .expr9 <- t.m - t.b
-  .expr11 <- .expr8^(.expr9/.expr2)
-  .expr13 <- .expr2^2
-  .exp03 <- w.max * (.expr1/.expr13) * .expr11 + .expr5 * 
-    (.expr11 * (.lexpr8 * (1/.expr2 + .expr9/.expr13)))
-  .exp3 <- ifelse(is.nan(.exp03),err.val,.exp03)
-    
-  ## Derivative with respect to t.b
-  ## deriv(~w.max * (1 + (t.e - time)/(t.e - t.m)) * ((time - t.b)/(t.e - t.b))^((t.m - t.b)/(t.e - t.m)),"t.b")
-  .expr2 <- t.e - t.m
-  .expr5 <- w.max * (1 + (t.e - time)/.expr2)
-  .expr6 <- time - t.b
-  .expr7 <- t.e - t.b
-  .expr8 <- .expr6/.expr7
-  .lexpr8 <- suppressWarnings(log(.expr8))
-  .expr10 <- (t.m - t.b)/.expr2
-  .expr11 <- .expr8^.expr10
-  .exp04 <- -(.expr5 * (.expr11 * (.lexpr8 * (1/.expr2)) + 
-                         .expr8^(.expr10 - 1) * (.expr10 * (1/.expr7 - .expr6/.expr7^2))))
-  .exp4 <- ifelse(is.nan(.exp04),err.val,.exp04)
-    
-  .actualArgs <- as.list(match.call()[c("w.max", "t.e", "t.m", "t.b")])
-
-##  Gradient
-  if (all(unlist(lapply(.actualArgs, is.name)))) {
-    .grad <- array(0, c(length(.value), 4L), list(NULL, c("w.max", "t.e", "t.m","t.b")))
-    .grad[, "w.max"] <- .exp1
-    .grad[, "t.e"] <- .exp2
-    .grad[, "t.m"] <- .exp3
-    .grad[, "t.b"] <- .exp4
-    dimnames(.grad) <- list(NULL, .actualArgs)
-    attr(.value, "gradient") <- .grad
-  }
+#   err.val <- 0
+#   ## Derivative with respect to w.max
+#   ## deriv(~w.max * (1 + (t.e - time)/(t.e - t.m)) * ((time - t.b)/(t.e - t.b))^((t.m - t.b)/(t.e - t.m)),"w.max")
+#   .exp01 <- .expre4 * .expre3
+#   .exp1 <- ifelse(is.nan(.exp01),err.val,.exp01)
+#   
+#   ## Derivative with respect to t.e
+#   ## deriv(~w.max * (1 + (t.e - time)/(t.e - t.m)) * ((time - t.b)/(t.e - t.b))^((t.m - t.b)/(t.e - t.m)),"t.e")
+#   .expr1 <- t.e - time
+#   .expr2 <- t.e - t.m
+#   .expr5 <- w.max * (1 + .expr1/.expr2)
+#   .expr6 <- time - t.b
+#   .expr7 <- t.e - t.b
+#   .expr8 <- .expr6/.expr7
+#   .lexpr8 <- suppressWarnings(log(.expr8))
+#   .expr9 <- t.m - t.b
+#   .expr10 <- .expr9/.expr2
+#   .expr11 <- .expr8^.expr10
+#   .expr14 <- .expr2^2
+#   .exp02 <- w.max * (1/.expr2 - .expr1/.expr14) * .expr11 - 
+#     .expr5 * (.expr11 * (.lexpr8 * (.expr9/.expr14)) + 
+#                 .expr8^(.expr10 - 1) * (.expr10 * (.expr6/.expr7^2)))
+#   .exp2 <- ifelse(is.nan(.exp02),err.val,.exp02)
+#     
+#   ## Derivative with respect to t.m
+#   ## deriv(~w.max * (1 + (t.e - time)/(t.e - t.m)) * ((time - t.b)/(t.e - t.b))^((t.m - t.b)/(t.e - t.m)),"t.m")
+#   .expr1 <- t.e - time
+#   .expr2 <- t.e - t.m
+#   .expr5 <- w.max * (1 + .expr1/.expr2)
+#   .expr8 <- (time - t.b)/(t.e - t.b)
+#   .lexpr8 <- suppressWarnings(log(.expr8))
+#   .expr9 <- t.m - t.b
+#   .expr11 <- .expr8^(.expr9/.expr2)
+#   .expr13 <- .expr2^2
+#   .exp03 <- w.max * (.expr1/.expr13) * .expr11 + .expr5 * 
+#     (.expr11 * (.lexpr8 * (1/.expr2 + .expr9/.expr13)))
+#   .exp3 <- ifelse(is.nan(.exp03),err.val,.exp03)
+#     
+#   ## Derivative with respect to t.b
+#   ## deriv(~w.max * (1 + (t.e - time)/(t.e - t.m)) * ((time - t.b)/(t.e - t.b))^((t.m - t.b)/(t.e - t.m)),"t.b")
+#   .expr2 <- t.e - t.m
+#   .expr5 <- w.max * (1 + (t.e - time)/.expr2)
+#   .expr6 <- time - t.b
+#   .expr7 <- t.e - t.b
+#   .expr8 <- .expr6/.expr7
+#   .lexpr8 <- suppressWarnings(log(.expr8))
+#   .expr10 <- (t.m - t.b)/.expr2
+#   .expr11 <- .expr8^.expr10
+#   .exp04 <- -(.expr5 * (.expr11 * (.lexpr8 * (1/.expr2)) + 
+#                          .expr8^(.expr10 - 1) * (.expr10 * (1/.expr7 - .expr6/.expr7^2))))
+#   .exp4 <- ifelse(is.nan(.exp04),err.val,.exp04)
+#     
+#   .actualArgs <- as.list(match.call()[c("w.max", "t.e", "t.m", "t.b")])
+# 
+# ##  Gradient
+#   if (all(unlist(lapply(.actualArgs, is.name)))) {
+#     .grad <- array(0, c(length(.value), 4L), list(NULL, c("w.max", "t.e", "t.m","t.b")))
+#     .grad[, "w.max"] <- .exp1
+#     .grad[, "t.e"] <- .exp2
+#     .grad[, "t.m"] <- .exp3
+#     .grad[, "t.b"] <- .exp4
+#     dimnames(.grad) <- list(NULL, .actualArgs)
+#     attr(.value, "gradient") <- .grad
+#   }
     .value
 }
 
