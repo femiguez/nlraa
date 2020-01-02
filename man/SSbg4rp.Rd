@@ -34,15 +34,16 @@ This is a reparameterization of the beta growth function (4 parameters) with gua
 behave numerically better than SSbgf4
 
 Reparameterizing the four parameter beta growth
-ldtm = log(t.e - t.m)
-ldtb = log(t.m - t.b)
-t.e = exp(lt.e)
-t.m = exp(lt.e) - exp(ldtm)
-t.b = (exp(lt.e) - exp(ldtm)) - exp(ldtb)
+\itemize{
+  \item ldtm = log(t.e - t.m)
+  \item ldtb = log(t.m - t.b)
+  \item t.e = exp(lt.e)
+  \item t.m = exp(lt.e) - exp(ldtm)
+  \item t.b = (exp(lt.e) - exp(ldtm)) - exp(ldtb)
+}
 
 The form of the equation is: \deqn{w.max * (1 + (exp(lt.e) - time)/exp(ldtm)) * ((time - (exp(lt.e) - exp(ldtb)))/exp(ldtb))^(exp(ldtb)/exp(ldtm))}.
 This is a reparameterized version of the Beta-Growth function in which the parameters are unconstrained, but they are expressed in the log-scale.
-This version is not fully unconstrained since ldtb > ldtm is not enforced.
 }
 \examples{
 \dontrun{
