@@ -31,6 +31,7 @@ x <- 1:100
 y <- bg4rp(x, 20, log(70), log(30), log(20)) + rnorm(100, 0, 1)
 dat <- data.frame(x = x, y = y)
 fit <- nls(y ~ SSbg4rp(x, w.max, lt.e, ldtm, ldtb), data = dat)
+exp(coef(fit))[-1]
 
 ## 5. SSdlf 
 ## Extended example in vignette 'nlraa-Oddi-LFMC'
@@ -50,13 +51,15 @@ x <- 1:10
 y <- profd(x, 0.3, 0.05, 0.5, 4) + rnorm(10, 0, 0.01)
 dat <- data.frame(x = x, y = y)
 fit <- nls(y ~ SSprofd(x, a, b, c, d), data = dat)
+confint(fit, level = 0.9)
 
 ## 8. SSnrh
 set.seed(1234)
 x <- seq(0, 2000, 100)
-y <- nrh(x, 35, 0.04, 0.83, 2) + rnorm(length(x), 0, 0.25)
+y <- nrh(x, 35, 0.04, 0.83, 2) + rnorm(length(x), 0, 0.5)
 dat <- data.frame(x = x, y = y)
 fit <- nls(y ~ SSnrh(x, asym, phi, theta, rd), data = dat)
+confint(fit)
 
 ## 9. SSlinp
 set.seed(123)
@@ -80,6 +83,8 @@ x <- 1:30
 y <- quadp(x, 5, 1.7, -0.04, 20) + rnorm(30, 0, 0.6)
 dat <- data.frame(x = x, y = y)
 fit <- nls(y ~ SSquadp(x, a, b, c, xs), data = dat, algorithm = "port")
+## Using port because default does not work
+summary(fit)
 ## It's strange but confint will return NAs unless level is 0.5
 confint(fit, level = 0.5)
 
@@ -92,12 +97,12 @@ fit <- nls(y ~ SSpquad(x, a, xs, b, c), data = dat)
 confint(fit)
 
 ## 13. SSblin
-set.seed(123)
+set.seed(1234)
 x <- 1:30
 y <- blin(x, 0, 0.75, 15, 1.75) + rnorm(30, 0, 0.5)
 dat <- data.frame(x = x, y = y)
 fit <- nls(y ~ SSblin(x, a, b, xs, c), data = dat)
-## Confidence intervals do not work for this example...?
+confint(fit)
 
 ## 14. SSexpf
 set.seed(1234)
@@ -128,6 +133,7 @@ x <- 1:20
 y <- bell(x, 8, -0.0314, 0.000317, 13) + rnorm(length(x), 0, 0.5)
 dat <- data.frame(x = x, y = y)
 fit <- nls(y ~ SSbell(x, asym, a, b, xc), data = dat)
+confint(fit)
 
 ## 18. SSratio
 require(minpack.lm)
@@ -144,3 +150,7 @@ fit.nlis.o <- nlsLMList(circumference ~ SSlogis(age, asym, xmid, scal), data = O
 data(Soybean)
 fit.nlis1.s <- nlsLMList(weight ~ SSbgf(Time, w.max, t.e, t.m), data = Soybean)
 fit.nlis2.s <- nlsLMList(weight ~ SSbgrp(Time, w.max, lt.e, ldt), data = Soybean)
+fit.nlme <- nlme(fit.nlis2.s, random = pdDiag(w.max + lt.e ~ 1))
+##plot(augPred(fit.nlme, level=0:1))
+
+

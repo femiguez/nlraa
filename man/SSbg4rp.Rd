@@ -10,7 +10,7 @@ bg4rp(time, w.max, lt.e, ldtm, ldtb)
 SSbg4rp(time, w.max, lt.e, ldtm, ldtb)
 }
 \arguments{
-\item{time}{input vector (x) which is normally 'time', the smallest value should be close to zero.}
+\item{time}{input vector (x) which is normally \sQuote{time}, the smallest value should be close to zero.}
 
 \item{w.max}{value of weight or mass at its peak}
 
@@ -27,7 +27,7 @@ bg4rp: vector of the same length as x (time) using the beta growth function with
 Self starter for Beta Growth function with parameters w.max, lt.m, ldt
 }
 \details{
-For details see the publication by Yin et al. (2003) "A Flexible Sigmoid Function of Determinate Growth".
+For details see the publication by Yin et al. (2003) \dQuote{A Flexible Sigmoid Function of Determinate Growth}.
 This is a reparameterization of the beta growth function (4 parameters) with guaranteed constraints, so it is expected to 
 behave numerically better than \code{\link{SSbgf4}}.
 

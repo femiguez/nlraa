@@ -5,7 +5,7 @@
 #' @description Self starter for plateau-linear function with parameters a (plateau), xs (break-point), b (slope) 
 #' @param x input vector 
 #' @param a the initial plateau
-#' @param xs break point of transition between plateau and linear 
+#' @param xs break-point of transition between plateau and linear 
 #' @param b the slope
 #' @return a numeric vector of the same length as x containing parameter estimates for equation specified
 #' @details Initial plateau with a second linear phase. When \eqn{x < xs: y = a} and when \eqn{x >= xs: y = a + b * (x - xs)}.

@@ -1,4 +1,4 @@
-#' For details see the publication by Yin et al. (2003) "A Flexible Sigmoid Function of Determinate Growth".
+#' For details see the publication by Yin et al. (2003) \dQuote{A Flexible Sigmoid Function of Determinate Growth}.
 #' 
 #' @title self start for Beta Growth Function
 #' @name SSbgf
@@ -15,7 +15,7 @@
 #' \dontrun{
 #' ## See extended example in vignette 'nlraa-AgronJ-paper'
 #' x <- seq(0, 17, by = 0.25)
-#' y <- bgf(x, 5, 10, 3)
+#' y <- bgf(x, 5, 15, 7)
 #' plot(x, y)
 #' }
 NULL

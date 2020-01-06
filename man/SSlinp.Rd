@@ -16,7 +16,7 @@ SSlinp(x, a, b, xs)
 
 \item{b}{the slope}
 
-\item{xs}{break point of transition between linear and plateau}
+\item{xs}{break-point of transition between linear and plateau}
 }
 \value{
 a numeric vector of the same length as x containing parameter estimates for equation specified

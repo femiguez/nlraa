@@ -29,9 +29,7 @@ profd: vector of the same length as x using the profd function
 Self starter for a decay of a variable within a canopy (e.g. nitrogen concentration).
 }
 \details{
-Profile decay function for describing variables which decay within a canopy profile
-
-This function is described in Archontoulis and Miguez (2015) - (doi:10.2134/agronj2012.0506) and originally Johnson et al. (2010) Annals of Botany 106: 735–749, 2010. (doi:10.1093/aob/mcq183).
+This function is described in Archontoulis and Miguez (2015) - (doi:10.2134/agronj2012.0506) and originally in Johnson et al. (2010) Annals of Botany 106: 735–749, 2010. (doi:10.1093/aob/mcq183).
 }
 \examples{
 \dontrun{
@@ -45,6 +43,13 @@ fit <- nls(y ~ SSprofd(x, a, b, c, d), data = dat)
 ggplot(data = dat, aes(x = x, y = y)) + 
   geom_point() + 
   geom_line(aes(y = fitted(fit)))
+## profiling
+## It does not work at a lower alphamax level
+par(mfrow=c(2,2))
+plot(profile(fit, alphamax = 0.016))
+par(mfrow=c(1,1))
+## parameter 'd' is not well constrained
+confint(fit, level = 0.9)
 }
 
 }

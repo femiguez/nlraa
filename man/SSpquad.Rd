@@ -14,7 +14,7 @@ SSpquad(x, a, xs, b, c)
 
 \item{a}{the plateau value}
 
-\item{xs}{break point of transition between plateau and quadratic}
+\item{xs}{break-point of transition between plateau and quadratic}
 
 \item{b}{the slope (linear term)}
 
@@ -26,7 +26,7 @@ a numeric vector of the same length as x containing parameter estimates for equa
 pquad: vector of the same length as x using the plateau-quadratic function
 }
 \description{
-Self starter for quadratic plateau function with parameters a (plateau), xs (break-point), b (slope), c (quadratic)
+Self starter for plateau-quadratic function with parameters a (plateau), xs (break-point), b (slope), c (quadratic)
 }
 \details{
 Reference for nonlinear regression Archontoulis and Miguez (2015) - (doi:10.2134/agronj2012.0506).

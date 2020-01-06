@@ -3,7 +3,7 @@
 #' @name SSnrh
 #' @rdname SSnrh
 #' @description Self starter for Non-rectangual Hyperbola with parameters: asymptote, quantum efficiency, curvature and dark respiration
-#' @param x input vector (x) which is normally light intensity (PPFD, photosynthetic Photon Flux Density).
+#' @param x input vector (x) which is normally light intensity (PPFD, Photosynthetic Photon Flux Density).
 #' @param asym asymptotic value for photosynthesis
 #' @param phi quantum efficiency (mol CO2 per mol of photons) or initial slope of the light response
 #' @param theta curvature parameter for smooth transition between limitations
@@ -16,7 +16,7 @@
 #' require(ggplot2)
 #' set.seed(1234)
 #' x <- seq(0, 2000, 100)
-#' y <- nrh(x, 35, 0.04, 0.83, 2) + rnorm(length(x), 0, 0.25)
+#' y <- nrh(x, 35, 0.04, 0.83, 2) + rnorm(length(x), 0, 0.5)
 #' dat <- data.frame(x = x, y = y)
 #' fit <- nls(y ~ SSnrh(x, asym, phi, theta, rd), data = dat)
 #' ## plot

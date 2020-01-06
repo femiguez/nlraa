@@ -17,7 +17,7 @@
 #' @examples 
 #' \dontrun{
 #' require(ggplot2)
-#' set.seed(123)
+#' set.seed(1234)
 #' x <- 1:30
 #' y <- blin(x, 0, 0.75, 15, 1.75) + rnorm(30, 0, 0.5)
 #' dat <- data.frame(x = x, y = y)

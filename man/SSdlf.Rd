@@ -10,7 +10,7 @@ dlf(time, asym, a2, xmid, scal)
 SSdlf(time, asym, a2, xmid, scal)
 }
 \arguments{
-\item{time}{input vector (x) which is normally 'time', the smalles value should be close to zero.}
+\item{time}{input vector (x) which is normally \sQuote{time}, the smalles value should be close to zero.}
 
 \item{asym}{value of weight or mass at its peak (maximum)}
 
@@ -40,7 +40,7 @@ Response function:  \deqn{y = (asym - a2) / (1 + exp((xmid - time)/scal))) + a2}
  
  The four parameter logistic \code{\link{SSfpl}} is essentially equivalent to this function,
  but here the interpretation of the parameters is different and this is the form used in 
- Oddi et al (2019) (see vignette).
+ Oddi et. al. (2019) (see vignette).
 }
 \examples{
 \dontrun{

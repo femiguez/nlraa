@@ -10,7 +10,7 @@ ricker(time, a, b)
 SSricker(time, a, b)
 }
 \arguments{
-\item{time}{input vector (x) which is normally 'time', the smalles value should be close to zero.}
+\item{time}{input vector (x) which is normally \sQuote{time}, the smallest value should be close to zero.}
 
 \item{a}{which is related to the initial growth slope}
 

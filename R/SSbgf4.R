@@ -1,4 +1,4 @@
-#' For details see the publication by Yin et al. (2003) "A Flexible Sigmoid Function of Determinate Growth".
+#' For details see the publication by Yin et al. (2003) \dQuote{A Flexible Sigmoid Function of Determinate Growth}.
 #' This is a difficult function to fit because the linear constrains are not explicitly introduced 
 #' in the optimization process. See function \code{\link{SSbgrp}} for a reparameterized version.
 #' 
@@ -6,11 +6,11 @@
 #' @name SSbgf4
 #' @rdname SSbgf4
 #' @description Self starter for Beta Growth function with parameters w.max, t.e, t.m and t.b
-#' @param time input vector (x) which is normally 'time'.
-#' @param w.max value of weight or mass at its peak
+#' @param time input vector (x) which is normally \sQuote{time}.
+#' @param w.max value of weight or mass at its peak.
 #' @param t.e time at which the weight or mass reaches its peak.
 #' @param t.m time at which half of the maximum weight or mass has bean reached.
-#' @param t.b time at which biomass growth starts
+#' @param t.b time at which growth starts.
 #' @return a numeric vector of the same length as x (time) containing parameter estimates for equation specified
 #' @details This is equation 11 (pg. 368) in the Yin paper, but with errata correction \url{https://academic.oup.com/aob/article/91/6/753/211049} and with w.b equal to zero.
 #' @export
@@ -19,12 +19,10 @@
 #' data(sm)
 #' ## Let's just pick one crop
 #' sm2 <- subset(sm, Crop == "M")
-#' ## default 'nls' fails so we are using 'minpack.lm'
-#' require(minpack.lm)
-#' fit <- nlsLM(Yield ~ SSbgf4(DOY, w.max, t.e, t.m, t.b), data = sm2)
+#' fit <- nls(Yield ~ SSbgf4(DOY, w.max, t.e, t.m, t.b), data = sm2)
 #' plot(Yield ~ DOY, data = sm2)
 #' lines(sm2$DOY,fitted(fit))
-#' ## For this particular problem it is easier to 'fix' t.b and w.b
+#' ## For this particular problem it could be better to 'fix' t.b and w.b
 #' fit0 <- nls(Yield ~ bgf2(DOY, w.max, w.b = 0, t.e, t.m, t.b = 141), 
 #'            data = sm2, start = list(w.max = 16, t.e= 240, t.m = 200))
 #' }

@@ -1,5 +1,4 @@
-#' Profile decay function for describing variables which decay within a canopy profile
-#' 
+#'
 #' @title self start for profile decay function
 #' @name SSprofd
 #' @rdname SSprofd
@@ -10,7 +9,7 @@
 #' @param c represents the rate of decay
 #' @param d represents an empirical coefficient which provides flexibility
 #' @return a numeric vector of the same length as x containing parameter estimates for equation specified
-#' @details This function is described in Archontoulis and Miguez (2015) - (doi:10.2134/agronj2012.0506) and originally Johnson et al. (2010) Annals of Botany 106: 735–749, 2010. (doi:10.1093/aob/mcq183).
+#' @details This function is described in Archontoulis and Miguez (2015) - (doi:10.2134/agronj2012.0506) and originally in Johnson et al. (2010) Annals of Botany 106: 735–749, 2010. (doi:10.1093/aob/mcq183).
 #' @export
 #' @examples 
 #' \dontrun{
@@ -24,6 +23,13 @@
 #' ggplot(data = dat, aes(x = x, y = y)) + 
 #'   geom_point() + 
 #'   geom_line(aes(y = fitted(fit)))
+#' ## profiling
+#' ## It does not work at a lower alphamax level
+#' par(mfrow=c(2,2))
+#' plot(profile(fit, alphamax = 0.016))
+#' par(mfrow=c(1,1))
+#' ## parameter 'd' is not well constrained
+#' confint(fit, level = 0.9)
 #' }
 #' 
 NULL
@@ -68,20 +74,26 @@ profd <- function(x, a, b, c, d){
   .value <- a  - (a - b) * (1 - exp(-c * x))^d
   
   ## Derivative with respect to a, b, c, d
-  ## deriv(~ a - (a - b) * (1 - exp(-c * time))^d, c("a","b","c","d"))
-  .exp1 <- 1 - (1 - exp(-c * x))^d
+  ## deriv(~ a - (a - b) * (1 - exp(-c * x))^d, c("a","b","c","d"))
+  .expr6 <- (1 - exp(-c * x))^d
+  .exp1 <- 1 - .expr6
+  .exp1 <- ifelse(is.nan(.exp1), 0, .exp1)
   
   ## Derivative with respect to b
-  .exp2 <- (1 - exp(-c * x))^d
+  .exp2 <- .expr6
+  .exp2 <- ifelse(is.nan(.exp2), 0, .exp2)
   
   ## Derivative with respect to c
   .expr1 <- a - b
   .expr4 <- exp(-c * x)
   .expr5 <- 1 - .expr4
-  .expr6 <- .expr5^d
   .exp3 <- -(.expr1 * (.expr5^(d - 1) * (d * (.expr4 * x))))
+  .exp3 <- ifelse(is.nan(.exp3), 0, .exp3)
+  
   ## Derivative with respect to d
-  .exp4 <- -(.expr1 * (.expr6 * log(.expr5)))
+  .lexpr5 <- suppressWarnings(log(.expr5))
+  .exp4 <- -(.expr1 * (.expr6 * .lexpr5))
+  .exp4 <- ifelse(is.nan(.exp4),0,.exp4)
   
   .actualArgs <- as.list(match.call()[c("a", "b", "c", "d")])
   

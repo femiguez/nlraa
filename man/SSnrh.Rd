@@ -10,7 +10,7 @@ nrh(x, asym, phi, theta, rd)
 SSnrh(x, asym, phi, theta, rd)
 }
 \arguments{
-\item{x}{input vector (x) which is normally light intensity (PPFD, photosynthetic Photon Flux Density).}
+\item{x}{input vector (x) which is normally light intensity (PPFD, Photosynthetic Photon Flux Density).}
 
 \item{asym}{asymptotic value for photosynthesis}
 
@@ -36,7 +36,7 @@ This function is described in Archontoulis and Miguez (2015) - (doi:10.2134/agro
 require(ggplot2)
 set.seed(1234)
 x <- seq(0, 2000, 100)
-y <- nrh(x, 35, 0.04, 0.83, 2) + rnorm(length(x), 0, 0.25)
+y <- nrh(x, 35, 0.04, 0.83, 2) + rnorm(length(x), 0, 0.5)
 dat <- data.frame(x = x, y = y)
 fit <- nls(y ~ SSnrh(x, asym, phi, theta, rd), data = dat)
 ## plot

@@ -14,7 +14,7 @@ SSplin(x, a, xs, b)
 
 \item{a}{the initial plateau}
 
-\item{xs}{break point of transition between plateau and linear}
+\item{xs}{break-point of transition between plateau and linear}
 
 \item{b}{the slope}
 }

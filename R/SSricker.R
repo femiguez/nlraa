@@ -3,7 +3,7 @@
 #' @name SSricker
 #' @rdname SSricker
 #' @description Self starter for Ricker function with parameters a and b
-#' @param time input vector (x) which is normally 'time', the smalles value should be close to zero.
+#' @param time input vector (x) which is normally \sQuote{time}, the smallest value should be close to zero.
 #' @param a which is related to the initial growth slope
 #' @param b which is related to the slowing down or decline
 #' @return a numeric vector of the same length as x (time) containing parameter estimates for equation specified

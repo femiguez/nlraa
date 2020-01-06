@@ -9,13 +9,13 @@
 #'  
 #'  The four parameter logistic \code{\link{SSfpl}} is essentially equivalent to this function,
 #'  but here the interpretation of the parameters is different and this is the form used in 
-#'  Oddi et al (2019) (see vignette). 
+#'  Oddi et. al. (2019) (see vignette). 
 #' 
 #' @title self start for Declining Logistic Function
 #' @name SSdlf
 #' @rdname SSdlf
 #' @description Self starter for declining logistic function with parameters asym, a2, xmid and scal
-#' @param time input vector (x) which is normally 'time', the smalles value should be close to zero.
+#' @param time input vector (x) which is normally \sQuote{time}, the smalles value should be close to zero.
 #' @param asym value of weight or mass at its peak (maximum)
 #' @param a2 value of weight or mass at its trough (minimum)
 #' @param xmid time at which half of the maximum weight or mass has bean reached.

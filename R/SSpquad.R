@@ -2,10 +2,10 @@
 #' @title self start for plateau-quadratic function
 #' @name SSpquad
 #' @rdname SSpquad
-#' @description Self starter for quadratic plateau function with parameters a (plateau), xs (break-point), b (slope), c (quadratic)
+#' @description Self starter for plateau-quadratic function with parameters a (plateau), xs (break-point), b (slope), c (quadratic)
 #' @param x input vector 
 #' @param a the plateau value
-#' @param xs break point of transition between plateau and quadratic
+#' @param xs break-point of transition between plateau and quadratic
 #' @param b the slope (linear term)
 #' @param c quadratic term
 #' @return a numeric vector of the same length as x containing parameter estimates for equation specified
@@ -33,7 +33,8 @@ pquadInit <- function(mCall, LHS, data){
   if(nrow(xy) < 4){
     stop("Too few distinct input values to fit a plateau-quadratic")
   }
-  ## Dumb guess for a and b is to fit a quadratic linear regression to all the data
+  ## Dumb guess for a and b is to fit a quadratic linear regression to 
+  ## Second half of the data
   xy1 <- xy[1:floor(nrow(xy)/2),]
   xy2 <- xy[floor(nrow(xy)/2):nrow(xy),]
   xy2$x2 <- xy2[,"x"] - min(xy2[,"x"])

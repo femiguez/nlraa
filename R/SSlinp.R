@@ -6,7 +6,7 @@
 #' @param x input vector 
 #' @param a the intercept
 #' @param b the slope
-#' @param xs break point of transition between linear and plateau 
+#' @param xs break-point of transition between linear and plateau 
 #' @return a numeric vector of the same length as x containing parameter estimates for equation specified
 #' @details This function is linear when \eqn{x < xs: (a + b * x)} and flat (\eqn{asymptote = a + b * xs}) when \eqn{x >= xs}.
 #' @seealso package \pkg{segmented}.

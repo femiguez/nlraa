@@ -1,4 +1,4 @@
-#' For details see the publication by Yin et al. (2003) "A Flexible Sigmoid Function of Determinate Growth".
+#' For details see the publication by Yin et al. (2003) \dQuote{A Flexible Sigmoid Function of Determinate Growth}.
 #' This is a reparameterization of the beta growth function (4 parameters) with guaranteed constraints, so it is expected to 
 #' behave numerically better than \code{\link{SSbgf4}}.
 #' 
@@ -15,7 +15,7 @@
 #' @name SSbg4rp
 #' @rdname SSbg4rp
 #' @description Self starter for Beta Growth function with parameters w.max, lt.m, ldt
-#' @param time input vector (x) which is normally 'time', the smallest value should be close to zero.
+#' @param time input vector (x) which is normally \sQuote{time}, the smallest value should be close to zero.
 #' @param w.max value of weight or mass at its peak
 #' @param lt.e log of the time at which the maximum weight or mass has been reached.
 #' @param ldtm log of the difference between time at which the weight or mass reaches its peak and half its peak.
