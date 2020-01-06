@@ -36,7 +36,7 @@ pexpfInit <- function(mCall, LHS, data){
   ## On the log scale
   xy2 <- xy[floor(nrow(xy)/2):nrow(xy),]
   ## Fit to second half of the data
-  fit <- try(lm(log(xy2[,"y"]) ~ xy2[,"x"]), silent = TRUE)
+  fit <- try(stats::lm(log(xy2[,"y"]) ~ xy2[,"x"]), silent = TRUE)
   
   if(class(fit) == "try-error"){
     ## I don't see any reason why 'fit' should fail..., but in that case...
@@ -52,9 +52,9 @@ pexpfInit <- function(mCall, LHS, data){
   }
   a <- xy2[1,"y"] ## First observation in the sorted data
   cfs <- c(a,mean(xy[,"x"]),c)
-  op <- try(optim(cfs, objfun, method = "L-BFGS-B",
-                  upper = c(Inf, max(xy[,"x"]),Inf),
-                  lower = c(-Inf, min(xy[,"x"]),-Inf)), silent = TRUE)
+  op <- try(stats::optim(cfs, objfun, method = "L-BFGS-B",
+                         upper = c(Inf, max(xy[,"x"]),Inf),
+                         lower = c(-Inf, min(xy[,"x"]),-Inf)), silent = TRUE)
  
   if(class(op) != "try-error"){
     a <- op$par[1]

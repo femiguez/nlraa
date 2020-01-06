@@ -39,8 +39,8 @@ blinInit <- function(mCall, LHS, data){
   ## half and another linear regression to the second half
   xy1 <- xy[1:(floor(nrow(xy)/2)),]
   xy2 <- xy[floor(nrow(xy)/2):nrow(xy),]
-  fit1 <- lm(xy1[,"y"] ~ xy1[,"x"])
-  fit2 <- lm(xy2[,"y"] ~ xy2[,"x"])
+  fit1 <- stats::lm(xy1[,"y"] ~ xy1[,"x"])
+  fit2 <- stats::lm(xy2[,"y"] ~ xy2[,"x"])
 
   objfun <- function(cfs){
     pred <- blin(xy[,"x"], a=cfs[1], b=cfs[2], xs=cfs[3], c = cfs[4])
@@ -48,9 +48,9 @@ blinInit <- function(mCall, LHS, data){
     ans
   }
   cfs <- c(coef(fit1),mean(xy[,"x"]),coef(fit2)[2])
-  op <- try(optim(cfs, objfun, method = "L-BFGS-B",
-                  upper = c(Inf, Inf, max(xy[,"x"]),Inf),
-                  lower = c(-Inf, -Inf, min(xy[,"x"])),-Inf), silent = TRUE)
+  op <- try(stats::optim(cfs, objfun, method = "L-BFGS-B",
+                         upper = c(Inf, Inf, max(xy[,"x"]),Inf),
+                         lower = c(-Inf, -Inf, min(xy[,"x"])),-Inf), silent = TRUE)
   
   if(class(op) != "try-error"){
     a <- op$par[1]

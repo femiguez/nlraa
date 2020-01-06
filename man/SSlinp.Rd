@@ -46,3 +46,6 @@ confint(fit)
 }
 
 }
+\seealso{
+package \pkg{segmented}.
+}

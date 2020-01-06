@@ -8,7 +8,7 @@
 #' @param xs break point of transition between plateau and linear 
 #' @param b the slope
 #' @return a numeric vector of the same length as x containing parameter estimates for equation specified
-#' @details Initial plateau with a second linear phase. When \eqn{x < xs: y = a} and when \eqn{x > xs: y = a + b * (x - xs)}.
+#' @details Initial plateau with a second linear phase. When \eqn{x < xs: y = a} and when \eqn{x >= xs: y = a + b * (x - xs)}.
 #' @export
 #' @examples 
 #' \dontrun{
@@ -37,7 +37,7 @@ plinInit <- function(mCall, LHS, data){
   ## Split the data in half as an initial guess
   xy1 <- xy[1:floor(nrow(xy)/2),]
   xy2 <- xy[floor(nrow(xy)/2):nrow(xy),]
-  fit2 <- lm(xy2[,"y"] ~ xy2[,"x"])
+  fit2 <- stats::lm(xy2[,"y"] ~ xy2[,"x"])
   ## Atomic bomb approach to kill a mosquito
   objfun <- function(cfs){
     pred <- plin(xy[,"x"], a=cfs[1], xs=cfs[2], b=cfs[3])
@@ -45,9 +45,9 @@ plinInit <- function(mCall, LHS, data){
     ans
   }
   cfs <- c(mean(xy1[,"y"]), mean(xy[,"x"]),coef(fit2)[2])
-  op <- try(optim(cfs, objfun, method = "L-BFGS-U",
-                  upper = c(Inf, max(xy[,"x"]), Inf),
-                  lower = c(-Inf, min(xy[,"x"])), -Inf), silent = TRUE)
+  op <- try(stats::optim(cfs, objfun, method = "L-BFGS-U",
+                         upper = c(Inf, max(xy[,"x"]), Inf),
+                         lower = c(-Inf, min(xy[,"x"])), -Inf), silent = TRUE)
   
   if(class(op) != "try-error"){
     a <- op$par[1]

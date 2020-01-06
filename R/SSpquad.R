@@ -2,14 +2,14 @@
 #' @title self start for plateau-quadratic function
 #' @name SSpquad
 #' @rdname SSpquad
-#' @description Self starter for quadratic plateau function with parameters a (intercept), b (slope), c (quadratic), xs (break-point)
+#' @description Self starter for quadratic plateau function with parameters a (plateau), xs (break-point), b (slope), c (quadratic)
 #' @param x input vector 
-#' @param a the intercept
-#' @param b the slope
+#' @param a the plateau value
+#' @param xs break point of transition between plateau and quadratic
+#' @param b the slope (linear term)
 #' @param c quadratic term
-#' @param xs break point of transition between quadratic and plateau 
 #' @return a numeric vector of the same length as x containing parameter estimates for equation specified
-#' @details Reference for nonlinear regression Archontoulis and Miguez (2015) - (doi:10.2134/agronj2012.0506) 
+#' @details Reference for nonlinear regression Archontoulis and Miguez (2015) - (doi:10.2134/agronj2012.0506). 
 #' @export
 #' @examples 
 #' \dontrun{
@@ -37,7 +37,7 @@ pquadInit <- function(mCall, LHS, data){
   xy1 <- xy[1:floor(nrow(xy)/2),]
   xy2 <- xy[floor(nrow(xy)/2):nrow(xy),]
   xy2$x2 <- xy2[,"x"] - min(xy2[,"x"])
-  fit2 <- lm(xy2[,"y"] ~ xy2[,"x2"] + I(xy2[,"x2"]^2))
+  fit2 <- stats::lm(xy2[,"y"] ~ xy2[,"x2"] + I(xy2[,"x2"]^2))
   a <- coef(fit2)[1]
   b <- coef(fit2)[2]
   c <- coef(fit2)[3]
@@ -47,10 +47,10 @@ pquadInit <- function(mCall, LHS, data){
     ans <- sum((xy[,"y"] - pred)^2)
     ans
   }
-  op <- try(optim(c(a, mean(xy[,"x"]),b,c), objfun,
-                     method = "L-BFGS-B",
-                     upper = c(Inf, max(xy[,"x"]), Inf, Inf),
-                     lower = c(-Inf, min(xy[,"x"]), -Inf, -Inf)), silent = TRUE)
+  op <- try(stats::optim(c(a, mean(xy[,"x"]),b,c), objfun,
+                         method = "L-BFGS-B",
+                         upper = c(Inf, max(xy[,"x"]), Inf, Inf),
+                         lower = c(-Inf, min(xy[,"x"]), -Inf, -Inf)), silent = TRUE)
 
   if(class(op) != "try-error"){
     a <- op$par[1]

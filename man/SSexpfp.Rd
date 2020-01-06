@@ -3,7 +3,7 @@
 \name{SSexpfp}
 \alias{SSexpfp}
 \alias{expfp}
-\title{self start for exponential-plateau function}
+\title{self start for an exponential-plateau function}
 \usage{
 expfp(x, a, c, xs)
 
@@ -27,7 +27,7 @@ expp: vector of the same length as x using the profd function
 Self starter for an exponential-plateau function
 }
 \details{
-This function is described in Archontoulis and Miguez (2015) - (doi:10.2134/agronj2012.0506)
+This function is described in Archontoulis and Miguez (2015) - (doi:10.2134/agronj2012.0506).
 }
 \examples{
 \dontrun{

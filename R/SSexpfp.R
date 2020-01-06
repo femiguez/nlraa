@@ -1,5 +1,5 @@
 #' 
-#' @title self start for exponential-plateau function
+#' @title self start for an exponential-plateau function
 #' @name SSexpfp
 #' @rdname SSexpfp
 #' @description Self starter for an exponential-plateau function
@@ -8,7 +8,7 @@
 #' @param c represents the exponential rate
 #' @param xs represents the breakpoint at which the plateau starts
 #' @return a numeric vector of the same length as x containing parameter estimates for equation specified
-#' @details This function is described in Archontoulis and Miguez (2015) - (doi:10.2134/agronj2012.0506) 
+#' @details This function is described in Archontoulis and Miguez (2015) - (doi:10.2134/agronj2012.0506). 
 #' @export
 #' @examples 
 #' \dontrun{
@@ -32,11 +32,11 @@ expfpInit <- function(mCall, LHS, data){
     stop("Too few distinct input values to fit an exponential-plateau.")
   }
   
-  if(any(xy[,"y"] < 0)) stop("negative values are not allowed.")
+  if(any(xy[,"y"] < 0)) stop("negative values in y are not allowed.")
   ## On the log scale
   xy1 <- xy[1:floor(nrow(xy)/2),]
   ## Fit to half the data
-  fit <- try(lm(log(xy1[,"y"]) ~ xy1[,"x"]), silent = TRUE)
+  fit <- try(stats::lm(log(xy1[,"y"]) ~ xy1[,"x"]), silent = TRUE)
   
   if(class(fit) == "try-error"){
     ## I don't see any reason why 'fit' should fail..., but in that case...
@@ -53,9 +53,9 @@ expfpInit <- function(mCall, LHS, data){
     ans
   }
   cfs <- c(a,c,mean(xy[,"x"]))
-  op <- try(optim(cfs, objfun, method = "L-BFGS-B",
-                  upper = c(Inf, Inf, max(xy[,"x"])),
-                  lower = c(-Inf, -Inf, min(xy[,"x"]))), silent = TRUE)
+  op <- try(stats::optim(cfs, objfun, method = "L-BFGS-B",
+                         upper = c(Inf, Inf, max(xy[,"x"])),
+                         lower = c(-Inf, -Inf, min(xy[,"x"]))), silent = TRUE)
   
   if(class(op) != "try-error"){
     a <- op$par[1]

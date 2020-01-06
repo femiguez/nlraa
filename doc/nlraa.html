@@ -13,7 +13,7 @@
 
 <meta name="author" content="Fernando Miguez" />
 
-<meta name="date" content="2020-01-02" />
+<meta name="date" content="2020-01-06" />
 
 <title>Nonlinear Regression Agricultural Applications</title>
 
@@ -96,7 +96,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 
 <h1 class="title toc-ignore">Nonlinear Regression Agricultural Applications</h1>
 <h4 class="author">Fernando Miguez</h4>
-<h4 class="date">2020-01-02</h4>
+<h4 class="date">2020-01-06</h4>
 
 
 
@@ -128,9 +128,12 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <ol style="list-style-type: decimal">
 <li>SSbgf (Beta-Growth Function)</li>
 <li>SSbgf4 (Four Parameter Beta-Growth Function)</li>
+<li>SSbgrp (Beta-Growth Reparameterized)</li>
+<li>SSbg4rp (Beta-Growth with four parameters Reparameterized)</li>
 <li>SSdlf (Declining Logistic Function)</li>
 <li>SSricker (Ricker population growth)</li>
 <li>SSprofd (Profile of protein distribution)</li>
+<li>SSnrh (Non-rectangual hyperbola)</li>
 <li>SSlinp (linear-plateau)</li>
 <li>SSplin (plateau-linear)</li>
 <li>SSquadp (quadratic-plateau)</li>
@@ -139,22 +142,22 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li>SSexpf (exponential function)</li>
 <li>SSexpfp (exponential-plateau)</li>
 <li>SSpexpf (plateau-exponential)</li>
-<li>SSbgrp (Beta-Growth Reparameterized)</li>
-<li>SSbg4rp (Beta-Growth with four parameters Reparameterized)</li>
+<li>SSbell (bell-shaped function)</li>
+<li>SSratio (rational function)</li>
 </ol>
 <p>For the reference on the Beta growth function see Yin et al. 2003 (<a href="https://doi.org/10.1093/aob/mcg029" class="uri">https://doi.org/10.1093/aob/mcg029</a>) and Erratum: (<a href="https://doi.org/10.1093/aob/mcg091" class="uri">https://doi.org/10.1093/aob/mcg091</a>). For a reference on a use of the declining logistic see Oddi et al. (2019). For the Ricker model see: (<a href="https://en.wikipedia.org/wiki/Ricker_model" class="uri">https://en.wikipedia.org/wiki/Ricker_model</a>). For the protein profile in the canopy see Johnson et al. (2010) (<a href="https://doi.org/10.1093/aob/mcq183" class="uri">https://doi.org/10.1093/aob/mcq183</a>).</p>
-<p>The <em>SSbgrp</em> function is a reparameterized version of <em>SSbgf</em>. The original <em>SSbgf</em> does not enforce the constraint that <em>t.m &lt; t.e</em> and this makes it numerically unstable for routine use. To recover the original parameters from <em>SSbgrp</em>, take the exponential of <em>lt.e</em>, so <em>t.e = exp(lt.e)</em> and likewise <em>t.m = exp(lt.e) - exp(ldt)</em>. There is a similar function for the four parameter Beta growth <em>SSbg4rp</em>.</p>
+<p>The <em>SSbgrp</em> function is a reparameterized version of <em>SSbgf</em>. The original <em>SSbgf</em> does not enforce the constraint that <em>t.m &lt; t.e</em> and this makes it somewhat numerically unstable for routine use (but more testing is needed). To recover the original parameters from <em>SSbgrp</em>, take the exponential of <em>lt.e</em>, so <em>t.e = exp(lt.e)</em> and likewise <em>t.m = exp(lt.e) - exp(ldt)</em>. There is a similar function for the four parameter Beta growth <em>SSbg4rp</em>.</p>
 <p>The main benefit of having these self starting functions is that they can be incorporated in the workflow of package ‘nlme’ which allows for fitting nonlinear mixed models.</p>
 </div>
 <div id="which-functions-are-available" class="section level2">
 <h2>Which functions are available?</h2>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">apropos</span>(<span class="st">&quot;^SS&quot;</span>)</code></pre></div>
-<pre><code>##  [1] &quot;SS&quot;          &quot;SSasymp&quot;     &quot;SSasympOff&quot;  &quot;SSasympOrig&quot; &quot;SSbg4rp&quot;    
-##  [6] &quot;SSbgf&quot;       &quot;SSbgf4&quot;      &quot;SSbgrp&quot;      &quot;SSbiexp&quot;     &quot;SSblin&quot;     
-## [11] &quot;SSD&quot;         &quot;SSdlf&quot;       &quot;SSexpf&quot;      &quot;SSexpfp&quot;     &quot;SSfol&quot;      
-## [16] &quot;SSfpl&quot;       &quot;SSgompertz&quot;  &quot;SSlinp&quot;      &quot;SSlogis&quot;     &quot;SSmicmen&quot;   
-## [21] &quot;SSpexpf&quot;     &quot;SSplin&quot;      &quot;SSpquad&quot;     &quot;SSprofd&quot;     &quot;SSquadp&quot;    
-## [26] &quot;SSricker&quot;    &quot;SSweibull&quot;</code></pre>
+<pre><code>##  [1] &quot;SS&quot;          &quot;SSasymp&quot;     &quot;SSasympOff&quot;  &quot;SSasympOrig&quot; &quot;SSbell&quot;     
+##  [6] &quot;SSbg4rp&quot;     &quot;SSbgf&quot;       &quot;SSbgf4&quot;      &quot;SSbgrp&quot;      &quot;SSbiexp&quot;    
+## [11] &quot;SSblin&quot;      &quot;SSD&quot;         &quot;SSdlf&quot;       &quot;SSexpf&quot;      &quot;SSexpfp&quot;    
+## [16] &quot;SSfol&quot;       &quot;SSfpl&quot;       &quot;SSgompertz&quot;  &quot;SSlinp&quot;      &quot;SSlogis&quot;    
+## [21] &quot;SSmicmen&quot;    &quot;SSnrh&quot;       &quot;SSpexpf&quot;     &quot;SSplin&quot;      &quot;SSpquad&quot;    
+## [26] &quot;SSprofd&quot;     &quot;SSquadp&quot;     &quot;SSratio&quot;     &quot;SSricker&quot;    &quot;SSweibull&quot;</code></pre>
 </div>
 </div>
 <div id="datasets" class="section level1">

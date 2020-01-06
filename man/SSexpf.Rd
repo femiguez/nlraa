@@ -3,7 +3,7 @@
 \name{SSexpf}
 \alias{SSexpf}
 \alias{expf}
-\title{self start for exponential function}
+\title{self start for an exponential function}
 \usage{
 expf(x, a, c)
 
@@ -25,7 +25,7 @@ expf: vector of the same length as x using the profd function
 Self starter for a simple exponential function
 }
 \details{
-This function is described in Archontoulis and Miguez (2015) - (doi:10.2134/agronj2012.0506)
+This function is described in Archontoulis and Miguez (2015) - (doi:10.2134/agronj2012.0506).
 }
 \examples{
 \dontrun{

@@ -1,17 +1,16 @@
-#' Profile decay function for describing variables which 
-#' decay within a canopy profile
+#' Profile decay function for describing variables which decay within a canopy profile
 #' 
 #' @title self start for profile decay function
 #' @name SSprofd
 #' @rdname SSprofd
-#' @description Self starter for a 'decay' of a variable within a canopy
+#' @description Self starter for a 'decay' of a variable within a canopy (e.g. nitrogen concentration).
 #' @param x input vector (x) 
 #' @param a represents the maximum value
 #' @param b represents the minimum value
 #' @param c represents the rate of decay
 #' @param d represents an empirical coefficient which provides flexibility
 #' @return a numeric vector of the same length as x containing parameter estimates for equation specified
-#' @details This function is described in Archontoulis and Miguez (2015) - (doi:10.2134/agronj2012.0506) and originally Johnson et al. (2010) Annals of Botany 106: 735–749, 2010. doi:10.1093/aob/mcq183
+#' @details This function is described in Archontoulis and Miguez (2015) - (doi:10.2134/agronj2012.0506) and originally Johnson et al. (2010) Annals of Botany 106: 735–749, 2010. (doi:10.1093/aob/mcq183).
 #' @export
 #' @examples 
 #' \dontrun{

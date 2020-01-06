@@ -29,13 +29,18 @@ dlf: vector of the same length as x (time) using the declining logistic function
 Self starter for declining logistic function with parameters asym, a2, xmid and scal
 }
 \details{
-Declining Logistic
+Response function:  \deqn{y = (asym - a2) / (1 + exp((xmid - time)/scal))) + a2}.
 
-Response function:  \eqn{y = (asym - a2) / (1 + exp((xmid - time)/scal))) + a2}. 
- .- asym: upper asymptote
- .- xmid: time when y is midway between w and a 
- .- scal: controls the spread
- .- a2: lower asymptote
+\itemize{
+ \item asym: upper asymptote
+ \item xmid: time when y is midway between w and a 
+ \item scal: controls the spread
+ \item a2: lower asymptote 
+ }
+ 
+ The four parameter logistic \code{\link{SSfpl}} is essentially equivalent to this function,
+ but here the interpretation of the parameters is different and this is the form used in 
+ Oddi et al (2019) (see vignette).
 }
 \examples{
 \dontrun{

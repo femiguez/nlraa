@@ -7,7 +7,7 @@
 #' @param a which is related to the initial growth slope
 #' @param b which is related to the slowing down or decline
 #' @return a numeric vector of the same length as x (time) containing parameter estimates for equation specified
-#' @details This function is described in Archontoulis and Miguez (2015) - (doi:10.2134/agronj2012.0506) and originally in Ricker, W. E. (1954) Stock and Recruitment Journal of the Fisheries Research Board of Canada, 11(5): 559–623. doi:10.1139/f54-039.
+#' @details This function is described in Archontoulis and Miguez (2015) - (doi:10.2134/agronj2012.0506) and originally in Ricker, W. E. (1954) Stock and Recruitment Journal of the Fisheries Research Board of Canada, 11(5): 559–623. (doi:10.1139/f54-039).
 #' The equation is: \eqn{a * time * exp(-b * time)}.
 #' @export
 #' @examples 
@@ -35,7 +35,7 @@ rickerInit <- function(mCall, LHS, data){
   xy <- subset(xy, xy[,"y"] > 0 & xy[,"x"] > 0)
   
   ry <- log(xy[,"y"]) - log(xy[,"x"])
-  fit <- lm(ry ~ xy[,"x"])
+  fit <- stats::lm(ry ~ xy[,"x"])
   a <- exp(coef(fit)[1])
   b <- -coef(fit)[2]
   value <- c(a, b)

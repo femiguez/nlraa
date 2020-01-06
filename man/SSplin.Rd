@@ -27,7 +27,7 @@ plin: vector of the same length as x using the plateau-linear function
 Self starter for plateau-linear function with parameters a (plateau), xs (break-point), b (slope)
 }
 \details{
-Initial plateau with a second linear phase. When \eqn{x < xs: y = a} and when \eqn{x > xs: y = a + b * (x - xs)}.
+Initial plateau with a second linear phase. When \eqn{x < xs: y = a} and when \eqn{x >= xs: y = a + b * (x - xs)}.
 }
 \examples{
 \dontrun{

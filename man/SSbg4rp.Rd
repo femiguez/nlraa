@@ -27,11 +27,9 @@ bg4rp: vector of the same length as x (time) using the beta growth function with
 Self starter for Beta Growth function with parameters w.max, lt.m, ldt
 }
 \details{
-Beta Growth Function
-
 For details see the publication by Yin et al. (2003) "A Flexible Sigmoid Function of Determinate Growth".
 This is a reparameterization of the beta growth function (4 parameters) with guaranteed constraints, so it is expected to 
-behave numerically better than SSbgf4
+behave numerically better than \code{\link{SSbgf4}}.
 
 Reparameterizing the four parameter beta growth
 \itemize{
@@ -42,7 +40,7 @@ Reparameterizing the four parameter beta growth
   \item t.b = (exp(lt.e) - exp(ldtm)) - exp(ldtb)
 }
 
-The form of the equation is: \deqn{w.max * (1 + (exp(lt.e) - time)/exp(ldtm)) * ((time - (exp(lt.e) - exp(ldtb)))/exp(ldtb))^(exp(ldtb)/exp(ldtm))}.
+The form of the equation is: \deqn{w.max * (1 + (exp(lt.e) - time)/exp(ldtm)) * ((time - (exp(lt.e) - exp(ldtb)))/exp(ldtb))^(exp(ldtb)/exp(ldtm))}
 This is a reparameterized version of the Beta-Growth function in which the parameters are unconstrained, but they are expressed in the log-scale.
 }
 \examples{

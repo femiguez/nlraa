@@ -4,7 +4,7 @@
 ###                      Douglas M. Bates <bates@stat.wisc.edu>
 ### Copyright 2006-2016 The R Core team
 ###
-### Modified by Fernando Miguez to use nlsLM instead of nls 2019
+### Modified by Fernando Miguez to use nlsLM instead of nls (2019)
 #
 #  This program is free software; you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -35,7 +35,8 @@
 #' @param algorithm choice of algorithm default is 'LM' which uses 'nlsLM' from the minpack.lm package
 #' @param pool an optional logical value that is preserved as an attribute of the returned value. This will be used as the default for pool in calculations of standard deviations or standard errors for summaries.
 #' @param warn.nls logical indicating if nls errors (all of which are caught by tryCatch) should be signalled as a “summarizing” warning.
-#' @details See function \code{\link{nlsList}} in the 'nlme' package.
+#' @details See function \code{\link[nlme]{nlsList}} and \code{\link[minpack.lm]{nlsLM}}. This function is a copy of nlsList but with minor changes to use LM instead as the default algorithm.
+#' @author Fernando E. Miguez. (see details).
 #' @export
 #' 
 

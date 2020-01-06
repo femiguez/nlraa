@@ -35,5 +35,8 @@ to use the 'nlsLM' function instead of 'nls'. By changing the algorithm argument
 to use 'nls' as well
 }
 \details{
-See function \code{\link{nlsList}} in the 'nlme' package.
+See function \code{\link[nlme]{nlsList}} and \code{\link[minpack.lm]{nlsLM}}. This function is a copy of nlsList but with minor changes to use LM instead as the default algorithm.
+}
+\author{
+Fernando E. Miguez. (see details).
 }

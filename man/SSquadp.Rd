@@ -3,7 +3,7 @@
 \name{SSquadp}
 \alias{SSquadp}
 \alias{quadp}
-\title{self start for quadratic plateau function}
+\title{self start for quadratic-plateau function}
 \usage{
 quadp(x, a, b, c, xs)
 
@@ -29,7 +29,7 @@ quadp: vector of the same length as x using the quadratic-plateau function
 Self starter for quadratic plateau function with parameters a (intercept), b (slope), c (quadratic), xs (break-point)
 }
 \details{
-Reference for nonlinear regression Archontoulis and Miguez (2015) - (doi:10.2134/agronj2012.0506)
+Reference for nonlinear regression Archontoulis and Miguez (2015) - (doi:10.2134/agronj2012.0506).
 }
 \examples{
 \dontrun{

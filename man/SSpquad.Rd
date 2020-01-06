@@ -12,11 +12,11 @@ SSpquad(x, a, xs, b, c)
 \arguments{
 \item{x}{input vector}
 
-\item{a}{the intercept}
+\item{a}{the plateau value}
 
-\item{xs}{break point of transition between quadratic and plateau}
+\item{xs}{break point of transition between plateau and quadratic}
 
-\item{b}{the slope}
+\item{b}{the slope (linear term)}
 
 \item{c}{quadratic term}
 }
@@ -26,10 +26,10 @@ a numeric vector of the same length as x containing parameter estimates for equa
 pquad: vector of the same length as x using the plateau-quadratic function
 }
 \description{
-Self starter for quadratic plateau function with parameters a (intercept), b (slope), c (quadratic), xs (break-point)
+Self starter for quadratic plateau function with parameters a (plateau), xs (break-point), b (slope), c (quadratic)
 }
 \details{
-Reference for nonlinear regression Archontoulis and Miguez (2015) - (doi:10.2134/agronj2012.0506)
+Reference for nonlinear regression Archontoulis and Miguez (2015) - (doi:10.2134/agronj2012.0506).
 }
 \examples{
 \dontrun{

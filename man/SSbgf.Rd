@@ -34,11 +34,9 @@ bgf2: a numeric vector of the same length as x (time) containing parameter estim
 Self starter for Beta Growth function with parameters w.max, t.m and t.e
 }
 \details{
-Beta Growth Function
+For details see the publication by Yin et al. (2003) "A Flexible Sigmoid Function of Determinate Growth".
 
-For details see the publication by Yin et al. (2003) "A Flexible Sigmoid Function of Determinate Growth"
-
-The form of the equation is: \eqn{w.max * (1 + (t.e - time)/(t.e - t.m)) * (time/t.e)^t.e / (t.e - t.m)}.
+The form of the equation is: \deqn{w.max * (1 + (t.e - time)/(t.e - t.m)) * (time/t.e)^(t.e / (t.e - t.m))}.
 Given this function weight is expected to decay and reach zero again at \eqn{2*t.e - t.m}.
 }
 \examples{

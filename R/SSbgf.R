@@ -1,6 +1,4 @@
-#' Beta Growth Function
-#' 
-#' For details see the publication by Yin et al. (2003) "A Flexible Sigmoid Function of Determinate Growth"
+#' For details see the publication by Yin et al. (2003) "A Flexible Sigmoid Function of Determinate Growth".
 #' 
 #' @title self start for Beta Growth Function
 #' @name SSbgf
@@ -10,7 +8,7 @@
 #' @param w.max value of weight or mass at its peak
 #' @param t.m time at which half of the maximum weight or mass has been reached.
 #' @param t.e time at which the weight or mass reaches its peak.
-#' @details The form of the equation is: \eqn{w.max * (1 + (t.e - time)/(t.e - t.m)) * (time/t.e)^t.e / (t.e - t.m)}.
+#' @details The form of the equation is: \deqn{w.max * (1 + (t.e - time)/(t.e - t.m)) * (time/t.e)^(t.e / (t.e - t.m))}.
 #' Given this function weight is expected to decay and reach zero again at \eqn{2*t.e - t.m}.
 #' @export
 #' @examples 
@@ -47,28 +45,40 @@ bgf <- function(time, w.max, t.e, t.m){
   .expr3 <- (1 + (t.e - time)/(t.e - t.m))
   .value <- w.max * .expr3 * .expr2
 
+  ## Derivative with respect to w.max
+  ## deriv(~ w.max * (1 + (t.e - time)/(t.e - t.m)) * (time/t.e)^(t.e / (t.e - t.m)),"w.max")
+  .expr2 <- t.e - t.m
+  .expr4 <- 1 + (t.e - time)/.expr2
+  .expr8 <- (time/t.e)^(t.e/.expr2)
+  .expi1 <- .expr4 * .expr8
+  .expi1 <- ifelse(is.nan(.expi1),0,.expi1)
+  
   ## Derivative with respect to t.e
-  .exp1 <- ((time/t.e)^(t.e/(t.e - t.m))) * ((t.e-time)/(t.e-t.m) + 1)
-  .exp2 <- (log(time/t.e)*((1/(t.e-t.m) - (t.e/(t.e-t.m)^2) - (1/(t.e - t.m)))))*w.max
-  .exp3 <- (time/t.e)^(t.e/(t.e-t.m))
-  .exp4 <- w.max * ((1/(t.e-t.m)) - ((t.e - time)/(t.e-t.m)^2))
-  .exp5 <- .exp1 * .exp2 + .exp3 * .exp4 
+  .expr1 <- t.e - time
+  .expr5 <- w.max * (1 + .expr1/.expr2)
+  .expr6 <- time/t.e
+  .lexpr6 <- suppressWarnings(log(.expr6))
+  .expr7 <- t.e/.expr2
+  .expr8 <- .expr6^.expr7
+  .expr10 <- 1/.expr2
+  .expr11 <- .expr2^2
+  .expi2 <- w.max * (.expr10 - .expr1/.expr11) * .expr8 + .expr5 * (.expr8 * (.lexpr6 * (.expr10 - t.e/.expr11)) - .expr6^(.expr7 - 1) * (.expr7 * (time/t.e^2)))
+  .expi2 <- ifelse(is.nan(.expi2),0,.expi2)
 
   ## Derivative with respect to t.m
-  .ex1 <- t.e * (time/t.e)^((t.e/(t.e - t.m))) * log(time/t.e) * ((t.e - time)/(t.e - t.m) + 1) * w.max
-  .ex2 <- (t.e - time) * w.max * (time/t.e)^(t.e/(t.e-t.m))
-  .ex3 <- (t.e - t.m)^2
-  .ex4 <- .ex1 / .ex3 + .ex2 / .ex3
+  ## deriv(~ w.max * (1 + (t.e - time)/(t.e - t.m)) * (time/t.e)^(t.e / (t.e - t.m)),"t.m")
+  .expr10 <- .expr2^2
+  .expi3 <- w.max * (.expr1/.expr10) * .expr8 + .expr5 * (.expr8 * (.lexpr6 * (t.e/.expr10)))
+  .expi3 <- ifelse(is.nan(.expi3),0,.expi3)
   
   .actualArgs <- as.list(match.call()[c("w.max", "t.e", "t.m")])
 
 ##  Gradient
   if (all(unlist(lapply(.actualArgs, is.name)))) {
-    .grad <- array(0, c(length(.value), 3L), list(NULL, c("w.max", 
-                                                          "t.e", "t.m")))
-    .grad[, "w.max"] <- .expr3 * .expr2
-    .grad[, "t.e"] <- .exp5
-    .grad[, "t.m"] <- .ex4 
+    .grad <- array(0, c(length(.value), 3L), list(NULL, c("w.max", "t.e", "t.m")))
+    .grad[, "w.max"] <- .expi1
+    .grad[, "t.e"] <- .expi2
+    .grad[, "t.m"] <- .expi3 
     dimnames(.grad) <- list(NULL, .actualArgs)
     attr(.value, "gradient") <- .grad
   }

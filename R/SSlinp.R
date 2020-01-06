@@ -9,6 +9,7 @@
 #' @param xs break point of transition between linear and plateau 
 #' @return a numeric vector of the same length as x containing parameter estimates for equation specified
 #' @details This function is linear when \eqn{x < xs: (a + b * x)} and flat (\eqn{asymptote = a + b * xs}) when \eqn{x >= xs}.
+#' @seealso package \pkg{segmented}.
 #' @export
 #' @examples 
 #' \dontrun{
@@ -37,7 +38,7 @@ linpInit <- function(mCall, LHS, data){
 
   ## Dumb guess for a and b is to fit a linear regression to half the data
   xy1 <- xy[1:floor(nrow(xy)/2),]
-  fit1 <- lm(xy1[,"y"] ~ xy1[,"x"])
+  fit1 <- stats::lm(xy1[,"y"] ~ xy1[,"x"])
   ## Atomic bomb approach to kill a mosquito
   objfun <- function(cfs){
     pred <- linp(xy[,"x"], a=cfs[1], b=cfs[2], xs=cfs[3])
@@ -45,9 +46,9 @@ linpInit <- function(mCall, LHS, data){
     ans
   }
   cfs <- c(coef(fit1),mean(xy[,"x"]))
-  op <- try(optim(cfs, objfun, method = "L-BFGS-B",
-                  upper = c(Inf, Inf, max(xy[,"x"])),
-                  lower = c(-Inf, -Inf, min(xy[,"x"]))), silent = TRUE)
+  op <- try(stats::optim(cfs, objfun, method = "L-BFGS-B",
+                         upper = c(Inf, Inf, max(xy[,"x"])),
+                         lower = c(-Inf, -Inf, min(xy[,"x"]))), silent = TRUE)
 
   if(class(op) != "try-error"){
     a <- op$par[1]

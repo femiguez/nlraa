@@ -71,15 +71,15 @@ function **SSbgf** to improve the fitting process.
 
 ```{r nls-list-sm}
 fit.lis <- nlsList(Yield ~ SSbgf(DOY, w.max, t.e, t.m), data = smG)
-## But this works much better
+## But this works better
 ## Added 2020/1/2
 fit.lis.rp <- nlsList(Yield ~ SSbgrp(DOY, w.max, lt.e, ldt), data = smG) 
 ```
 
 There are three crops, two levels of agronomic input and four blocks
 which results in 24 possible combinations. We fitted the model to
-these 24 experimental units and obtained apparent convergence in only
-10. This suggests that some modifications are needed.
+these 24 experimental units and obtained apparent convergence in
+20 (Note: was only 10 in the original paper, but this improved dramatically when I recomputed the partial derivatives 2020/1/3). Still, this suggests that some modifications are needed.
 
 ```{r nls-list-plot, echo = FALSE}
 print(plot(fit.lis))

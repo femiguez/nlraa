@@ -25,7 +25,7 @@ ricker: vector of the same length as x (time) using the ricker function
 Self starter for Ricker function with parameters a and b
 }
 \details{
-This function is described in Archontoulis and Miguez (2015) - (doi:10.2134/agronj2012.0506) and originally in Ricker, W. E. (1954) Stock and Recruitment Journal of the Fisheries Research Board of Canada, 11(5): 559–623. doi:10.1139/f54-039.
+This function is described in Archontoulis and Miguez (2015) - (doi:10.2134/agronj2012.0506) and originally in Ricker, W. E. (1954) Stock and Recruitment Journal of the Fisheries Research Board of Canada, 11(5): 559–623. (doi:10.1139/f54-039).
 The equation is: \eqn{a * time * exp(-b * time)}.
 }
 \examples{

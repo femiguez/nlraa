@@ -29,14 +29,11 @@ bgf4: vector of the same length as x (time) using the beta growth function with 
 Self starter for Beta Growth function with parameters w.max, t.e, t.m and t.b
 }
 \details{
-Beta Growth Function
-
 For details see the publication by Yin et al. (2003) "A Flexible Sigmoid Function of Determinate Growth".
 This is a difficult function to fit because the linear constrains are not explicitly introduced 
-in the optimization process.
+in the optimization process. See function \code{\link{SSbgrp}} for a reparameterized version.
 
-Given this function weight is expected to decay and reach zero again at \eqn{2*t.e - t.m}. This is equation
-11 (pg. 368) in the Yin paper, but with errata correction (https://academic.oup.com/aob/article/91/6/753/211049) and with w.b equal to zero.
+This is equation 11 (pg. 368) in the Yin paper, but with errata correction \url{https://academic.oup.com/aob/article/91/6/753/211049} and with w.b equal to zero.
 }
 \examples{
 \dontrun{

@@ -1,5 +1,5 @@
 #' 
-#' @title self start for exponential function
+#' @title self start for an exponential function
 #' @name SSexpf
 #' @rdname SSexpf
 #' @description Self starter for a simple exponential function
@@ -7,7 +7,7 @@
 #' @param a represents the value at x = 0
 #' @param c represents the exponential rate
 #' @return a numeric vector of the same length as x containing parameter estimates for equation specified
-#' @details This function is described in Archontoulis and Miguez (2015) - (doi:10.2134/agronj2012.0506) 
+#' @details This function is described in Archontoulis and Miguez (2015) - (doi:10.2134/agronj2012.0506). 
 #' @export
 #' @examples 
 #' \dontrun{
@@ -27,14 +27,14 @@ NULL
 expfInit <- function(mCall, LHS, data){
   
   xy <- sortedXyData(mCall[["x"]], LHS, data)
-  if(nrow(xy) < 2){
+  if(nrow(xy) < 3){
     stop("Too few distinct input values to fit an exponential")
   }
   
-  if(any(xy[,"y"] < 0)) stop("negative values are not allowed.")
+  if(any(xy[,"y"] < 0)) stop("negative values in y are not allowed.")
   
   ## On the log scale for 'y'
-  fit <- try(lm(log(xy[,"y"]) ~ xy[,"x"], na.action = "na.omit"), silent = TRUE)
+  fit <- try(stats::lm(log(xy[,"y"]) ~ xy[,"x"], na.action = "na.omit"), silent = TRUE)
   
   if(class(fit) == "try-error"){
     ## I don't see any reason why 'fit' should fail..., but in that case...

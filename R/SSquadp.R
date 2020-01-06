@@ -1,5 +1,5 @@
 #' 
-#' @title self start for quadratic plateau function
+#' @title self start for quadratic-plateau function
 #' @name SSquadp
 #' @rdname SSquadp
 #' @description Self starter for quadratic plateau function with parameters a (intercept), b (slope), c (quadratic), xs (break-point)
@@ -9,7 +9,7 @@
 #' @param c quadratic term
 #' @param xs break point of transition between quadratic and plateau 
 #' @return a numeric vector of the same length as x containing parameter estimates for equation specified
-#' @details Reference for nonlinear regression Archontoulis and Miguez (2015) - (doi:10.2134/agronj2012.0506) 
+#' @details Reference for nonlinear regression Archontoulis and Miguez (2015) - (doi:10.2134/agronj2012.0506). 
 #' @export
 #' @examples 
 #' \dontrun{
@@ -43,9 +43,9 @@ quadpInit <- function(mCall, LHS, data){
     ans <- sum((xy[,"y"] - pred)^2)
     ans
   }
-  op.xs <- try(optimize(objfun, range(xy[,"x"]), 
-                        a = a, b = b,
-                        c = c), silent = TRUE)
+  op.xs <- try(stats::optimize(objfun, range(xy[,"x"]), 
+                               a = a, b = b,
+                               c = c), silent = TRUE)
 
   if(class(op.xs) != "try-error"){
     xs <- op.xs$minimum
