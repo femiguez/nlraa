@@ -1,4 +1,6 @@
 #' 
+#' The equation is: \deqn{ a * x ^ c / (1 + b * x ^ d)}
+#' 
 #' @title self start for a rational curve
 #' @name SSratio
 #' @rdname SSratio
@@ -52,10 +54,20 @@ ratioInit <- function(mCall, LHS, data){
     c <- op$par[3]
     d <- op$par[4]
   }else{
-    a <- 1
-    b <- 1
-    c <- 1
-    d <- 1
+    op <- try(stats::optim(cfs, objfun, method = "SANN"), silent = TRUE)
+    if(class(op) != "try-error"){
+      a <- op$par[1]
+      b <- op$par[2]
+      c <- op$par[3]
+      d <- op$par[4]
+      warning('Used method = "SANN" in optim')
+    }else{
+      a <- 1
+      b <- 1
+      c <- 1
+      d <- 1
+      warning("Could not find suitable starting values")
+    }
   }
   value <- c(a, b, c, d)
   names(value) <- mCall[c("a","b","c","d")]

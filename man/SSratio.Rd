@@ -29,6 +29,8 @@ ratio: vector of the same length as x using a rational function
 Self starter for a rational curve
 }
 \details{
+The equation is: \deqn{ a * x ^ c / (1 + b * x ^ d)}
+
 This function is described in Archontoulis and Miguez (2015) - (doi:10.2134/agronj2012.0506).  
 One example application is in Bril et al. (1994) \url{https://edepot.wur.nl/333930} - pages 19 and 21. 
 The parameters are difficult to interpret, but the function is very flexible. I have not tested this, 

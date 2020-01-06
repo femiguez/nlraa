@@ -208,6 +208,11 @@ Ritz C, Baty F, Streibig JC, Gerhard D
 
 Might make it easier to fit and plot a few different models.
 
+## **chngpt** pacakge
+
+chngpt: threshold regression model estimation and inference. 
+(doi: 10.1186/s12859-017-1863-x).
+
 ## **HydroMe** package
 
 This package has functions for fitting water retention curves. Interestingly, it

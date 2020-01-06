@@ -124,4 +124,16 @@ if(test.other.examples){
   ggplot(data = dat) + 
     geom_line(aes(x = xx, y = y1), color = "red") +
     geom_line(aes(x = xx, y = y2), color = "blue")
+  
+  ## Testing SSratio
+  data(Theoph)
+  Theoph.10 <- subset(Theoph, Subject == 10)
+  fit.10 <- nlsLM(conc ~ SSratio(Time, a, b, c, d), data = Theoph.10)
+  dat <- data.frame(x = Theoph.10$Time, y = Theoph.10$conc)
+  ggplot(data = dat, aes(x = x, y = y)) + 
+    geom_point() + 
+    geom_line(aes(y = fitted(fit.10)))
+  
+  
+  
 }
