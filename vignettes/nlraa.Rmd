@@ -45,7 +45,7 @@ One of the objectives of those publications was to introduce a large family of n
 1. SSbgf (Beta-Growth Function)
 2. SSbgf4 (Four Parameter Beta-Growth Function)
 3. SSbgrp (Beta-Growth Reparameterized)
-4. SSbg4rp (Beta-Growth with four parameters Reparameterized)
+4. SSbg4rp (Four Parameter Beta-Growth Reparameterized)
 5. SSdlf (Declining Logistic Function)
 6. SSricker (Ricker population growth)
 7. SSprofd (Profile of protein distribution)
@@ -62,13 +62,13 @@ One of the objectives of those publications was to introduce a large family of n
 18. SSratio (rational function)
 
 For the reference on the Beta growth function see Yin et al. 2003 (https://doi.org/10.1093/aob/mcg029) and Erratum: (https://doi.org/10.1093/aob/mcg091).
-For a reference on a use of the declining logistic see Oddi et al. (2019). For the Ricker model see: (https://en.wikipedia.org/wiki/Ricker_model). For the protein profile in the canopy see Johnson et al. (2010) (https://doi.org/10.1093/aob/mcq183). 
+For a reference on a use of the declining logistic see Oddi et al. (2019) (and vignette in this package). For the Ricker model see: (https://en.wikipedia.org/wiki/Ricker_model). For the protein profile in the canopy see Johnson et al. (2010) (https://doi.org/10.1093/aob/mcq183). 
 
 The *SSbgrp* function is a reparameterized version of *SSbgf*. The original *SSbgf* does not enforce the constraint that *t.m < t.e* and this makes it somewhat numerically unstable for routine use (but more testing is needed). To recover the original parameters from *SSbgrp*, take the exponential of *lt.e*, so *t.e = exp(lt.e)* and likewise *t.m = exp(lt.e) - exp(ldt)*. There is a similar function for the four parameter Beta growth *SSbg4rp*.
 
-The main benefit of having these self starting functions is that they can be incorporated in the workflow of package 'nlme' which allows for fitting nonlinear mixed models. 
+The main benefit of having these self starting functions is that they can be incorporated in the workflow of package 'nlme' which allows for fitting nonlinear mixed models. Although there are other tools available, package nlme is still appropriate for most applications in agricultural, environmental and biological sciences.
 
-## Which functions are available?
+### List of available SS (self-start) functions.
 
 ```{r apropos}
 apropos("^SS")
@@ -76,7 +76,7 @@ apropos("^SS")
 
 # Datasets
 
-These are the available datasets in the package:
+These are the available datasets distributed with this package:
 
 1. "sm"
 2. "lfmc"
@@ -119,7 +119,8 @@ ggplot(data = barley, aes(x = NF, y = yield, color = as.factor(year))) +
 
 # What to do when convergence fails?
 
-Convergence problems in nonlinear models are often because of a number of reasons:
+The most common issue with nonlinear regression models is related to convergence problems.
+Convergence problems in nonlinear models can be caused by many different reasons. These are a few of them:
 
 1. The model is not appropriate for the observed data (or viceversa)
 2. The model is conceptually correct but there is an error in the formula
@@ -128,7 +129,9 @@ Convergence problems in nonlinear models are often because of a number of reason
 5. Starting values are too far from the solution
 
 Model specification (choosing the correct model) is clearly very important when using 
-nonlinear models. For convergence problems related to poor starting values there are some alternatives:
+nonlinear models, the references above and this package are a resource that tries to alleviate this issue. 
+
+For convergence problems related to poor starting values there are some alternatives:
 
 1. Try algorithm 'port' in function 'nls'
 2. Use an alternative algorithm 'Levenberg-Marquardt' in package 'minpack.lm' through the function 'nlsLM', which can be more robust
@@ -165,7 +168,7 @@ intervals(fit.nlme)
 
 ## Other modeling approaches
 
-Other modeling approaches do not use such a direct rigid specification as the models classically used in nonlinear relationships. Some examples are:
+Other modeling approaches do not use such a rigid specification as the models classically used in nonlinear relationships. Some examples are:
 
 1. **splines** (packages 'splines' or 'splines2')
 2. **gams** (package 'mgcv')
@@ -230,9 +233,14 @@ And additional models, such as:
 3. Campbel
 4. Expo
 
-# Additional references
+# Additional material on growth models
 
-1. https://www.ncbi.nlm.nih.gov/pubmed/20831877
-2. https://www.ncbi.nlm.nih.gov/pubmed/28582419
+1. A unified approach to the Richards-model family for use in growth analyses:
+Why we need only two model forms. (doi:10.1016/j.jtbi.2010.09.008). Might incorporate this function in the package in the future.
+
+2. The use of Gompertz models in growth analyses, and new Gompertz-model approach: An addition to the Unified-Richards family. https://doi.org/10.1371/journal.pone.0178691
+
+3. Choosing the right sigmoid growth function using the unified-models approach. doi: 10.1111/ibi.12592
+
 
 

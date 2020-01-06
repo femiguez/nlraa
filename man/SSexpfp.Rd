@@ -21,7 +21,7 @@ SSexpfp(x, a, c, xs)
 \value{
 a numeric vector of the same length as x containing parameter estimates for equation specified
 
-expp: vector of the same length as x using the profd function
+expfp: vector of the same length as x using the expfp function
 }
 \description{
 Self starter for an exponential-plateau function

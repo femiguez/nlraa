@@ -21,7 +21,7 @@ SSpexpf(x, a, xs, c)
 \value{
 a numeric vector of the same length as x containing parameter estimates for equation specified
 
-pexpf: vector of the same length as x using the profd function
+pexpf: vector of the same length as x using the pexpf function
 }
 \description{
 Self starter for an plateau-exponential function

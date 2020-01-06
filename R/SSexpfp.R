@@ -73,7 +73,7 @@ expfpInit <- function(mCall, LHS, data){
 }
 
 #' @rdname SSexpfp
-#' @return expp: vector of the same length as x using the profd function
+#' @return expfp: vector of the same length as x using the expfp function
 #' @export
 expfp <- function(x, a, c, xs){
   

@@ -72,7 +72,7 @@ pexpfInit <- function(mCall, LHS, data){
 }
 
 #' @rdname SSpexpf
-#' @return pexpf: vector of the same length as x using the profd function
+#' @return pexpf: vector of the same length as x using the pexpf function
 #' @export
 pexpf <- function(x, a, xs, c){
   

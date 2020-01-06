@@ -23,7 +23,7 @@ SSratio(x, a, b, c, d)
 \value{
 a numeric vector of the same length as x containing parameter estimates for equation specified
 
-ratio: vector of the same length as x using a bell-shaped curve
+ratio: vector of the same length as x using a rational function
 }
 \description{
 Self starter for a rational curve

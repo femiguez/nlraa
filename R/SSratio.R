@@ -64,7 +64,7 @@ ratioInit <- function(mCall, LHS, data){
 }
 
 #' @rdname SSratio
-#' @return ratio: vector of the same length as x using a bell-shaped curve
+#' @return ratio: vector of the same length as x using a rational function
 #' @export
 #' 
 ratio <- function(x, a, b, c, d){

@@ -26,7 +26,7 @@ a numeric vector of the same length as x containing parameter estimates for equa
 profd: vector of the same length as x using the profd function
 }
 \description{
-Self starter for a 'decay' of a variable within a canopy (e.g. nitrogen concentration).
+Self starter for a decay of a variable within a canopy (e.g. nitrogen concentration).
 }
 \details{
 Profile decay function for describing variables which decay within a canopy profile

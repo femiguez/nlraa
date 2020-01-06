@@ -3,7 +3,7 @@
 #' @title self start for profile decay function
 #' @name SSprofd
 #' @rdname SSprofd
-#' @description Self starter for a 'decay' of a variable within a canopy (e.g. nitrogen concentration).
+#' @description Self starter for a decay of a variable within a canopy (e.g. nitrogen concentration).
 #' @param x input vector (x) 
 #' @param a represents the maximum value
 #' @param b represents the minimum value
