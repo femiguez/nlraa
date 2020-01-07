@@ -40,11 +40,12 @@ but it might be beneficial to re-scale x and y to the (0,1) range if this functi
 \examples{
 \dontrun{
 require(ggplot2)
+require(minpack.lm)
 set.seed(1234)
 x <- 1:100
-y <- ratio(x, 1, 0.5, 1, 1.5) + rnorm(length(x), 0, 0.5)
+y <- ratio(x, 1, 0.5, 1, 1.5) + rnorm(length(x), 0, 0.025)
 dat <- data.frame(x = x, y = y)
-fit <- nls(y ~ SSratio(x, a, b, c, d), data = dat)
+fit <- nlsLM(y ~ SSratio(x, a, b, c, d), data = dat)
 ## plot
 ggplot(data = dat, aes(x = x, y = y)) + 
   geom_point() + 

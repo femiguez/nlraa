@@ -14,7 +14,7 @@
   \item{group}{grouping for regression}
 }}
 \source{
-\url{insert doi}
+\url{https://doi.org/10.1002/ece3.5543}
 }
 \usage{
 lfmc

@@ -49,7 +49,7 @@ One of the objectives of those publications was to introduce a large family of n
 5. SSdlf (Declining Logistic Function)
 6. SSricker (Ricker population growth)
 7. SSprofd (Profile of protein distribution)
-8. SSnrh (Non-rectangual hyperbola)
+8. SSnrh (Non-rectangular hyperbola)
 9. SSlinp (linear-plateau)
 10. SSplin (plateau-linear)
 11. SSquadp (quadratic-plateau)
