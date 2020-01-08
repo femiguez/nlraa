@@ -26,6 +26,7 @@ bgfInit <- function(mCall, LHS, data){
   if(nrow(xy) < 4){
     stop("Too few distinct input values to fit a bgf")
   }
+
   w.max <- max(xy[,"y"])
   t.e <- NLSstClosestX(xy, w.max)
   t.m <- t.e / 2

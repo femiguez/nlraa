@@ -141,7 +141,7 @@ For convergence problems related to poor starting values there are some alternat
 
 ## Barley example
 
-For background see: http://miguezlab.agron.iastate.edu/OldWebsite/Research/Talks/ASA_Miguez.pdf
+For background see: (http://miguezlab.agron.iastate.edu/OldWebsite/Research/Talks/ASA_Miguez.pdf).
 
 ```{r barleyG}
 library(nlme)
@@ -211,7 +211,7 @@ Might make it easier to fit and plot a few different models.
 ## **chngpt** pacakge
 
 chngpt: threshold regression model estimation and inference. 
-(doi: 10.1186/s12859-017-1863-x).
+\doi{10.1186/s12859-017-1863-x}.
 
 ## **HydroMe** package
 
@@ -241,11 +241,11 @@ And additional models, such as:
 # Additional material on growth models
 
 1. A unified approach to the Richards-model family for use in growth analyses:
-Why we need only two model forms. (doi:10.1016/j.jtbi.2010.09.008). Might incorporate this function in the package in the future.
+Why we need only two model forms. \doi{10.1016/j.jtbi.2010.09.008}. Might incorporate this function in the package in the future.
 
-2. The use of Gompertz models in growth analyses, and new Gompertz-model approach: An addition to the Unified-Richards family. https://doi.org/10.1371/journal.pone.0178691
+2. The use of Gompertz models in growth analyses, and new Gompertz-model approach: An addition to the Unified-Richards family. (https://doi.org/10.1371/journal.pone.0178691).
 
-3. Choosing the right sigmoid growth function using the unified-models approach. doi: 10.1111/ibi.12592
+3. Choosing the right sigmoid growth function using the unified-models approach. \doi{10.1111/ibi.12592}.
 
 
 

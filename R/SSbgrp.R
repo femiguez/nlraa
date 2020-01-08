@@ -13,6 +13,7 @@
 #' @details The form of the equation is: \deqn{w.max * (1 + (exp(lt.e) - time)/exp(ldt)) * (time/exp(lt.e))^(exp(lt.e) / exp(ldt))}.
 #' Given this function weight is expected to decay and reach zero again at \eqn{2*ldt}. This is a reparameterized version 
 #' of the Beta-Growth function in which the parameters are unconstrained, but they are expressed in the log-scale.
+#' @note In a few tests it seems that zero values of \sQuote{time} can cause the error message \sQuote{NA/NaN/Inf in foreign function call (arg 1)}, so it might be better to remove them before running this function.
 #' @export
 #' @examples 
 #' \dontrun{
@@ -34,6 +35,7 @@ bgrpInit <- function(mCall, LHS, data){
   if(nrow(xy) < 3){
     stop("Too few distinct input values to fit a bgrp.")
   }
+  
   w.max <- max(xy[,"y"])
   lt.e <- log(NLSstClosestX(xy, w.max))
   ldt <- lt.e / 2

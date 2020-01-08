@@ -134,6 +134,36 @@ if(test.other.examples){
     geom_point() + 
     geom_line(aes(y = fitted(fit.10)))
   
+  ## Dataset ChickWeight is an interesting one to analyze
+  data(ChickWeight)
+  chick.11 <- subset(ChickWeight, Chick == 11)
+  fit.11.b <- nls(weight ~ bgf2(Time, w.max, w.b = 43, t.e, t.m, t.b = 0), data = chick.11, start = list(w.max = 170, t.e = 17, t.m = 10))
+  fit.11.l <- nls(weight ~ SSfpl(Time, A, B, xmid, scal), data = chick.11)
+  anova(fit.11.b, fit.11.l)
   
+  ggplot(data = chick.11, aes(x = Time, y = weight)) + 
+    geom_point() + 
+    geom_line(aes(y = fitted(fit.11.b)))
+  
+  ggplot(data = chick.11, aes(x = Time, y = weight)) + 
+    geom_point() + 
+    geom_line(aes(y = fitted(fit.11.l)))
+  
+  chick.43 <- subset(ChickWeight, Chick == 43)
+  fit.43.b <- nls(weight ~ SSbgf(Time, w.max, t.e, t.m), data = chick.43)
+  fit.43.brp <- nls(weight ~ SSbgrp(Time, w.max, t.e, t.m), data = chick.43, subset = Time > 0)
+  fit.43.b4rp <- nls(weight ~ SSbg4rp(Time, w.max, lt.e, ldtm, ldtb), data = chick.43)
+  
+  ggplot(data = chick.43, aes(x = Time, y = weight)) + 
+    geom_point() + 
+    geom_line(aes(y = fitted(fit.43.b)))
+  
+  ggplot(data = subset(chick.43, Time > 0), aes(x = Time, y = weight)) + 
+    geom_point() + 
+    geom_line(aes(y = fitted(fit.43.brp)))
+  
+  ggplot(data = chick.43, aes(x = Time, y = weight)) + 
+    geom_point() + 
+    geom_line(aes(y = fitted(fit.43.b4rp)))
   
 }
