@@ -30,7 +30,7 @@ Self starter for linear-plateau function with parameters a (intercept), b (slope
 This function is linear when \eqn{x < xs: (a + b * x)} and flat (\eqn{asymptote = a + b * xs}) when \eqn{x >= xs}.
 }
 \examples{
-\dontrun{
+\donttest{
 require(ggplot2)
 set.seed(123)
 x <- 1:30
@@ -47,5 +47,5 @@ confint(fit)
 
 }
 \seealso{
-package \pkg{segmented}.
+package \CRANpkg{segmented}.
 }

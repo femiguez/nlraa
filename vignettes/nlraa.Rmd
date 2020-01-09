@@ -139,6 +139,26 @@ For convergence problems related to poor starting values there are some alternat
 4. Define a custom optimization and use function 'optim' in 'stats' package (also 'nlm' or 'nlminb'). This option extends the possibility of available algorithms.
 5. Manually construct a profile of residual sum of squares as a function of the parameters to understand the relationship which might lead to a better choice for starting values.
 
+## Some common error messages
+
+When fitting nonlinear models some error messages will be commonly encountered. For example,
+
+```{r, eval = FALSE}
+## Error in nls(y ~ SSratio(x, a, b, c, d), data = dat) : 
+##  step factor 0.000488281 reduced below 'minFactor' of 0.000976562
+```
+
+Although one option is to reduce `minFactor` under `control` in `nls` it is better to first check that the model is appropriate for the data and that starting values are reasonable. Another option is to use `nlsLM` from the `minpack.lm` package, which can be more robust. 
+
+Another possible error message is:
+
+```{r, eval = FALSE}
+## Error in qr.default(.swts * gr) : 
+##  NA/NaN/Inf in foreign function call (arg 1)
+```
+
+This can be caused by the presence of missing data, which your model cannot handle, or by the presence of zeros in the data that can generate `NA/NaN/Inf` inside other functions. The solution is to remove missing data and/or zeros.
+
 ## Barley example
 
 For background see: (http://miguezlab.agron.iastate.edu/OldWebsite/Research/Talks/ASA_Miguez.pdf).
@@ -202,7 +222,7 @@ Dose-response curves package
 
 Ritz C, Baty F, Streibig JC, Gerhard D
 (2015) Dose-Response Analysis Using R. PLoS ONE
-10(12): e0146021. doi:10.1371/journal.pone.0146021
+10(12): e0146021. \doi{10.1371/journal.pone.0146021}.
 
 ## **easynls** pacakge
 
@@ -215,7 +235,7 @@ chngpt: threshold regression model estimation and inference.
 
 ## **HydroMe** package
 
-This package has functions for fitting water retention curves. Interestingly, it
+This package has functions for fitting water retention curves. It
 uses the 'minpack.lm' package which has a different implementation of the 
 minimization algorithm (Levenberg-Marquardt).
 
@@ -238,7 +258,7 @@ And additional models, such as:
 3. Campbel
 4. Expo
 
-# Additional material on growth models
+## Additional material on growth models
 
 1. A unified approach to the Richards-model family for use in growth analyses:
 Why we need only two model forms. \doi{10.1016/j.jtbi.2010.09.008}. Might incorporate this function in the package in the future.

@@ -12,7 +12,7 @@
 #' @details This function is described in Archontoulis and Miguez (2015) - (doi:10.2134/agronj2012.0506). One example application is Hammer et al. (2009) (doi:10.2135/cropsci2008.03.0152).
 #' @export
 #' @examples 
-#' \dontrun{
+#' \donttest{
 #' require(ggplot2)
 #' set.seed(1234)
 #' x <- 1:20
@@ -30,7 +30,7 @@ bellInit <- function(mCall, LHS, data){
   
   xy <- sortedXyData(mCall[["x"]], LHS, data)
   if(nrow(xy) < 4){
-    stop("Too few distinct input values to fit a bell-shaped curve")
+    stop("Too few distinct input values to fit a bell-shaped curve.")
   }
   ymax <- max(xy[,"y"])
   xc <- NLSstClosestX(xy, ymax)

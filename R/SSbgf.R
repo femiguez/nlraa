@@ -4,7 +4,7 @@
 #' @name SSbgf
 #' @rdname SSbgf
 #' @description Self starter for Beta Growth function with parameters w.max, t.m and t.e
-#' @param time input vector (x) which is normally 'time', the smallest value should be close to zero.
+#' @param time input vector (x) which is normally \sQuote{time}, the smallest value should be close to zero.
 #' @param w.max value of weight or mass at its peak
 #' @param t.m time at which half of the maximum weight or mass has been reached.
 #' @param t.e time at which the weight or mass reaches its peak.
@@ -12,7 +12,7 @@
 #' Given this function weight is expected to decay and reach zero again at \eqn{2*t.e - t.m}.
 #' @export
 #' @examples 
-#' \dontrun{
+#' \donttest{
 #' ## See extended example in vignette 'nlraa-AgronJ-paper'
 #' x <- seq(0, 17, by = 0.25)
 #' y <- bgf(x, 5, 15, 7)

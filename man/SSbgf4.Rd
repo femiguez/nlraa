@@ -16,7 +16,7 @@ SSbgf4(time, w.max, t.e, t.m, t.b)
 
 \item{t.e}{time at which the weight or mass reaches its peak.}
 
-\item{t.m}{time at which half of the maximum weight or mass has bean reached.}
+\item{t.m}{time at which half of the maximum weight or mass has been reached.}
 
 \item{t.b}{time at which growth starts.}
 }
@@ -33,10 +33,10 @@ For details see the publication by Yin et al. (2003) \dQuote{A Flexible Sigmoid 
 This is a difficult function to fit because the linear constrains are not explicitly introduced 
 in the optimization process. See function \code{\link{SSbgrp}} for a reparameterized version.
 
-This is equation 11 (pg. 368) in the Yin paper, but with errata correction \url{https://academic.oup.com/aob/article/91/6/753/211049} and with w.b equal to zero.
+This is equation 11 (pg. 368) in the publication by Yin, but with correction (https://doi.org/10.1093/aob/mcg091) and with \sQuote{w.b} equal to zero.
 }
 \examples{
-\dontrun{
+\donttest{
 data(sm)
 ## Let's just pick one crop
 sm2 <- subset(sm, Crop == "M")

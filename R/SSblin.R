@@ -15,7 +15,7 @@
 #' @seealso package \pkg{segmented}.
 #' @export
 #' @examples 
-#' \dontrun{
+#' \donttest{
 #' require(ggplot2)
 #' set.seed(1234)
 #' x <- 1:30

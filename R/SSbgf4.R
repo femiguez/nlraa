@@ -9,13 +9,13 @@
 #' @param time input vector (x) which is normally \sQuote{time}.
 #' @param w.max value of weight or mass at its peak.
 #' @param t.e time at which the weight or mass reaches its peak.
-#' @param t.m time at which half of the maximum weight or mass has bean reached.
+#' @param t.m time at which half of the maximum weight or mass has been reached.
 #' @param t.b time at which growth starts.
 #' @return a numeric vector of the same length as x (time) containing parameter estimates for equation specified
-#' @details This is equation 11 (pg. 368) in the Yin paper, but with errata correction \url{https://academic.oup.com/aob/article/91/6/753/211049} and with w.b equal to zero.
+#' @details This is equation 11 (pg. 368) in the publication by Yin, but with correction (https://doi.org/10.1093/aob/mcg091) and with \sQuote{w.b} equal to zero.
 #' @export
 #' @examples 
-#' \dontrun{
+#' \donttest{
 #' data(sm)
 #' ## Let's just pick one crop
 #' sm2 <- subset(sm, Crop == "M")

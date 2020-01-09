@@ -2,7 +2,7 @@
 % Please edit documentation in R/nlsLMList.R
 \name{nlsLMList}
 \alias{nlsLMList}
-\title{Create a list of nls objects with the option of using nlsLM instead of nls}
+\title{Create a list of nls objects with the option of using nlsLM in addition to nls}
 \usage{
 nlsLMList(model, data, start, control, level, subset,
   na.action = na.fail, algorithm = c("LM", "default", "port",
@@ -23,7 +23,7 @@ nlsLMList(model, data, start, control, level, subset,
 
 \item{na.action}{a function that indicates what should happen when the data contain NAs. The default action (na.fail) causes nlsList to print an error message and terminate if there are any incomplete observations.}
 
-\item{algorithm}{choice of algorithm default is 'LM' which uses 'nlsLM' from the minpack.lm package}
+\item{algorithm}{choice of algorithm. Default is 'LM' which uses 'nlsLM' from the \CRANpkg{minpack.lm} package. Other options are: \dQuote{default}, \dQuote{port} and \dQuote{plinear} (nls).}
 
 \item{pool}{an optional logical value that is preserved as an attribute of the returned value. This will be used as the default for pool in calculations of standard deviations or standard errors for summaries.}
 
@@ -31,12 +31,12 @@ nlsLMList(model, data, start, control, level, subset,
 }
 \description{
 This function is a copy of 'nlsList' from the 'nlme' package modified
-to use the 'nlsLM' function instead of 'nls'. By changing the algorithm argument it is possible
+to use the 'nlsLM' function in addition to (optinally) 'nls'. By changing the algorithm argument it is possible
 to use 'nls' as well
 }
 \details{
-See function \code{\link[nlme]{nlsList}} and \code{\link[minpack.lm]{nlsLM}}. This function is a copy of nlsList but with minor changes to use LM instead as the default algorithm.
+See function \code{\link[nlme]{nlsList}} and \code{\link[minpack.lm]{nlsLM}}. This function is a copy of nlsList but with minor changes to use LM instead as the default algorithm. The authors of the original function are Pinheiro and Bates.
 }
 \author{
-Fernando E. Miguez. (see details).
+Jose C. Pinheiro and Douglas M. Bates \email{bates@stat.wisc.edu} wrote the original \code{\link[nlme]{nlsList}}. Fernando E. Miguez made minor changes to use \code{\link[minpack.lm]{nlsLM}} in addition to (optionally) \code{\link{nls}}. R-Core maintains copyright after 2006.
 }

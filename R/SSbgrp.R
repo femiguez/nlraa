@@ -16,7 +16,8 @@
 #' @note In a few tests it seems that zero values of \sQuote{time} can cause the error message \sQuote{NA/NaN/Inf in foreign function call (arg 1)}, so it might be better to remove them before running this function.
 #' @export
 #' @examples 
-#' \dontrun{
+#' \donttest{
+#' require(ggplot2)
 #' x <- 1:30
 #' y <- bgrp(x, 20, log(25), log(5)) + rnorm(30, 0, 1)
 #' dat <- data.frame(x = x, y = y)

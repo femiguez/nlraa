@@ -32,7 +32,7 @@ Self starter for plateau-quadratic function with parameters a (plateau), xs (bre
 Reference for nonlinear regression Archontoulis and Miguez (2015) - (doi:10.2134/agronj2012.0506).
 }
 \examples{
-\dontrun{
+\donttest{
 require(ggplot2)
 set.seed(12345)
 x <- 1:40

@@ -38,7 +38,7 @@ but it might be beneficial to re-scale x and y to the (0,1) range if this functi
 \url{https://en.wikipedia.org/wiki/Rational_function}.
 }
 \examples{
-\dontrun{
+\donttest{
 require(ggplot2)
 require(minpack.lm)
 set.seed(1234)

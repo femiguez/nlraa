@@ -30,7 +30,7 @@ Self starter for an exponential-plateau function
 This function is described in Archontoulis and Miguez (2015) - (doi:10.2134/agronj2012.0506).
 }
 \examples{
-\dontrun{
+\donttest{
 require(ggplot2)
 set.seed(12345)
 x <- 1:30

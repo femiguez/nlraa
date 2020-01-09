@@ -23,7 +23,7 @@
 #' @return a numeric vector of the same length as x (time) containing parameter estimates for equation specified
 #' @export
 #' @examples 
-#' \dontrun{
+#' \donttest{
 #' ## Extended example in the vignette 'nlraa-Oddi-LFMC'
 #' x <- seq(0, 17, by = 0.25)
 #' y <- dlf(x, 2, 10, 8, 1)

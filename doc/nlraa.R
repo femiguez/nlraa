@@ -36,6 +36,14 @@ ggplot(data = barley, aes(x = NF, y = yield, color = as.factor(year))) +
   xlab("Nitrogen fertilizer (g/m^2)") +
   ylab("Grain (g/m^2)")
 
+## ---- eval = FALSE-------------------------------------------------------
+#  ## Error in nls(y ~ SSratio(x, a, b, c, d), data = dat) :
+#  ##  step factor 0.000488281 reduced below 'minFactor' of 0.000976562
+
+## ---- eval = FALSE-------------------------------------------------------
+#  ## Error in qr.default(.swts * gr) :
+#  ##  NA/NaN/Inf in foreign function call (arg 1)
+
 ## ----barleyG-------------------------------------------------------------
 library(nlme)
 data(barley)

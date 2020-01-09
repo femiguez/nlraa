@@ -30,7 +30,7 @@ Self starter for plateau-linear function with parameters a (plateau), xs (break-
 Initial plateau with a second linear phase. When \eqn{x < xs: y = a} and when \eqn{x >= xs: y = a + b * (x - xs)}.
 }
 \examples{
-\dontrun{
+\donttest{
 require(ggplot2)
 set.seed(123)
 x <- 1:30

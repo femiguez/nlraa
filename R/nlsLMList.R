@@ -4,7 +4,7 @@
 ###                      Douglas M. Bates <bates@stat.wisc.edu>
 ### Copyright 2006-2016 The R Core team
 ###
-### Modified by Fernando Miguez to use nlsLM instead of nls (2019)
+### Modified by Fernando Miguez to use nlsLM for fitting in addition to (optionally) nls (2020-01-08)
 #
 #  This program is free software; you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -20,10 +20,10 @@
 #  http://www.r-project.org/Licenses/
 #
 
-#' @title Create a list of nls objects with the option of using nlsLM instead of nls
+#' @title Create a list of nls objects with the option of using nlsLM in addition to nls
 #' @name nlsLMList
 #' @description This function is a copy of 'nlsList' from the 'nlme' package modified
-#' to use the 'nlsLM' function instead of 'nls'. By changing the algorithm argument it is possible
+#' to use the 'nlsLM' function in addition to (optinally) 'nls'. By changing the algorithm argument it is possible
 #' to use 'nls' as well
 #' @param model either a nonlinear model formula, with the response on the left of a ~ operator and an expression involving parameters, covariates, and a grouping factor separated by the | operator on the right, or a selfStart function. 
 #' @param data a data frame
@@ -32,11 +32,11 @@
 #' @param level an optional integer specifying the level of grouping to be used when multiple nested levels of grouping are present.
 #' @param subset subset of rows to use
 #' @param na.action a function that indicates what should happen when the data contain NAs. The default action (na.fail) causes nlsList to print an error message and terminate if there are any incomplete observations.
-#' @param algorithm choice of algorithm default is 'LM' which uses 'nlsLM' from the minpack.lm package
+#' @param algorithm choice of algorithm. Default is 'LM' which uses 'nlsLM' from the \CRANpkg{minpack.lm} package. Other options are: \dQuote{default}, \dQuote{port} and \dQuote{plinear} (nls).
 #' @param pool an optional logical value that is preserved as an attribute of the returned value. This will be used as the default for pool in calculations of standard deviations or standard errors for summaries.
 #' @param warn.nls logical indicating if nls errors (all of which are caught by tryCatch) should be signalled as a “summarizing” warning.
-#' @details See function \code{\link[nlme]{nlsList}} and \code{\link[minpack.lm]{nlsLM}}. This function is a copy of nlsList but with minor changes to use LM instead as the default algorithm.
-#' @author Fernando E. Miguez. (see details).
+#' @details See function \code{\link[nlme]{nlsList}} and \code{\link[minpack.lm]{nlsLM}}. This function is a copy of nlsList but with minor changes to use LM instead as the default algorithm. The authors of the original function are Pinheiro and Bates.
+#' @author Jose C. Pinheiro and Douglas M. Bates \email{bates@@stat.wisc.edu} wrote the original \code{\link[nlme]{nlsList}}. Fernando E. Miguez made minor changes to use \code{\link[minpack.lm]{nlsLM}} in addition to (optionally) \code{\link{nls}}. R-Core maintains copyright after 2006.
 #' @export
 #' 
 

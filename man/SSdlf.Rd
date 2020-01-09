@@ -43,7 +43,7 @@ Response function:  \deqn{y = (asym - a2) / (1 + exp((xmid - time)/scal))) + a2}
  Oddi et. al. (2019) (see vignette).
 }
 \examples{
-\dontrun{
+\donttest{
 ## Extended example in the vignette 'nlraa-Oddi-LFMC'
 x <- seq(0, 17, by = 0.25)
 y <- dlf(x, 2, 10, 8, 1)

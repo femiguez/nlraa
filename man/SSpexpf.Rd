@@ -30,7 +30,7 @@ Self starter for an plateau-exponential function
 The equation is: \eqn{for x < xs: y = a and x >= xs: a * exp(c * (x-xs))}.
 }
 \examples{
-\dontrun{
+\donttest{
 require(ggplot2)
 set.seed(1234)
 x <- 1:30

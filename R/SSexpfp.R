@@ -11,7 +11,7 @@
 #' @details This function is described in Archontoulis and Miguez (2015) - (doi:10.2134/agronj2012.0506). 
 #' @export
 #' @examples 
-#' \dontrun{
+#' \donttest{
 #' require(ggplot2)
 #' set.seed(12345)
 #' x <- 1:30
@@ -56,7 +56,7 @@ expfpInit <- function(mCall, LHS, data){
   op <- try(stats::optim(cfs, objfun, method = "L-BFGS-B",
                          upper = c(Inf, Inf, max(xy[,"x"])),
                          lower = c(-Inf, -Inf, min(xy[,"x"]))), silent = TRUE)
-  
+
   if(class(op) != "try-error"){
     a <- op$par[1]
     c <- op$par[2]

@@ -11,7 +11,7 @@
 #' @details Initial plateau with a second linear phase. When \eqn{x < xs: y = a} and when \eqn{x >= xs: y = a + b * (x - xs)}.
 #' @export
 #' @examples 
-#' \dontrun{
+#' \donttest{
 #' require(ggplot2)
 #' set.seed(123)
 #' x <- 1:30

@@ -32,7 +32,7 @@ Self starter for Non-rectangual Hyperbola with parameters: asymptote, quantum ef
 This function is described in Archontoulis and Miguez (2015) - (doi:10.2134/agronj2012.0506).
 }
 \examples{
-\dontrun{
+\donttest{
 require(ggplot2)
 set.seed(1234)
 x <- seq(0, 2000, 100)

@@ -9,10 +9,10 @@
 #' @param xs break-point of transition between linear and plateau 
 #' @return a numeric vector of the same length as x containing parameter estimates for equation specified
 #' @details This function is linear when \eqn{x < xs: (a + b * x)} and flat (\eqn{asymptote = a + b * xs}) when \eqn{x >= xs}.
-#' @seealso package \pkg{segmented}.
+#' @seealso package \CRANpkg{segmented}.
 #' @export
 #' @examples 
-#' \dontrun{
+#' \donttest{
 #' require(ggplot2)
 #' set.seed(123)
 #' x <- 1:30

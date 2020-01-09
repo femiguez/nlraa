@@ -139,7 +139,8 @@ if(test.other.examples){
   chick.11 <- subset(ChickWeight, Chick == 11)
   fit.11.b <- nls(weight ~ bgf2(Time, w.max, w.b = 43, t.e, t.m, t.b = 0), data = chick.11, start = list(w.max = 170, t.e = 17, t.m = 10))
   fit.11.l <- nls(weight ~ SSfpl(Time, A, B, xmid, scal), data = chick.11)
-  anova(fit.11.b, fit.11.l)
+  anova(fit.11.b, fit.11.l) ## RSS is lower for bgf2
+  AIC(fit.11.l, fit.11.b) ## AIC is lower for bgf2
   
   ggplot(data = chick.11, aes(x = Time, y = weight)) + 
     geom_point() + 
@@ -165,5 +166,70 @@ if(test.other.examples){
   ggplot(data = chick.43, aes(x = Time, y = weight)) + 
     geom_point() + 
     geom_line(aes(y = fitted(fit.43.b4rp)))
+  
+  ## Looking at dataset 'Indometh'
+  data(Indometh)
+  
+  fit <- nlsLM(conc ~ SSratio(time, a, b, c, d), data = Indometh)
+  
+  ggplot(data = Indometh, aes(x = time, y = conc)) + 
+    geom_point() + 
+    geom_line(aes(y = fitted(fit)))
+  
+  fit.nlis <- nlsLMList(conc ~ SSratio(time, a, b, c, d), data = Indometh)  
+  ## Can't fit a reasonable model using nlme...
+  
+  ## Looking at 'Orange' dataset
+  data(Orange)
+  
+  fit <- nlsList(circumference ~ SSbg4rp(age, w.max, lt.e, ldtm , ldtb), data = Orange)
+  
+  fit.nlme2 <- nlme(fit, random = list(w.max  ~ 1))
+  
+  plot(augPred(fit.nlme2, level = 0:1))
+  
+  ## Looking at dataset 'pressure'
+  data(pressure)
+  
+  fit <- nls(pressure ~ SSexpf(temperature, a, c), data = pressure)
+  
+  ggplot(data = pressure, aes(x = temperature, y = pressure)) + 
+    geom_point() + 
+    geom_line(aes(y = fitted(fit)))
+  
+  ## Looking at dataset 'Loblloly'
+  data(Loblolly)
+  
+  fit <- nlsLM(height ~ SSratio(age, a, b, c, d), data = Loblolly)
+  
+  ggplot(data = Loblolly, aes(x = age, y = height)) + 
+    geom_point() + 
+    geom_line(aes(y = fitted(fit)))
+  
+  fit <- nlsLM(height ~ SSblin(age, a, b, xs, c), data = Loblolly)
+  
+  ggplot(data = Loblolly, aes(x = age, y = height)) + 
+    geom_point() + 
+    geom_line(aes(y = fitted(fit)))
+  
+  ## Should create some examples from pacakge 'nlstools'
+  require(nlstools)
+  
+  data(O2K)
+  fit <- nls(VO2 ~ SSpquad(t, a, xs, b, c), data = O2K)
+  
+  plotfit(fit)
+  
+  ggplot(data = O2K, aes(x = t, y = VO2)) + 
+    geom_point() + 
+    geom_line(aes(y = fitted(fit)))
+  
+  data(vmkm)
+  
+  fit <- nlsLM(v ~ SSblin(S, a, b, xs, c), data = vmkm)
+  
+  ggplot(data = vmkm, aes(x = S, y = v)) + 
+    geom_point() + 
+    geom_line(aes(y = fitted(fit)))
   
 }

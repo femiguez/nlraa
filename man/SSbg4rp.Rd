@@ -44,7 +44,8 @@ The form of the equation is: \deqn{w.max * (1 + (exp(lt.e) - time)/exp(ldtm)) * 
 This is a reparameterized version of the Beta-Growth function in which the parameters are unconstrained, but they are expressed in the log-scale.
 }
 \examples{
-\dontrun{
+\donttest{
+require(ggplot2)
 set.seed(1234)
 x <- 1:100
 y <- bg4rp(x, 20, log(70), log(30), log(20)) + rnorm(100, 0, 1)

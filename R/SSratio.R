@@ -18,7 +18,7 @@
 #' \url{https://en.wikipedia.org/wiki/Rational_function}.
 #' @export
 #' @examples 
-#' \dontrun{
+#' \donttest{
 #' require(ggplot2)
 #' require(minpack.lm)
 #' set.seed(1234)

@@ -13,7 +13,7 @@ SSbgf(time, w.max, t.e, t.m)
 bgf2(time, w.max, w.b, t.e, t.m, t.b)
 }
 \arguments{
-\item{time}{input vector (x) which is normally 'time', the smallest value should be close to zero.}
+\item{time}{input vector (x) which is normally \sQuote{time}, the smallest value should be close to zero.}
 
 \item{w.max}{value of weight or mass at its peak}
 
@@ -40,7 +40,7 @@ The form of the equation is: \deqn{w.max * (1 + (t.e - time)/(t.e - t.m)) * (tim
 Given this function weight is expected to decay and reach zero again at \eqn{2*t.e - t.m}.
 }
 \examples{
-\dontrun{
+\donttest{
 ## See extended example in vignette 'nlraa-AgronJ-paper'
 x <- seq(0, 17, by = 0.25)
 y <- bgf(x, 5, 15, 7)

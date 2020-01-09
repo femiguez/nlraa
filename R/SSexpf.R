@@ -10,7 +10,7 @@
 #' @details This function is described in Archontoulis and Miguez (2015) - (doi:10.2134/agronj2012.0506). 
 #' @export
 #' @examples 
-#' \dontrun{
+#' \donttest{
 #' require(ggplot2)
 #' set.seed(1234)
 #' x <- 1:15

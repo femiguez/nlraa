@@ -34,7 +34,7 @@ function with several breakpoints and linear segments. Splines would be even mor
 model assumes that there is a break-point that needs to be estimated.
 }
 \examples{
-\dontrun{
+\donttest{
 require(ggplot2)
 set.seed(1234)
 x <- 1:30

@@ -29,7 +29,7 @@ This function is described in Archontoulis and Miguez (2015) - (doi:10.2134/agro
 The equation is: \eqn{a * time * exp(-b * time)}.
 }
 \examples{
-\dontrun{
+\donttest{
 require(ggplot2)
 set.seed(123)
 x <- 1:30
