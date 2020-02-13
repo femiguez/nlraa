@@ -32,6 +32,14 @@ if(test.other.examples){
   ggplot(data = subset(plant, group == "RKV"), aes(x = time, y = y)) + 
     geom_point() + geom_line(aes(y = fitted(fit.rkv)))
   
+  ## Data 'down'
+  ## data(down)
+  ## fit <- nls(births ~ SSricker(age, a, b), data = down)
+  
+  ## ggplot(data = down, aes(age, births)) + 
+    ## geom_point() + 
+    ## geom_line(aes(y = fitted(fit)))
+  
   ## Testing with the swpg data
   data(swpg)
   ## blinear
@@ -231,5 +239,52 @@ if(test.other.examples){
   ggplot(data = vmkm, aes(x = S, y = v)) + 
     geom_point() + 
     geom_line(aes(y = fitted(fit)))
+  
+  ## Let's review the datasets in NISTnls
+  library(NISTnls)
+  
+  ## Bennett5 - not interested
+  data(Chwirut1)
+  fit <- nls(y ~ SSexpfp(x, a, c, d), data = Chwirut1)
+  ggplot(data = Chwirut1, aes(x, y)) + geom_point() + geom_line(aes(y = fitted(fit)))
+  
+  data(Chwirut2)
+  fit <- nls(y ~ SSexpfp(x, a, c, d), data = Chwirut2)
+  ggplot(data = Chwirut2, aes(x, y)) + geom_point() + geom_line(aes(y = fitted(fit)))
+  ## DanielWood - not interested
+  ## ENSO - not interested
+  data(Eckerle4)
+  fit <- nls(y ~ SSbell(x, ymax, a, b, xc), data = Eckerle4)
+  ggplot(data = Eckerle4, aes(x, y)) + geom_point() + geom_line(aes(y = fitted(fit)))
+  
+  ## Gauss1, Gauss2, Gauss3 - nlraa cannot handle this!
+  ## should use splines or gams instead
+  
+  data(Hahn1)
+  fit <- nlsLM(y ~ SSratio(x, a, b, c, d), data = Hahn1, control = list(maxiter = 1e3))
+  ggplot(data = Hahn1, aes(x = x, y = y)) + geom_point() + geom_line(aes(y = fitted(fit)))
+  ## Almost perfect fit, but there are complains
+  fit2 <- nlsLM(y ~ SSratio(x, a, b, c, d), data = Hahn1, start = coef(fit))
+  ggplot(data = Hahn1, aes(x = x, y = y)) + geom_point() + geom_line(aes(y = fitted(fit2)))
+  
+  ## Kirby2 - maybe, but there is not much of an error
+  ## Lanczos1, 2, and 3 - not too interesting
+  data(MGH09)
+  fit <- nls(y ~ SSblin(x, a, b, xs, c), data = MGH09)
+  ggplot(data = MGH09, aes(x = x, y = y)) + geom_point() + geom_line(aes(y = fitted(fit)))
+  
+  ## MGH10 - not interested
+  ## MGH17 - challenging, but do not have a good candidate
+  ## Misra1a, b, c and d - not interested
+  ## Nelson - not sure what this one is about
+  ## Ratkowsky2 and 3 - look like good candidates for logistic or Gompertz
+  data(Roszman1)
+  fit <- nls(y ~ SSexpf(x, a, c), data = Roszman1)
+  ggplot(data = Roszman1, aes(x = x, y = y)) + geom_point() + geom_line(aes(y = fitted(fit)))
+  ## Roszman1 - cannot fit a good model
+  data(Thurber)
+  ## Several possible models
+  fit <- nls(y ~ SSfpl(x, a, b, c, d), data = Thurber)
+  ggplot(data = Thurber, aes(x = x, y = y)) + geom_point() + geom_line(aes(y = fitted(fit)))
   
 }

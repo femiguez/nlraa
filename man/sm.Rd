@@ -8,13 +8,12 @@
 \describe{
   \item{DOY}{ -integer- Day of the year 141-303}
   \item{Block}{ -integer- Block in the experimental design 1-4}
-  \item{Input}{ -integer- Input level 1 (Low) or High (2)}
+  \item{Input}{ -integer- Input level 1 (Low) or 2 (High)}
   \item{Crop}{ -factor- either F (Fiber Sorghum), M (Maize), S (Sweet Sorghum)}
   \item{Yield}{ -numeric- Biomass yield in Mg/ha}
 }}
 \source{
-See above reference 
-## TODO: insert link to paper
+See above reference. (Currently available on ResearchGate).
 }
 \usage{
 sm

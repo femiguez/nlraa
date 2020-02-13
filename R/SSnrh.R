@@ -1,8 +1,8 @@
 #' 
-#' @title self start for non-rectangualr hyperbola (photosynthesis)
+#' @title self start for non-rectangular hyperbola (photosynthesis)
 #' @name SSnrh
 #' @rdname SSnrh
-#' @description Self starter for Non-rectangual Hyperbola with parameters: asymptote, quantum efficiency, curvature and dark respiration
+#' @description Self starter for Non-rectangular Hyperbola with parameters: asymptote, quantum efficiency, curvature and dark respiration
 #' @param x input vector (x) which is normally light intensity (PPFD, Photosynthetic Photon Flux Density).
 #' @param asym asymptotic value for photosynthesis
 #' @param phi quantum efficiency (mol CO2 per mol of photons) or initial slope of the light response

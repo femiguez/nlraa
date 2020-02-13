@@ -224,6 +224,8 @@ Ritz C, Baty F, Streibig JC, Gerhard D
 (2015) Dose-Response Analysis Using R. PLoS ONE
 10(12): e0146021. \doi{10.1371/journal.pone.0146021}.
 
+This package actually has very useful functions, datasets and examples. In particular **drm** is an alternative to **nls**.
+
 ## **easynls** pacakge
 
 Might make it easier to fit and plot a few different models.
@@ -232,6 +234,24 @@ Might make it easier to fit and plot a few different models.
 
 chngpt: threshold regression model estimation and inference. 
 \doi{10.1186/s12859-017-1863-x}.
+
+## **mcp** package 
+
+mcp: package for multiple change points. Similar to the previous one, but it seems to use a Bayesian approach through JAGS.
+(https://lindeloev.github.io/mcp/)
+
+## **nlsr** package
+
+This is an effort to replace 'nls' with a better algorithm, but it seems to be still in development. Main function is **nlxb**.
+
+## **propagate** package
+
+This provides uncertainty for 'nls' objects via function 'predictNLS'.
+
+## **car** package
+
+"Companion to Applied Regression". It has function 'Boot' which can do bootstrapping
+for 'nls' objects. 
 
 ## **HydroMe** package
 
@@ -266,6 +286,10 @@ Why we need only two model forms. \doi{10.1016/j.jtbi.2010.09.008}. Might incorp
 2. The use of Gompertz models in growth analyses, and new Gompertz-model approach: An addition to the Unified-Richards family. (https://doi.org/10.1371/journal.pone.0178691).
 
 3. Choosing the right sigmoid growth function using the unified-models approach. \doi{10.1111/ibi.12592}.
+
+4. I find this post by Ben Bolker very interesting...
+https://stats.stackexchange.com/questions/231074/confidence-intervals-on-predictions-for-a-non-linear-mixed-model-nlme
+
 
 
 

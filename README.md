@@ -1,6 +1,11 @@
 # nlraa: R pacakge for Nonlinear Regression for Agricultural
 # Applications
 
+[![CRAN](http://www.r-pkg.org/badges/version/nlraa)](https://CRAN.R-project.org/package=nlraa)
+[![CRAN
+downloads total](https://cranlogs.r-pkg.org/badges/grand-total/nlraa)](https://github.com/metacran/cranlogs.app)
+[![CRAN downloads](https://cranlogs.r-pkg.org/badges/nlraa)](https://cran.r-project.org/package=nlraa)
+
 This package supports the following publications:
 
 1. Archontoulis, S. V., and F. E. Miguez. 2015. Nonlinear Regression

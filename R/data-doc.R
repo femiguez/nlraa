@@ -29,12 +29,11 @@
 #' \describe{
 #'   \item{DOY}{ -integer- Day of the year 141-303}
 #'   \item{Block}{ -integer- Block in the experimental design 1-4}
-#'   \item{Input}{ -integer- Input level 1 (Low) or High (2)}
+#'   \item{Input}{ -integer- Input level 1 (Low) or 2 (High)}
 #'   \item{Crop}{ -factor- either F (Fiber Sorghum), M (Maize), S (Sweet Sorghum)}
 #'   \item{Yield}{ -numeric- Biomass yield in Mg/ha}
 #' }
-#' @source See above reference 
-#' ## TODO: insert link to paper
+#' @source See above reference. (Currently available on ResearchGate).
  "sm"
  
  #' Simulated data based on obseved data presented in Sinclair (1986) - Fig. 1A
@@ -52,7 +51,6 @@
  
  #' Data from a paper by Arild Vold on response of barley to nitrogen fertilizer
  #' 
- #'
  #' @format A data frame with 76 rows and 3 columns
  #' \describe{
  #'   \item{year}{Year when the trial was conducted (1970-1988).}

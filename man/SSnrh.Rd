@@ -3,7 +3,7 @@
 \name{SSnrh}
 \alias{SSnrh}
 \alias{nrh}
-\title{self start for non-rectangualr hyperbola (photosynthesis)}
+\title{self start for non-rectangular hyperbola (photosynthesis)}
 \usage{
 nrh(x, asym, phi, theta, rd)
 
@@ -26,7 +26,7 @@ a numeric vector of the same length as x (time) containing parameter estimates f
 nrh: vector of the same length as x (time) using the non-rectangular hyperbola
 }
 \description{
-Self starter for Non-rectangual Hyperbola with parameters: asymptote, quantum efficiency, curvature and dark respiration
+Self starter for Non-rectangular Hyperbola with parameters: asymptote, quantum efficiency, curvature and dark respiration
 }
 \details{
 This function is described in Archontoulis and Miguez (2015) - (doi:10.2134/agronj2012.0506).
