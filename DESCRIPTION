@@ -1,5 +1,5 @@
 Package: nlraa
-Version: 0.54
+Version: 0.55
 Authors@R: c(person("Fernando", "Miguez", email = "femiguez@iastate.edu", role = c("aut", "cre"), comment = c(ORCID = "0000-0002-4627-8329")),
              person("José", "Pinheiro", role = c("ctb","cph"), comment = "author of nlme::nlsList"),
              person("Douglas", "Bates", role = c("ctb","cph"), comment = "author of nlme::nlsList"),
@@ -17,6 +17,7 @@ Imports:
         stats
 Suggests:
         bbmle,
+	car,
 	emmeans,
 	ggplot2,
 	HydroMe,

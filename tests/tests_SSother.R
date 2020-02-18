@@ -8,6 +8,7 @@ if(test.other.examples){
   require(ggplot2)
   require(segmented)
   require(minpack.lm)
+  require(car)
   
   data(plant)
   
@@ -278,13 +279,47 @@ if(test.other.examples){
   ## Misra1a, b, c and d - not interested
   ## Nelson - not sure what this one is about
   ## Ratkowsky2 and 3 - look like good candidates for logistic or Gompertz
+  data(Ratkowsky2)
+  fit1 <- nls(y ~ SSlogis(x, Asym, xmid, scal), data = Ratkowsky2)
+  ggplot(data = Ratkowsky2, aes(x = x, y = y)) + geom_point() + geom_line(aes(y = fitted(fit1)))
+  
+  ## What about a 5 parameter logistic?
+  fit2 <- nlsLM(y ~ SSlogis5(x, asym1, asym2, xmid, iscal, theta), data = Ratkowsky2, control = list(maxiter = 1e3))
+  ggplot(data = Ratkowsky2, aes(x = x, y = y)) + geom_point() + geom_line(aes(y = fitted(fit2)))
+  ## Comparing the models
+  anova(fit1, fit2)
+  fit2.bt <- Boot(fit2)
+  hist(fit2.bt)
+  ## These shows that the parameters are not well constrained under this model
+  
+  data("Ratkowsky3")
+  fit1 <- nls(y ~ SSlogis(x, asym, xmid, scal), data = Ratkowsky3)
+  ggplot(data = Ratkowsky3, aes(x = x, y = y)) + geom_point() + geom_line(aes(y = fitted(fit1)))
+  
+  fit2 <- nlsLM(y ~ SSlogis5(x, asym1, asym2, xmid, iscal, theta), data = Ratkowsky3, control = list(maxiter = 1e3))
+  fit3 <- nls(y ~ SSgompertz(x, a, b, c), data = Ratkowsky3)
+  ggplot(data = Ratkowsky3, aes(x = x, y = y)) + geom_point() + geom_line(aes(y = fitted(fit2)))
+  ggplot(data = Ratkowsky3, aes(x = x, y = y)) + geom_point() + geom_line(aes(y = fitted(fit3)))
+  
+  ## Five-parameter logistic fits a little bit better
+  anova(fit1, fit2, fit3)
+  fit2.bt <- Boot(fit2)
+  hist(fit2.bt)
+  
   data(Roszman1)
   fit <- nls(y ~ SSexpf(x, a, c), data = Roszman1)
   ggplot(data = Roszman1, aes(x = x, y = y)) + geom_point() + geom_line(aes(y = fitted(fit)))
-  ## Roszman1 - cannot fit a good model
+  
+  ## Blinear is not actually a terrible fit
+  fit <- nls(y ~ SSblin(x, a, b, xs, c), data = Roszman1)
+  ggplot(data = Roszman1, aes(x = x, y = y)) + geom_point() + geom_line(aes(y = fitted(fit)))
+  
   data(Thurber)
   ## Several possible models
   fit <- nls(y ~ SSfpl(x, a, b, c, d), data = Thurber)
   ggplot(data = Thurber, aes(x = x, y = y)) + geom_point() + geom_line(aes(y = fitted(fit)))
   
+  ## Another idea is to show and compare the car::Boot and nlstools:nlsBoot functions
+  ## These could be very useful, especially when the confidence interval function 'confint'
+  ## fails
 }
