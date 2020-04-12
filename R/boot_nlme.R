@@ -1,6 +1,6 @@
 #' Bootstraping tools for nonlinear models using a consistent interface
 #' 
-#' @title Bootstraping for generalized nonlinear models
+#' @title Bootstraping for generalized nonlinear models and nonlinear mixed models
 #' @name boot_nlme
 #' @param object object of class \sQuote{nlme} or \sQuote{gnls}
 #' @param f function to be applied (and bootstrapped), default coef (gnls) or fixef (nlme)
