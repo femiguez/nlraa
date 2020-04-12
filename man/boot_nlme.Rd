@@ -2,7 +2,7 @@
 % Please edit documentation in R/boot_nlme.R
 \name{boot_nlme}
 \alias{boot_nlme}
-\title{Bootstraping for generalized nonlinear models}
+\title{Bootstraping for generalized nonlinear models and nonlinear mixed models}
 \usage{
 boot_nlme(object, f = NULL, R = 999, psim = 1, ...)
 }

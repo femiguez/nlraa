@@ -54,10 +54,18 @@ boot_nlme <- function(object,
   NA.j <- 0
   
   boot_fun_resid <- function(data, indices, fn, model, psim,...){
-      
-    ## Fitted values, which are simulated values if psim = 1
-    if(inherits(model, "gnls")) fttd <- simulate_gnls(model, psim = psim, ...)
-    if(inherits(model, "nlme")) fttd <- simulate_nlme_one(model, psim = psim, ...)
+    
+    ## I need a hack to make the first iteration be t0 for boot
+    if(identical(get(".k.boot", envir = nlraa.env), 0L)){
+      ## This makes the assumption that the first time
+      ## boot calls 'boot_fun_resid' it will generate 't0' 
+      fttd <- fitted(model)
+      assign(".k.boot", 1L, envir = nlraa.env)
+    }else{
+      ## Fitted values, which are simulated values if psim = 1
+      if(inherits(model, "gnls")) fttd <- simulate_gnls(model, psim = psim, ...)
+      if(inherits(model, "nlme")) fttd <- simulate_nlme_one(model, psim = psim, ...)
+    }
     
     rsds.std <- residuals(model, type = "pearson") ## Extract 'pearson' residuals
    
@@ -92,6 +100,7 @@ boot_nlme <- function(object,
   cat("Number of times model fit did not converge",NA.j,
       "out of",R,"\n")
   
+  assign(".k.boot", 0L, envir = nlraa.env)
   return(ans)
 }
 
@@ -103,3 +112,4 @@ boot_nlme <- function(object,
 #' 
 nlraa.env <- new.env(parent = emptyenv())
 assign('.bdat', NA, nlraa.env)
+assign('.k.boot', 0L, nlraa.env)

@@ -2,7 +2,6 @@
 require(nlme)
 require(nlraa)
 require(car)
-require(boot)
 
 run.boot.test <- FALSE
 
@@ -26,15 +25,13 @@ if(run.boot.test){
 
   confint(fit.lp.gnls2.bt, type = "perc")
 
-  ## hist(fit.lp.gnls2.bt, 1, ci = "perc")
-  ## hist(fit.lp.gnls2.bt, 2, ci = "perc")
-  ## hist(fit.lp.gnls2.bt, 3, ci = "perc")
+  hist(fit.lp.gnls2.bt, 1, ci = "perc")
+  hist(fit.lp.gnls2.bt, 2, ci = "perc")
+  hist(fit.lp.gnls2.bt, 3, ci = "perc")
 
   ## Testing the bootstrap function with an object which
   ## contains factors
-  ## This does not work and I do not know how to handle the error
-  ## [1] "approximate covariance matrix for parameter estimates not of full rank"
-  set.seed(101)
+  
   barley2$year.f <- as.factor(barley2$year)
 
   cfs <- coef(fit.lp.gnls2)
@@ -43,20 +40,21 @@ if(run.boot.test){
                          params = list(a + b + xs ~ year.f),
                          start = c(cfs[1], 0, 0, 0, 
                                    cfs[2], 0, 0, 0,
-                                   cfs[3], 0, 0, 0),
-                         subset = 1:10)
+                                   cfs[3], 0, 0, 0))
 
   intervals(fit.lp.gnls3)
 
   fit.lp.gnls3.bt <- boot_nlme(fit.lp.gnls3, R = 3000)
 
+  summary(fit.lp.gnls3.bt)
+  
   confint(fit.lp.gnls3.bt, type = "perc")
   
-  ## hist(fit.lp.gnls3.bt, 1, ci = "perc")
+  hist(fit.lp.gnls3.bt, 1, ci = "perc")
+  hist(fit.lp.gnls3.bt, 2, ci = "perc")
+  hist(fit.lp.gnls3.bt, 3, ci = "perc")
 
-  ## Testing the function for 'nlme'. It seems to work well because
-  ## Error handling is somewhat different than for 'gnls'
-
+  ## Testing the function for 'nlme'. 
   barley$year.f <- as.factor(barley$year)
 
   barleyG <- groupedData(yield ~ NF | year.f, data = barley)
@@ -65,6 +63,7 @@ if(run.boot.test){
 
   fit.bar.nlme <- nlme(fitL.bar, random = pdDiag(a + b + xs ~ 1))
 
+  plot(augPred(fit.bar.nlme, level = 0:1))
   ## Confidence intervals of the model fixed parameters
   intervals(fit.bar.nlme, which = "fixed")
 
@@ -75,6 +74,8 @@ if(run.boot.test){
 
   confint(fit.bar.nlme.bt, type = "perc")
 
+  ## This is good because the estimate on the original data is
+  ## 348.9912, which is in the middle of the confidence interval
   hist(fit.bar.nlme.bt, 1, ci = "perc")
 
 }

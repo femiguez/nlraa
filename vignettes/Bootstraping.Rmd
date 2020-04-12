@@ -175,7 +175,7 @@ fit.lp.gnls2 <- gnls(yield ~ SSlinp(NF, a, b, xs), data = barley2)
 intervals(fit.lp.gnls2)
 
 ## Compare this to the bootstrapping approach
-fit.lp.gnls2.bt <- boot_nlme(fit.lp.gnls2, R = 500)
+fit.lp.gnls2.bt <- boot_nlme(fit.lp.gnls2, R = 200)
 
 summary(fit.lp.gnls2.bt)
 
@@ -184,8 +184,8 @@ confint(fit.lp.gnls2.bt, type = "perc")
 
 The confidence intervals obtained by bootstrap are wider (as expected) than the ones obtained using intervals because they consider the uncertainty in the parameters of the nonlinear model.
 
-```{r not-used-now, include = FALSE, eval = FALSE}
-set.seed(102)
+```{r gnls-factors}
+set.seed(101)
 barley2$year.f <- as.factor(barley2$year)
 
 cfs <- coef(fit.lp.gnls2)
@@ -198,7 +198,9 @@ fit.lp.gnls3 <- update(fit.lp.gnls2,
 
 fit.lp.gnls3.bt <- boot_nlme(fit.lp.gnls3, R = 500)
 
-confint(fit.lp.gnls.Bt3, type = "perc")
+confint(fit.lp.gnls3.bt, type = "perc")
+
+hist(fit.lp.gnls3.bt, 1, ci = "perc")
 ```
 
 I won't process this last object, but it is shown here to illustrate the use of bootstrapping for a 'gnls' object, which is something that function 'car::Boot' does not seem to be able to handle (the deltaMethod function also fails for this type of model, because it cannot handle the names in the vector of coefficients which uses periods).
