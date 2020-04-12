@@ -1,0 +1,233 @@
+---
+title: "Bootstraping for Nonlinear Models"
+author: "Fernando Miguez"
+date: "`r Sys.Date()`"
+fig_width: 6
+fig_height: 4
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Bootstraping for Nonlinear Models}
+  %\VignetteEngine{knitr::rmarkdown}
+  \usepackage[utf8]{inputenc}
+---
+
+```{r setup, include=TRUE}
+knitr::opts_chunk$set(echo = TRUE)
+library(ggplot2)
+library(nlraa)
+library(car)
+library(nlme)
+```
+
+# Bootstraping
+
+Often the questions we are interested in related to a nonlinear model are not fully answered by a typical analysis. One example is when we want to have an estimate of uncertainty. The functions available in R do not allow us to place standard errors or confidence regions around model predictions. Another example arises when we are interested in a (linear or nonlinear) combination of model parameters. There are different approaches that can be used in these cases. Two of the most common ones are the delta method and the bootstrap.
+
+## Nonlinear models 
+
+The next section covers tools that can be used to answer some of these questions for nonlinear models without random effects and assuming homogeneous variances.
+
+### Simple example
+
+As a simple example, we can use the dataset 'barley' in the 'nlraa' package. This represents the response of barley yield to different doses of fertilizer over several seasons. We will ignore the effect of 'Year' in this section.
+
+```{r barley}
+data(barley, package = "nlraa")
+
+ggplot(data = barley, aes(x = NF, y = yield)) + geom_point()
+```
+
+We can fit a very simple model known as the linear-plateau.
+
+```{r linp}
+## Linear plateau model
+## The function SSlinp is in the 'nlraa' package
+fit.lp <- nls(yield ~ SSlinp(NF, a, b, xs), data = barley)
+
+ggplot(data = barley, aes(x = NF, y = yield)) + 
+  geom_point() + 
+  geom_line(aes(y = fitted(fit.lp)))
+```
+
+At this point several questions might arise:
+
+1. What are the confidence intervals around the model parameters?
+2. How do we describe the uncertainty around the fitted values of the model?
+3. What is the confidence interval for the asymptote?
+
+### Confidence interval for model parameters
+
+The confidence intervals for the model parameters can be derived using a method called profiling. The function used is 'confint' which is really using 'confint.nls' from the 'MASS' package.
+
+```{r confint-fit-lp}
+confint(fit.lp)
+```
+
+For nonlinear models this method is preferred to simple confidence intervals that would directly use the standard error of the model parameters. The reason is that the distribution of parameters in nonlinear models is often not normal. Those standard errors can be obtained using the summary function, along with hypothesis testing. 
+
+```{r summary-fit-lp}
+summary(fit.lp)
+```
+
+Some interesting plots can be produced which illustrate the asymetry of confidence intervals for nonlinear model parameters
+
+```{r plot-profile}
+## For the intercept
+plot(profile(fit.lp, "a"))
+## This one is fairly symetric and the normal approximation is reasonable
+plot(profile(fit.lp, "b"))
+plot(profile(fit.lp, "xs"))
+## These last parameters are less symetrical
+```
+
+Being able to see the whole profile for a parameter can be interesting in terms of understanding its behavior. For example, in this model which has a 'break-point' we would not expect all the parameters to have identical profiles and that is illustrated above.
+
+In this case, bootstraping is an alternative to computing the confidence intervals and it can be used as a way to double check the previous results, but it can also be used when profiling fails. A function which can perform bootstraping for nonlinear models is 'Boot' in the 'car' pacakge. 
+
+```{r barley-Boot}
+fit.lp.Bt <- Boot(fit.lp)
+```
+
+In this case this function uses the base 'boot' package under the hood and it returns an object of that class. This also allows for the supply of a function which can be a combination of model parameters, for example, and the use of more than one core to speed up computation. In this case since we are also interested in the asymptote which is 'a + b * xs' we can obtain confidence intervals for this parameter by doing the following.
+
+```{r barley-Boot-asymp}
+fn <- function(x) coef(x)[1] + coef(x)[2] * coef(x)[3]
+fit.lp.Bt.asymp <- Boot(fit.lp, f = fn, labels = "asymptote")
+confint(fit.lp.Bt.asymp)
+hist(fit.lp.Bt.asymp)
+```
+
+The bootstrap method takes a few seconds here, but it can be computationally much more demanding in larger problems since it re-fits the model many, many times. An alternative is to use the delta method, for which there is a function in the 'car' pacakge. The delta method has the disadvantage that it makes the assumption of a normal distribution. In this case the lower bound for the confidence interval is similar to the one obtained with the bootstrap, but the upper bound for the confidence interval is somewhat higher using the bootstrap (381 vs. 370). Since the bootstrap method makes fewer assumptions it is probably the better one to report.
+
+```{r barley-Boot-deltaMethod}
+fit.lp.Dlt.asymp <- deltaMethod(fit.lp, "a + b * xs")
+fit.lp.Dlt.asymp
+```
+
+In order to answer our second question above we could plug-in the values of the bootstrap sampling and obtain different regression lines, which could be used to assess the uncertainty around our predictions.
+
+```{r fit-lp-pred-uncertainty}
+## The object 't' in the bootstrap run has 
+## the parameter values
+fit.lp.Bt.prms <- na.omit(fit.lp.Bt$t)
+
+nrb <- length(unique(barley$NF))
+nrp <- nrow(fit.lp.Bt.prms)
+  
+prd.dat <- data.frame(i = as.factor(rep(1:nrp, each = nrb)), NF = rep(unique(barley$NF), nrp), prd = NA)
+
+## A simple loop can be used to run the model multiple times
+for(i in 1:nrp){
+  a.i <- fit.lp.Bt.prms[i,1]
+  b.i <- fit.lp.Bt.prms[i,2]
+  xs.i <- fit.lp.Bt.prms[i,3]
+  
+  prd.dat[c(1 + (nrb*(i - 1))):c(i * nrb),3] <- linp(unique(barley$NF), a.i, b.i, xs.i)
+}
+
+## Plot the data with the original fit and the uncertainty
+ggplot() + 
+  geom_point(data = barley, aes(x = NF, y = yield)) + 
+  geom_line(data = prd.dat, aes(x = NF, y = prd, group = i), 
+            color = "gray", alpha = 0.2) +
+  geom_line(data = barley, aes(x = NF, y = fitted(fit.lp))) + 
+  ylab("Yield") + xlab("Nitrogen rate") + 
+  ggtitle("Using results from Boot and plug-in into linp")
+```
+
+The previous graph shows the black line with the original fit and the variability in the fitted values due to the resampling generated during the bootstrap process. The function 'predict.nls' in R ignores the arguments 'se.fit' and 'interval' which means that this functionality is not available in the base 'stats' package. 
+
+This method is also described here: http://sia.webpopix.org/nonlinearRegression.html#confidence-intervals-and-prediction-intervals
+
+So we could use the quantiles of 'prd.mat' object above to derive confidence intervals for the regression line. The previous example is an attempt to make it clear how the uncertainty could be displayed. Equivalently, we can use 'Boot' for this purpose, but with some effort manipulating the data.
+
+```{r fit-lp-Boot-uncertainty-2}
+fn2 <- function(x) predict(x, newdata = data.frame(NF = 0:14))
+fit.lp.Bt2 <- Boot(fit.lp, fn2)
+fttd <- na.omit(fit.lp.Bt2$t)
+prds <- c(t(fttd))
+ndat <- data.frame(i = as.factor(rep(1:nrow(fttd), each = ncol(fttd))),
+                   NF = rep(0:14, nrow(fttd)))
+ndat$prd <- prds
+
+## Essentially the same graph as the one above
+ggplot() + 
+  geom_point(data = barley, aes(x = NF, y = yield)) + 
+  geom_line(data = ndat, aes(x = NF, y = prd, group = i), 
+            color = "gray", alpha = 0.2) + 
+    geom_line(data = barley, aes(x = NF, y = fitted(fit.lp))) + 
+  ylab("Yield") + xlab("Nitrogen rate")
+```
+
+## Bootstrapping generalized nonlinear models
+
+Implementing bootstrap for more complex models takes a little bit of extra work. For this, I'm taking the approach of sampling from the vector of fixed parameters and also bootstrapping the standardized residuals for 'gnls' and 'nlme' objects. (The methodology can be improved in the future.) This takes advantage that we assume that the residuals are normally distributed. 
+
+As a first example I will see how the bootstrapped confidence intervals compared to the ones obtained by 'intervals'.
+
+```{r barley-gls2}
+set.seed(101)
+## Simplify the dataset to make the set up simpler
+barley2 <- subset(barley, year < 1974)
+
+fit.lp.gnls2 <- gnls(yield ~ SSlinp(NF, a, b, xs), data = barley2)
+
+intervals(fit.lp.gnls2)
+
+## Compare this to the bootstrapping approach
+fit.lp.gnls2.bt <- boot_nlme(fit.lp.gnls2, R = 500)
+
+summary(fit.lp.gnls2.bt)
+
+confint(fit.lp.gnls2.bt, type = "perc")
+```
+
+The confidence intervals obtained by bootstrap are wider (as expected) than the ones obtained using intervals because they consider the uncertainty in the parameters of the nonlinear model.
+
+```{r not-used-now, include = FALSE, eval = FALSE}
+set.seed(102)
+barley2$year.f <- as.factor(barley2$year)
+
+cfs <- coef(fit.lp.gnls2)
+
+fit.lp.gnls3 <- update(fit.lp.gnls2, 
+                      params = list(a + b + xs ~ year.f),
+                      start = c(cfs[1], 0, 0, 0, 
+                                cfs[2], 0, 0, 0,
+                                cfs[3], 0, 0, 0))
+
+fit.lp.gnls3.bt <- boot_nlme(fit.lp.gnls3, R = 500)
+
+confint(fit.lp.gnls.Bt3, type = "perc")
+```
+
+I won't process this last object, but it is shown here to illustrate the use of bootstrapping for a 'gnls' object, which is something that function 'car::Boot' does not seem to be able to handle (the deltaMethod function also fails for this type of model, because it cannot handle the names in the vector of coefficients which uses periods).
+
+## Bootstrapping nonlinear mixed models
+
+For illustration I will continue to use the barley example, but this time the model is fitted to each year individually and then a nonlinear mixed model which assumes a diagonal matrix for the random effects (for simplicity). In this case we want an esimtate of the confidence interval for the asymptote which is not an explicit parameter but rather a combination 'a + b * xs' of the three parameters.
+
+```{r barley-nlme}
+set.seed(101)
+barley$year.f <- as.factor(barley$year)
+
+barleyG <- groupedData(yield ~ NF | year.f, data = barley)
+
+fitL.bar <- nlsList(yield ~ SSlinp(NF, a, b, xs), data = barleyG)
+
+fit.bar.nlme <- nlme(fitL.bar, random = pdDiag(a + b + xs ~ 1))
+
+## Confidence intervals of the model fixed parameters
+intervals(fit.bar.nlme, which = "fixed")
+
+## Bootstrap for the asymptote
+fna <- function(x) fixef(x)[1] + fixef(x)[2] * fixef(x)[3]
+
+fit.bar.nlme.bt <- boot_nlme(fit.bar.nlme, f = fna, R = 200)
+
+confint(fit.bar.nlme.bt, type = "perc")
+
+hist(fit.bar.nlme.bt, ci = "perc")
+```
+
+
