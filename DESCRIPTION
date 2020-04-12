@@ -1,5 +1,5 @@
 Package: nlraa
-Version: 0.55
+Version: 0.57
 Authors@R: c(person("Fernando", "Miguez", email = "femiguez@iastate.edu", role = c("aut", "cre"), comment = c(ORCID = "0000-0002-4627-8329")),
              person("José", "Pinheiro", role = c("ctb","cph"), comment = "author of nlme::nlsList"),
              person("Douglas", "Bates", role = c("ctb","cph"), comment = "author of nlme::nlsList"),
@@ -12,7 +12,9 @@ Encoding: UTF-8
 VignetteBuilder: knitr
 BugReports: https://github.com/femiguez/nlraa/issues
 Imports:
+        boot,
         knitr,
+	MASS,
 	nlme,
         stats
 Suggests:

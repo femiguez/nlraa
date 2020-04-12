@@ -36,6 +36,7 @@ NULL
 trlinInit <- function(mCall, LHS, data){
   
   xy <- sortedXyData(mCall[["x"]], LHS, data)
+
   if(nrow(xy) < 5){
     stop("Too few distinct input values to fit a trlinear")
   }

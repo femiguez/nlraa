@@ -9,6 +9,7 @@ if(test.other.examples){
   require(segmented)
   require(minpack.lm)
   require(car)
+  require(nlstools)
   
   data(plant)
   
@@ -322,4 +323,32 @@ if(test.other.examples){
   ## Another idea is to show and compare the car::Boot and nlstools:nlsBoot functions
   ## These could be very useful, especially when the confidence interval function 'confint'
   ## fails
+  
+  ## Datasets from 'nlstools'
+  data(L.minor)
+  ## Blinear
+  fit1 <- nls(rate ~ SSblin(conc, a, b, xs1, c), data = L.minor)
+  ## MicMen
+  fit2 <- nls(rate ~ SSmicmen(conc, Vm, K), data = L.minor)
+  ## rational with minpack.lm
+  fit3 <- nlsLM(rate ~ SSratio(conc, a, b, c, d), data = L.minor)
+  
+  ggplot(data = L.minor, aes(conc, rate)) + geom_point() + 
+    geom_line(aes(y = fitted(fit1), color = "blinear")) + 
+    geom_line(aes(y = fitted(fit2), color = "MicMen")) +
+    geom_line(aes(y = fitted(fit3), color = "rational"))
+  
+  ## Oxygen uptake
+  data("O2K")
+  fit <- nls(VO2 ~ SSpquad(t, a, xs, b, c), data = O2K)
+  ggplot(data = O2K, aes(x = t, y = VO2)) + geom_point() + geom_line(aes(y = fitted(fit)))
+  
+  ## nlstool::vmkm
+  data(vmkm)
+  fit1 <- nls(v ~ SSmicmen(S, Vm, K), data = vmkm)
+  ggplot(data = vmkm, aes(x = S, y = v)) + geom_point() + geom_line(aes(y = fitted(fit1)))
+  
+  fit2 <- nls(v ~ SSasymp(S, Asym, R0, lrc), data = vmkm)
+  ggplot(data = vmkm, aes(x = S, y = v)) + geom_point() + geom_line(aes(y = fitted(fit2)))
+  
 }

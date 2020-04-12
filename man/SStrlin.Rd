@@ -44,7 +44,7 @@ when one break-point is in the first half and the second is in the second half.
 require(ggplot2)
 set.seed(1234)
 x <- 1:30
-y <- trlin(x, 0, 0.75, 10, 0.9, 20, 1.75) + rnorm(30, 0, 0.5)
+y <- trlin(x, 0.5, 2, 10, 0.1, 20, 1.75) + rnorm(30, 0, 0.5)
 dat <- data.frame(x = x, y = y)
 fit <- nls(y ~ SStrlin(x, a, b, xs1, c, xs2, d), data = dat)
 ## plot

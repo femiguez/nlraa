@@ -60,6 +60,8 @@ One of the objectives of those publications was to introduce a large family of n
 16. SSpexpf (plateau-exponential)
 17. SSbell (bell-shaped function)
 18. SSratio (rational function)
+19. SSlogis5 (five-parameter logistic)
+20. SStrlin (tri-linear function)
 
 For the reference on the Beta growth function see Yin et al. 2003 (https://doi.org/10.1093/aob/mcg029) and Erratum: (https://doi.org/10.1093/aob/mcg091).
 For a reference on a use of the declining logistic see Oddi et al. (2019) (and vignette in this package). For the Ricker model see: (https://en.wikipedia.org/wiki/Ricker_model). For the protein profile in the canopy see Johnson et al. (2010) (https://doi.org/10.1093/aob/mcq183). 
@@ -110,7 +112,8 @@ ggplot(data = swpg, aes(x = ftsw, y = lfgr)) +
 
 ```{r barley}
 ## Response of barley to nitrogen fertilizer
-data(barley)
+## There is a barley dataset also in package 'lattice'
+data(barley, package = "nlraa")
 ggplot(data = barley, aes(x = NF, y = yield, color = as.factor(year))) +
   geom_point() +
   xlab("Nitrogen fertilizer (g/m^2)") +
@@ -165,7 +168,7 @@ For background see: (http://miguezlab.agron.iastate.edu/OldWebsite/Research/Talk
 
 ```{r barleyG}
 library(nlme)
-data(barley)
+data(barley, package = "nlraa")
 barley$yearf <- as.factor(barley$year)
 barleyG <- groupedData(yield ~ NF | yearf, data = barley)
 ```
