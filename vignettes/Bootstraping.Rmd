@@ -1,9 +1,9 @@
 ---
-title: "Bootstraping for Nonlinear Models"
+title: "Bootstraping Nonlinear Models"
 author: "Fernando Miguez"
 date: "`r Sys.Date()`"
-fig_width: 6
-fig_height: 4
+fig_width: 7
+fig_height: 5
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Bootstraping for Nonlinear Models}
@@ -11,8 +11,13 @@ vignette: >
   \usepackage[utf8]{inputenc}
 ---
 
-```{r setup, include=TRUE}
-knitr::opts_chunk$set(echo = TRUE)
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, fig.width = 6, fig.height = 4)
+```
+
+Preliminaries: first, we need to load required libraries.
+
+```{r setup2}
 library(ggplot2)
 library(nlraa)
 library(car)
@@ -21,11 +26,13 @@ library(nlme)
 
 # Bootstraping
 
-Often the questions we are interested in related to a nonlinear model are not fully answered by a typical analysis. One example is when we want to have an estimate of uncertainty. The functions available in R do not allow us to place standard errors or confidence regions around model predictions. Another example arises when we are interested in a (linear or nonlinear) combination of model parameters. There are different approaches that can be used in these cases. Two of the most common ones are the delta method and the bootstrap.
+The bootstrap is a technique in statistics which consists of resampling the observed data in order to create an empirical distribution of some statistic for which an immediate distribution is not available. For nonlinear models, bootstrapping can be useful because often questions arise that a typical analysis does not answer. In many instances the distributions of parameters from a nonlinear model are in fact normal and standard approximations work well, in other instances, however, this is not the case.
+
+In the following sections I will illustrate the use of the bootstrap for nonlinear model (nls), generalized nonlinear models (gnls) and nonlinear mixed models (nlme).
 
 ## Nonlinear models 
 
-The next section covers tools that can be used to answer some of these questions for nonlinear models without random effects and assuming homogeneous variances.
+The first type of models illustrated here are nonlinear models for which we make standard assumptions for error distributions and there are no random effects.
 
 ### Simple example
 
@@ -53,23 +60,23 @@ At this point several questions might arise:
 
 1. What are the confidence intervals around the model parameters?
 2. How do we describe the uncertainty around the fitted values of the model?
-3. What is the confidence interval for the asymptote?
+3. What is the estimate and confidence interval for the asymptote?
 
 ### Confidence interval for model parameters
 
-The confidence intervals for the model parameters can be derived using a method called profiling. The function used is 'confint' which is really using 'confint.nls' from the 'MASS' package.
+The confidence intervals for the model parameters can be derived using a method called profiling. The generic function 'confint' can be used which invokes 'confint.nls' from the 'MASS' package.
 
 ```{r confint-fit-lp}
 confint(fit.lp)
 ```
 
-For nonlinear models this method is preferred to simple confidence intervals that would directly use the standard error of the model parameters. The reason is that the distribution of parameters in nonlinear models is often not normal. Those standard errors can be obtained using the summary function, along with hypothesis testing. 
+For nonlinear models this method is preferred to simple confidence intervals that would directly use the standard error of the model parameters (i.e. Wald). In many cases, there is good agreement between the two, but this is not always the case and it can be informative to compare both methods. Those standard errors can be obtained using the summary function, along with hypothesis testing. 
 
 ```{r summary-fit-lp}
 summary(fit.lp)
 ```
 
-Some interesting plots can be produced which illustrate the asymetry of confidence intervals for nonlinear model parameters
+Some interesting plots can be produced which illustrate the symetry (or lack thereof) of the distribution for the nonlinear model parameters. Profile plots which show large departures from normality would indicate that the normal approximation for the confidence intervals might not be the best choice.
 
 ```{r plot-profile}
 ## For the intercept
@@ -80,7 +87,7 @@ plot(profile(fit.lp, "xs"))
 ## These last parameters are less symetrical
 ```
 
-Being able to see the whole profile for a parameter can be interesting in terms of understanding its behavior. For example, in this model which has a 'break-point' we would not expect all the parameters to have identical profiles and that is illustrated above.
+Being able to see the whole profile for a parameter can be interesting in terms of understanding its behavior. For example, in this model, which has a 'break-point', we would not expect all the parameters to have identical shaped profiles and that is illustrated above for parameter 'xs'.
 
 In this case, bootstraping is an alternative to computing the confidence intervals and it can be used as a way to double check the previous results, but it can also be used when profiling fails. A function which can perform bootstraping for nonlinear models is 'Boot' in the 'car' pacakge. 
 
@@ -88,7 +95,7 @@ In this case, bootstraping is an alternative to computing the confidence interva
 fit.lp.Bt <- Boot(fit.lp)
 ```
 
-In this case this function uses the base 'boot' package under the hood and it returns an object of that class. This also allows for the supply of a function which can be a combination of model parameters, for example, and the use of more than one core to speed up computation. In this case since we are also interested in the asymptote which is 'a + b * xs' we can obtain confidence intervals for this parameter by doing the following.
+In this case this function uses the base 'boot' package under the hood and it returns an object of that class. This also allows for other options such as defining a function as a combination of model parameters, and the use of more than one core to speed up computation. In this case, since we are also interested in the asymptote, which is 'a + b * xs', we can obtain confidence intervals for this parameter by doing the following.
 
 ```{r barley-Boot-asymp}
 fn <- function(x) coef(x)[1] + coef(x)[2] * coef(x)[3]
@@ -104,16 +111,18 @@ fit.lp.Dlt.asymp <- deltaMethod(fit.lp, "a + b * xs")
 fit.lp.Dlt.asymp
 ```
 
-In order to answer our second question above we could plug-in the values of the bootstrap sampling and obtain different regression lines, which could be used to assess the uncertainty around our predictions.
+In order to answer our second question above related to the uncertainty around the fitted values we could plug-in the values from the bootstrap sampling and obtain different regression lines.
 
 ```{r fit-lp-pred-uncertainty}
 ## The object 't' in the bootstrap run has 
 ## the parameter values
+## First remove missing values
 fit.lp.Bt.prms <- na.omit(fit.lp.Bt$t)
 
 nrb <- length(unique(barley$NF))
 nrp <- nrow(fit.lp.Bt.prms)
-  
+
+## Set up an empty data.frame  
 prd.dat <- data.frame(i = as.factor(rep(1:nrp, each = nrb)), NF = rep(unique(barley$NF), nrp), prd = NA)
 
 ## A simple loop can be used to run the model multiple times
@@ -132,10 +141,10 @@ ggplot() +
             color = "gray", alpha = 0.2) +
   geom_line(data = barley, aes(x = NF, y = fitted(fit.lp))) + 
   ylab("Yield") + xlab("Nitrogen rate") + 
-  ggtitle("Using results from Boot and plug-in into linp")
+  ggtitle("Using results from Boot \n and plug-in into linp")
 ```
 
-The previous graph shows the black line with the original fit and the variability in the fitted values due to the resampling generated during the bootstrap process. The function 'predict.nls' in R ignores the arguments 'se.fit' and 'interval' which means that this functionality is not available in the base 'stats' package. 
+The previous graph shows the black line with the original fit and the variability in the fitted values due to the resampling generated during the bootstrap process. The function 'predict.nls' at the moment ignores the arguments 'se.fit' and 'interval' which means that this functionality is not available in the base 'stats' package. 
 
 This method is also described here: http://sia.webpopix.org/nonlinearRegression.html#confidence-intervals-and-prediction-intervals
 
@@ -161,9 +170,9 @@ ggplot() +
 
 ## Bootstrapping generalized nonlinear models
 
-Implementing bootstrap for more complex models takes a little bit of extra work. For this, I'm taking the approach of sampling from the vector of fixed parameters and also bootstrapping the standardized residuals for 'gnls' and 'nlme' objects. (The methodology can be improved in the future.) This takes advantage that we assume that the residuals are normally distributed. 
+Implementing bootstrap for more complex models takes extra work. For this, I'm taking the approach of sampling from the vector of fixed parameters and also bootstrapping the standardized residuals for 'gnls' and 'nlme' objects. (This is semi-parametric bootstrap and the methodology can be improved in the future.) This takes advantage that we assume that the residuals are normally distributed. 
 
-As a first example I will see how the bootstrapped confidence intervals compared to the ones obtained by 'intervals'.
+As a first example, we can compare the bootstrapped confidence intervals with the ones obtained by 'intervals'. Note: I'm running this only a few hundred times in the examples below for convenience, but it is a good practice to run these a few thousand.
 
 ```{r barley-gls2}
 set.seed(101)
@@ -182,7 +191,7 @@ summary(fit.lp.gnls2.bt)
 confint(fit.lp.gnls2.bt, type = "perc")
 ```
 
-The confidence intervals obtained by bootstrap are wider (as expected) than the ones obtained using intervals because they consider the uncertainty in the parameters of the nonlinear model.
+The confidence intervals obtained by bootstrap are wider (as expected) than the ones obtained using intervals because they consider the uncertainty in the parameters of the nonlinear model. The next example shows a slightly more complex model in which we introduce the effect of year for a subset of the data.
 
 ```{r gnls-factors}
 set.seed(101)
@@ -196,7 +205,7 @@ fit.lp.gnls3 <- update(fit.lp.gnls2,
                                 cfs[2], 0, 0, 0,
                                 cfs[3], 0, 0, 0))
 
-fit.lp.gnls3.bt <- boot_nlme(fit.lp.gnls3, R = 500)
+fit.lp.gnls3.bt <- boot_nlme(fit.lp.gnls3, R = 300)
 
 confint(fit.lp.gnls3.bt, type = "perc")
 
@@ -232,4 +241,31 @@ confint(fit.bar.nlme.bt, type = "perc")
 hist(fit.bar.nlme.bt, ci = "perc")
 ```
 
+## Confidence bands for generalized nonlinear models
 
+For this example I will use the Orange dataset. The goal here is simply to place confidence bands around the mean response function.
+
+```{r Orange}
+data(Orange)
+
+## This fits a model which considers the fact that 
+## the variance typically increases as the fitted
+## values increase
+fitg <- gnls(circumference ~ SSlogis(age, Asym, xmid, scal), 
+              data = Orange, weights = varPower())
+
+## Here we use bootstrapping to investigate 
+## the uncertainty around the fitted values
+fitg.bt1 <- boot_nlme(fitg, fitted, psim = 1, R = 300)
+  
+## Compute 90% quantiles
+lwr1.q <- apply(t(fitg.bt1$t), 1, quantile, probs = 0.05, na.rm = TRUE)
+upr1.q <- apply(t(fitg.bt1$t), 1, quantile, probs = 0.95, na.rm = TRUE)
+
+ggplot() + 
+  geom_point(data = Orange, aes(x = age, y = circumference)) + 
+  geom_line(data = Orange, aes(x = age, y = fitted(fitg))) + 
+  geom_ribbon(aes(x = Orange$age, ymin = lwr1.q, ymax = upr1.q), 
+                fill = "purple", alpha = 0.2) + 
+  ggtitle("Orange fit using the logistic: \n 90% confidence band for the mean function")
+```

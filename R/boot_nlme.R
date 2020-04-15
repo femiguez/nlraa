@@ -2,11 +2,12 @@
 #' 
 #' @title Bootstraping for generalized nonlinear models and nonlinear mixed models
 #' @name boot_nlme
-#' @param object object of class \sQuote{nlme} or \sQuote{gnls}
+#' @param object object of class \code{\link[nlme]{nlme}} or \code{\link[nlme]{gnls}}
 #' @param f function to be applied (and bootstrapped), default coef (gnls) or fixef (nlme)
 #' @param R number of bootstrap samples, default 999
-#' @param ... additional arguments to be passed to function \sQuote{boot::boot}
-#' @details This function is inspired by \sQuote{car::Boot}, which does not
+#' @param psim simulation level for vector of fixed parameters either for \code{\link{simulate_gnls}} or \code{\link{simulate_nlme_one}}
+#' @param ... additional arguments to be passed to function \code{\link[boot]{boot}}
+#' @details This function is inspired by \code{\link[car]{Boot}}, which does not
 #' seem to work with 'gnls' or 'nlme' objects. This function makes multiple copies 
 #' of the original data, so it can be very hungry in terms of memory use, but
 #' I do not believe this to be a big problem given the models we typically fit.
@@ -101,6 +102,7 @@ boot_nlme <- function(object,
       "out of",R,"\n")
   
   assign(".k.boot", 0L, envir = nlraa.env)
+  assign(".bdat", NULL, envir = nlraa.env)
   return(ans)
 }
 

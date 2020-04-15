@@ -4,27 +4,29 @@
 \alias{simulate_nlme}
 \title{Simulate samples from a nonlinear mixed model from fixed effects}
 \usage{
-simulate_nlme(object, f = NULL, R = 1, psim = 1, ...)
+simulate_nlme(object, nsim = 1, psim = 1, ...)
 }
 \arguments{
-\item{object}{object of class \sQuote{gnls} or \sQuote{nlme}}
-
-\item{f}{function to be used for the simulation}
-
-\item{...}{additional arguments (none used at the moment)}
+\item{object}{object of class \code{\link[nlme]{gnls}} or \code{\link[nlme]{nlme}}}
 
 \item{nsim}{number of samples, default 1}
+
+\item{psim}{simulation level for vector of fixed parameters for \code{\link{simulate_nlme_one}}}
+
+\item{...}{additional arguments to be passed to either \code{\link{simulate_gnls}} or \code{\link{simulate_nlme_one}}}
 }
 \value{
 It returns a matrix with simulated values from the original object
-with number of rows equal to the number of rows of \sQuote{fitted} and number
+with number of rows equal to the number of rows of \code{\link{fitted}} and number
 of columns equal to the number of simulated samples (\sQuote{nsim}).
 }
 \description{
-Simulate samples from a nonlinear model
+Simulate multiple samples from a nonlinear model
 }
 \details{
-details to come
+The details can be found in either \code{\link{simulate_gnls}} or \code{\link{simulate_nlme_one}}.
+This function is very simple and it only sets up a matrix and a loop in order to simulate several instances of 
+model outputs.
 }
 \examples{
 \donttest{
@@ -40,9 +42,8 @@ fit.lp.gnls3 <- update(fit.lp.gnls2,
                       start = c(cfs[1], 0, 0, 0, 
                                 cfs[2], 0, 0, 0,
                                 cfs[3], 0, 0, 0))
-## This will take a few seconds                               
-fit.lp.gnls.Bt3 <- boot_nlme(fit.lp.gnls3) 
-confint(fit.lp.gnls.Bt3, type = "perc")
+                                
+sims <- simulate_nlme(fit.lp.gnls3, nsim = 3)
 }
 
 }

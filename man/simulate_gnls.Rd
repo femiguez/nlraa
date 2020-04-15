@@ -2,26 +2,39 @@
 % Please edit documentation in R/simulate_gnls.R
 \name{simulate_gnls}
 \alias{simulate_gnls}
-\title{Simulate fitted values from an object of class \sQuote{gnls}}
+\title{Simulate fitted values from an object of class \code{\link[nlme]{gnls}}}
 \usage{
 simulate_gnls(object, psim = 1, na.action = na.fail,
   naPattern = NULL, ...)
 }
 \arguments{
-\item{object}{object of class \sQuote{gnls}}
+\item{object}{object of class \code{\link[nlme]{gnls}}}
 
 \item{psim}{parameter simulation level, 0: for fitted values, 1: for simulation from 
 fixed parameters (assuming a fixed vcov matrix), 2: for simulation considering the 
-uncertainty in vcov (not implemented yet)}
+uncertainty in the residual standard error (sigma), this returns data which
+will appear similar to the observed values}
 
-\item{na.action}{default \sQuote{na.fail}}
+\item{na.action}{default \sQuote{na.fail}. See \code{\link[nlme]{predict.gnls}}}
 
-\item{naPattern}{missing value pattern}
+\item{naPattern}{missing value pattern. See \code{\link[nlme]{predict.gnls}}}
+
+\item{...}{additional arguments (none used at the moment)}
 }
 \description{
-Simulate gnls based on \sQuote{nlme::predict.gnls} function
+This function is based on \code{\link[nlme]{predict.gnls}} function
 }
 \details{
-It uses function \sQuote{MASS::mvrnorm} to generate new values for the coefficients
-of the model using the Variance-Covariance matrix \sQuote{vcov}
+It uses function \code{\link[MASS]{mvrnorm}} to generate new values for the coefficients
+of the model using the Variance-Covariance matrix \code{\link{vcov}}
+}
+\examples{
+\donttest{
+require(nlme)
+data(barley, package = "nlraa")
+
+fit.gnls <- gnls(yield ~ SSlinp(NF, a, b, xs), data = barley)
+
+sim <- simulate_gnls(fit.gnls)
+}
 }

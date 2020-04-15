@@ -1,15 +1,18 @@
-#' Simulate samples from a nonlinear model
+#' Simulate multiple samples from a nonlinear model
 #' 
 #' @title Simulate samples from a nonlinear mixed model from fixed effects
 #' @name simulate_nlme
-#' @param object object of class \sQuote{gnls} or \sQuote{nlme}
-#' @param f function to be used for the simulation
+#' @param object object of class \code{\link[nlme]{gnls}} or \code{\link[nlme]{nlme}}
 #' @param nsim number of samples, default 1
-#' @param ... additional arguments (none used at the moment)
-#' @details details to come
+#' @param psim simulation level for vector of fixed parameters for \code{\link{simulate_nlme_one}}
+#' @param ... additional arguments to be passed to either \code{\link{simulate_gnls}} or \code{\link{simulate_nlme_one}}
+#' @details The details can be found in either \code{\link{simulate_gnls}} or \code{\link{simulate_nlme_one}}.
+#' This function is very simple and it only sets up a matrix and a loop in order to simulate several instances of 
+#' model outputs.
 #' @return It returns a matrix with simulated values from the original object
-#' with number of rows equal to the number of rows of \sQuote{fitted} and number
+#' with number of rows equal to the number of rows of \code{\link{fitted}} and number
 #' of columns equal to the number of simulated samples (\sQuote{nsim}).
+#' @export
 #' @examples 
 #' \donttest{
 #' require(car)
@@ -24,28 +27,26 @@
 #'                       start = c(cfs[1], 0, 0, 0, 
 #'                                 cfs[2], 0, 0, 0,
 #'                                 cfs[3], 0, 0, 0))
-#' ## This will take a few seconds                               
-#' fit.lp.gnls.Bt3 <- boot_nlme(fit.lp.gnls3) 
-#' confint(fit.lp.gnls.Bt3, type = "perc")
+#'                                 
+#' sims <- simulate_nlme(fit.lp.gnls3, nsim = 3)
 #' }
 #' 
 
 simulate_nlme <- function(object, 
-                          f = NULL, 
-                          R = 1, 
+                          nsim = 1, 
                           psim = 1, ...){
   
   ## Error checking
   if(!inherits(object, c("gnls","nlme"))) stop("object should be of class 'gnls' or 'nlme'")
   
-  sim.mat <- matrix(ncol = R, nrow = length(fitted(object)))
+  sim.mat <- matrix(ncol = nsim, nrow = length(fitted(object)))
   
   ## First example for the gnls case
-  for(i in seq_len(R)){
+  for(i in seq_len(nsim)){
       if(inherits(object, "gnls")){
         sim.mat[,i] <- as.vector(simulate_gnls(object, psim = psim, ...))
       }
-      if(inherits(x, "nlme")){
+      if(inherits(object, "nlme")){
         sim.mat[,i] <- as.vector(simulate_nlme_one(object, psim = psim, ...))
       }
   }

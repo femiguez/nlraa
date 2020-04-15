@@ -2,26 +2,32 @@
 % Please edit documentation in R/simulate_nlme_one.R
 \name{simulate_nlme_one}
 \alias{simulate_nlme_one}
-\title{Simulate fitted values from an object of class \sQuote{nlme}}
+\title{Simulate fitted values from an object of class \code{\link[nlme]{nlme}}}
 \usage{
 simulate_nlme_one(object, psim = 1, level = Q, asList = FALSE,
   na.action = na.fail, naPattern = NULL, ...)
 }
 \arguments{
-\item{object}{object of class \sQuote{gnls}}
+\item{object}{object of class \code{\link[nlme]{nlme}}}
 
 \item{psim}{parameter simulation level, 0: for fitted values, 1: for simulation from 
 fixed parameters (assuming a fixed vcov matrix), 2: for simulation considering the 
-uncertainty in vcov (not implemented yet)}
+residual error (sigma), this returns data which will appear similar to the observed values}
 
-\item{na.action}{default \sQuote{na.fail}}
+\item{level}{level at which simulations are performed. See \code{\link[nlme]{predict.nlme}}}
 
-\item{naPattern}{missing value pattern}
+\item{asList}{optional logical value. See \code{\link[nlme]{predict.nlme}}}
+
+\item{na.action}{missing value action. See \code{\link[nlme]{predict.nlme}}}
+
+\item{naPattern}{missing value pattern. See \code{\link[nlme]{predict.nlme}}}
+
+\item{...}{additional arguments to be passed (not used at the moment)}
 }
 \description{
-Simulate nlme based on \sQuote{nlme::predict.nlme} function
+This function is based on \code{\link[nlme]{predict.nlme}} function
 }
 \details{
-It uses function \sQuote{MASS::mvrnorm} to generate new values for the coefficients
-of the model using the Variance-Covariance matrix \sQuote{vcov}
+It uses function \code{\link[MASS]{mvrnorm}} to generate new values for the coefficients
+of the model using the Variance-Covariance matrix \code{\link{vcov}}
 }

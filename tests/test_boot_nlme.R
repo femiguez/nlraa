@@ -5,12 +5,38 @@ require(car)
 
 run.boot.test <- FALSE
 
+data(barley, package = "nlraa")
+set.seed(101)
+## Does Boot produce 'good' confidence intervals?
+
 if(run.boot.test){
   
-  set.seed(101)
-  ## Simple test for barley and an object of class 'gnls'
-  data(barley, package = "nlraa")
+  fit.nls <- nls(yield ~ SSlinp(NF, a, b, xs), data = barley)
+  
+  ## Profiled confidence intervals
+  confint(fit.nls)
 
+  ## Does bootstrap as implemented in car underestimates confidence intervals?  
+  fit.nls.bt <- Boot(fit.nls)
+  
+  fit.gnls <- gnls(yield ~ SSlinp(NF, a, b, xs), data = barley)
+  
+  intervals(fit.gnls)
+  
+  system.time(fit.gnls.bt <- boot_nlme(fit.gnls, R = 999))
+  
+  fit.gnls.bt2 <- boot_nlme(fit.gnls, R = 999, psim = 0)
+  
+  confint(fit.gnls.bt)
+  
+  ## I do not know which one is "correct"
+  ## Boot seems to have narrower confidence intervals
+  ## It does not consider the uncertainty in the fitted values
+}
+
+if(run.boot.test){
+  
+  ## Simple test for barley and an object of class 'gnls'
   ## Simplify the dataset to make the set up simpler
   barley2 <- subset(barley, year < 1974)
 
@@ -78,4 +104,37 @@ if(run.boot.test){
   ## 348.9912, which is in the middle of the confidence interval
   hist(fit.bar.nlme.bt, 1, ci = "perc")
 
+}
+
+## Trying to fit the model using different approaches
+## This time with the SSasymp function
+
+if(run.boot.test){
+  
+  # library(lme4)
+  # library(rstanarm)
+  
+  fmL1 <- nlsList(yield ~ SSasymp(NF, Asym, R0, lrc), data = barleyG)
+  
+  fm1 <- nlme(fmL1)
+  
+  ## fm2 <- nlmer(yield ~ SSasymp(NF, Asym, R0, lrc) ~ (Asym | year.f) + (R0 | year.f), data = barley,
+  ##             start = getInitial(yield ~ SSasymp(NF, Asym, R0, lrc), data = barley))
+  ## This fails. Is nlmer usable?
+  
+  system.time(fm1.bt <- boot_nlme(fm1, R = 999, parallel = "multicore", ncpus = 2))
+  
+  summary(fm1.bt)
+  
+  confint(fm1.bt)
+  
+  hist(fm1.bt)
+  
+  ## I feel validated! These intervals are very, very close to the ones
+  ## obtained through normal approximation
+
+  ## rstanarm also failed with this example. Chains did not converge
+  ## fm3 <- stan_nlmer(yield ~ SSasymp(NF, Asym, R0, lrc) ~ Asym + R0 + lrc | year.f, 
+  ##                  data = barley, cores = 2)  
+  
 }

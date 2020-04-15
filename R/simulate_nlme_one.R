@@ -18,18 +18,21 @@
 #  http://www.r-project.org/Licenses/
 #
 
-#' Simulate nlme based on \sQuote{nlme::predict.nlme} function 
+#' This function is based on \code{\link[nlme]{predict.nlme}} function 
 #' 
-#' @title Simulate fitted values from an object of class \sQuote{nlme}
+#' @title Simulate fitted values from an object of class \code{\link[nlme]{nlme}}
 #' @name simulate_nlme_one
-#' @param object object of class \sQuote{gnls}
+#' @param object object of class \code{\link[nlme]{nlme}}
 #' @param psim parameter simulation level, 0: for fitted values, 1: for simulation from 
 #' fixed parameters (assuming a fixed vcov matrix), 2: for simulation considering the 
-#' uncertainty in vcov (not implemented yet)
-#' @param na.action default \sQuote{na.fail}
-#' @param naPattern missing value pattern
-#' @details It uses function \sQuote{MASS::mvrnorm} to generate new values for the coefficients
-#' of the model using the Variance-Covariance matrix \sQuote{vcov}
+#' residual error (sigma), this returns data which will appear similar to the observed values
+#' @param level level at which simulations are performed. See \code{\link[nlme]{predict.nlme}}
+#' @param asList optional logical value. See \code{\link[nlme]{predict.nlme}}
+#' @param na.action missing value action. See \code{\link[nlme]{predict.nlme}}
+#' @param naPattern missing value pattern. See \code{\link[nlme]{predict.nlme}}
+#' @param ... additional arguments to be passed (not used at the moment)
+#' @details It uses function \code{\link[MASS]{mvrnorm}} to generate new values for the coefficients
+#' of the model using the Variance-Covariance matrix \code{\link{vcov}}
 
 simulate_nlme_one <- function(object, psim = 1, level = Q, asList = FALSE, na.action = na.fail,
            naPattern = NULL, ...){
@@ -174,8 +177,9 @@ simulate_nlme_one <- function(object, psim = 1, level = Q, asList = FALSE, na.ac
     }
     
     if(psim == 2){
-      ## This method would need to sample Sigma before feeding it into mvrnorm
-      stop("not implemented yet")
+      fix <- MASS::mvrnorm(n = 1, mu = fixef(object), Sigma = vcov(object))
+      rsds.std <- stats::rnorm(N, 0, 1) ## These are standardized residuals 'pearson'?
+      rsds <- rsds.std * attr(object[["residuals"]], "std") ## This last term is 'sigma'
     }
 
     for(nm in fnames){
@@ -233,7 +237,7 @@ simulate_nlme_one <- function(object, psim = 1, level = Q, asList = FALSE, na.ac
     for(i in 1:nlev) {
       val[[i]] <- eval(modForm,
                        data.frame(dataMix,
-                                  nlme:::getParsNlme(plist, omap$fmap, omap$rmapRel,
+                                  nlraa_getParsNlme(plist, omap$fmap, omap$rmapRel,
                                                      omap$bmap, grpsRev, fix, ranVec, ran,
                                                      level[i], N)))[naPat]
     }
@@ -278,3 +282,70 @@ simulate_nlme_one <- function(object, psim = 1, level = Q, asList = FALSE, na.ac
       return(data.frame(oGrps, predict = val))
     }
 }
+
+
+##' This function is not exported by nlme so I need to include it here
+##' As with predict.nlme it was originally written by Pinheiro and Bates
+##' and copied verbatim from the nlme package.
+##' @name nlraa_getParsNlme
+##' @param plist parameter list
+##' @param fmap fixed parameter map
+##' @param rmapRel random parameter map
+##' @param bmap b map
+##' @param groups groups
+##' @param beta beta coefficients
+##' @param bvec beta vector
+##' @param b bee's knees
+##' @param level grouping level I suppose
+##' @param N I presume the number of observations
+##' @noRd
+nlraa_getParsNlme <-
+  function(plist, fmap, rmapRel, bmap, groups, beta, bvec, b, level, N)
+  {
+    pars <- array(0, c(N, length(plist)), list(NULL, names(plist)))
+    ## for random effects below
+    iQ <- if (level > 0) {
+      Q <- length(groups)
+      (Q - level + 1L):Q
+    } else integer() # empty
+    
+    for (nm in names(plist)) {
+      ## 1) Fixed effects
+      if (is.logical(f <- plist[[nm]]$fixed)) {
+        if (f)
+          pars[, nm] <- beta[fmap[[nm]]]
+        ## else pars[, nm] <- 0  (as f == FALSE)
+      } else
+        pars[, nm] <- f %*% beta[fmap[[nm]]]
+      
+      ## 2) Random effects
+      for(i in iQ)
+        if(!is.null(rm.i. <- rmapRel[[i]][[nm]])) {
+          b.i <- b[[i]]
+          b.i[] <- bvec[(bmap[i] + 1):bmap[i+1]]
+          ## NB: some groups[[i]] may be *new* levels, i.e. non-matching:
+          gr.i <- match(groups[[i]], colnames(b.i)) # column numbers + NA
+          if (is.logical(r <- plist[[nm]]$random[[i]])) {
+            if (r)
+              pars[, nm] <- pars[, nm] + b.i[rm.i., gr.i]
+            ## else r == FALSE =^= 0
+          } else if (data.class(r) != "list") {
+            pars[, nm] <- pars[, nm] +
+              (r * t(b.i)[gr.i, rm.i., drop=FALSE]) %*% rep(1, ncol(r))
+          } else {
+            b.i.gi <- b.i[, gr.i, drop=FALSE]
+            for(j in seq_along(rm.i.)) {
+              if (is.logical(rr <- r[[j]])) {
+                if(rr)
+                  pars[, nm] <- pars[, nm] + b.i.gi[rm.i.[[j]], ]
+                ## else rr == FALSE =^= 0
+              }
+              else
+                pars[, nm] <- pars[, nm] +
+                  (rr * t(b.i.gi[rm.i.[[j]], , drop=FALSE])) %*% rep(1, ncol(rr))
+            }
+          }
+        } # for( i ) if(!is.null(rm.i. ..))
+    }
+    pars
+  }

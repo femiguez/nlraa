@@ -7,19 +7,21 @@
 boot_nlme(object, f = NULL, R = 999, psim = 1, ...)
 }
 \arguments{
-\item{object}{object of class \sQuote{nlme} or \sQuote{gnls}}
+\item{object}{object of class \code{\link[nlme]{nlme}} or \code{\link[nlme]{gnls}}}
 
 \item{f}{function to be applied (and bootstrapped), default coef (gnls) or fixef (nlme)}
 
 \item{R}{number of bootstrap samples, default 999}
 
-\item{...}{additional arguments to be passed to function \sQuote{boot::boot}}
+\item{psim}{simulation level for vector of fixed parameters either for \code{\link{simulate_gnls}} or \code{\link{simulate_nlme_one}}}
+
+\item{...}{additional arguments to be passed to function \code{\link[boot]{boot}}}
 }
 \description{
 Bootstraping tools for nonlinear models using a consistent interface
 }
 \details{
-This function is inspired by \sQuote{car::Boot}, which does not
+This function is inspired by \code{\link[car]{Boot}}, which does not
 seem to work with 'gnls' or 'nlme' objects. This function makes multiple copies 
 of the original data, so it can be very hungry in terms of memory use, but
 I do not believe this to be a big problem given the models we typically fit.
