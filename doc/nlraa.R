@@ -30,7 +30,8 @@ ggplot(data = swpg, aes(x = ftsw, y = lfgr)) +
 
 ## ----barley--------------------------------------------------------------
 ## Response of barley to nitrogen fertilizer
-data(barley)
+## There is a barley dataset also in package 'lattice'
+data(barley, package = "nlraa")
 ggplot(data = barley, aes(x = NF, y = yield, color = as.factor(year))) +
   geom_point() +
   xlab("Nitrogen fertilizer (g/m^2)") +
@@ -46,7 +47,7 @@ ggplot(data = barley, aes(x = NF, y = yield, color = as.factor(year))) +
 
 ## ----barleyG-------------------------------------------------------------
 library(nlme)
-data(barley)
+data(barley, package = "nlraa")
 barley$yearf <- as.factor(barley$year)
 barleyG <- groupedData(yield ~ NF | yearf, data = barley)
 
