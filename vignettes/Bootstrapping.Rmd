@@ -280,3 +280,6 @@ This is a first attempt at introducing bootstrapping methods for generalized non
 
 * J. Fox and S. Weisberg. Bootstrapping regression models in R. Technical report, 2017. URL: https://socialsciences.mcmaster.ca/jfox/Books/Companion-2E/appendix/Appendix-Bootstrapping.pdf
 
+* J. Fox and S. Weisberg. Nonlinear Regression, Nonlinear Least Squares, and Nonlinear
+Mixed Models in R. Appendix, 2018. 
+URL: https://socialsciences.mcmaster.ca/jfox/Books/Companion/appendices/Appendix-Nonlinear-Regression.pdf
