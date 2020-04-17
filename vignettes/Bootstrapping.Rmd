@@ -276,6 +276,8 @@ This is a first attempt at introducing bootstrapping methods for generalized non
 
 * propagate: https://rmazing.wordpress.com/2013/08/31/introducing-propagate/
 
+* For linear mixed models: package 'lmeresampler':  https://CRAN.R-project.org/package=lmeresampler  
+
 * J. Fox and S. Weisberg. An R Companion to Applied Regression. Sage, Thousand Oaks CA, 2nd edition, 2011. URL http://z.umn.edu/carbook.
 
 * J. Fox and S. Weisberg. Bootstrapping regression models in R. Technical report, 2017. URL: https://socialsciences.mcmaster.ca/jfox/Books/Companion-2E/appendix/Appendix-Bootstrapping.pdf

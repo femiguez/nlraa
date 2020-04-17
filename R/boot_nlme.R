@@ -37,7 +37,9 @@ boot_nlme <- function(object,
                       R = 999, 
                       psim = 1, 
                       ...){
-  
+  ## I chose to write it in this way instead of UseMethod
+  ## because I feel it is more efficient and results in less code
+  ## Maybe I'm wrong and will change this in the future
   ## Error checking
   if(!inherits(object, c("gnls","nlme"))) stop("object should be of class 'gnls' or 'nlme'")
 

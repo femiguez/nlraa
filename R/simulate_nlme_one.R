@@ -142,9 +142,11 @@ simulate_nlme_one <- function(object, psim = 1, level = Q, asList = FALSE, na.ac
     ##
     ## evaluating the naPattern expression, if any
     ##
-    naPat <- if(is.null(naPattern)) rep(TRUE, N)
-    else
+    naPat <- if(is.null(naPattern)){
+      rep(TRUE, N)
+    }else{
       as.logical(eval(stats::asOneSidedFormula(naPattern)[[2]], dataMix))
+    }
     ##
     ## Getting  the plist for the new data frame
     ##
