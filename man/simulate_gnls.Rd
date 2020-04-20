@@ -21,12 +21,21 @@ will appear similar to the observed values}
 
 \item{...}{additional arguments (none used at the moment)}
 }
+\value{
+It returns a vector with simulated values with length equal to the number of rows 
+in the original data
+}
 \description{
-This function is based on \code{\link[nlme]{predict.gnls}} function
+Simulate values from an object of class gnls. Unequal variances, 
+as modeled using the \sQuote{weights} option are supported, but the \sQuote{correlation}
+is not taken into account when sampling residuals.
 }
 \details{
+This function is based on \code{\link[nlme]{predict.gnls}} function
+
 It uses function \code{\link[MASS]{mvrnorm}} to generate new values for the coefficients
-of the model using the Variance-Covariance matrix \code{\link{vcov}}
+of the model using the Variance-Covariance matrix \code{\link{vcov}}. This variance-covariance matrix 
+refers to the one for the parameters 'beta', not the one for the residuals.
 }
 \examples{
 \donttest{
@@ -37,4 +46,7 @@ fit.gnls <- gnls(yield ~ SSlinp(NF, a, b, xs), data = barley)
 
 sim <- simulate_gnls(fit.gnls)
 }
+}
+\seealso{
+\code{\link[nlme]{predict.gnls}}
 }

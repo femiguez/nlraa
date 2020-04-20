@@ -1,12 +1,12 @@
 ---
-title: "Bootstrapping Nonlinear Models"
+title: "Bootstrap and Simulation for Nonlinear Models"
 author: "Fernando Miguez"
 date: "`r Sys.Date()`"
 fig_width: 7
 fig_height: 5
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Bootstrapping Nonlinear Models}
+  %\VignetteIndexEntry{Bootstrap and Simulation for Nonlinear Models}
   %\VignetteEngine{knitr::rmarkdown}
   \usepackage[utf8]{inputenc}
 ---
@@ -26,9 +26,9 @@ library(nlme)
 
 # Bootstrapping
 
-The bootstrap is a technique in statistics which consists of resampling the observed data in order to create an empirical distribution of some statistic for which an immediate distribution is not available (Fox and Weisberg, 2012, 2017). For nonlinear models, bootstrapping can be useful because often questions arise that a typical analysis does not answer. In many instances the distributions of parameters from a nonlinear model are in fact normal and standard approximations work well, in other instances, however, this is not the case.
+The bootstrap is a technique in statistics which consists of resampling the observed data in order to create an empirical distribution of some statistic (Fox and Weisberg, 2012, 2017). This is often done to evaluate the assumptions of the model or to derive empirical distributions which are difficult to approximate. For nonlinear models, bootstrapping can be useful because often questions arise that a typical analysis does not answer. In many instances the distributions of parameters from a nonlinear model are in fact normal and standard approximations work well, in other instances, however, this is not the case.
 
-In the following sections I will illustrate the use of the bootstrap for nonlinear model (nls), generalized nonlinear models (gnls) and nonlinear mixed models (nlme).
+In the following sections I will illustrate the use of the bootstrap for nonlinear model (nls), generalized nonlinear models (gnls) and nonlinear mixed models (nlme). In another section I will illustrate the ability to simulate from nonlinear (mixed) models
 
 ## Nonlinear models 
 
@@ -36,21 +36,23 @@ The first type of models illustrated here are nonlinear models for which we make
 
 ### Simple example
 
-As a simple example, we can use the dataset 'barley' in the 'nlraa' package. This represents the response of barley yield to different doses of fertilizer over several seasons. We will ignore the effect of 'Year' in this section.
+As a simple example, we can use the dataset 'barley' in the 'nlraa' package. This represents the response of barley yield to different doses of fertilizer over several seasons. We will ignore the effect of 'year' in this section.
 
 ```{r barley}
 data(barley, package = "nlraa")
 
+## Quick visualization
 ggplot(data = barley, aes(x = NF, y = yield)) + geom_point()
 ```
 
 We can fit a very simple model known as the linear-plateau.
 
 ```{r linp}
-## Linear plateau model
+## Linear-plateau model
 ## The function SSlinp is in the 'nlraa' package
 fit.lp <- nls(yield ~ SSlinp(NF, a, b, xs), data = barley)
 
+## Visualize data and fit
 ggplot(data = barley, aes(x = NF, y = yield)) + 
   geom_point() + 
   geom_line(aes(y = fitted(fit.lp)))
@@ -70,13 +72,13 @@ The confidence intervals for the model parameters can be derived using a method 
 confint(fit.lp)
 ```
 
-For nonlinear models this method is preferred to simple confidence intervals that would directly use the standard error of the model parameters. In many cases, there is good agreement between the two, but this is not always the case and it can be informative to compare both methods. Those standard errors can be obtained using the summary function, along with hypothesis testing. 
+For nonlinear models this method is preferred to simple confidence intervals that would directly use the standard error of the model parameters. In many cases, there is good agreement between the two, but this is not always the case and it can be informative to compare both methods. Those standard errors can be obtained using the 'summary' function, along with hypothesis testing. 
 
 ```{r summary-fit-lp}
 summary(fit.lp)
 ```
 
-Some interesting plots can be produced which illustrate the symmetry (or lack thereof) of the distribution for the nonlinear model parameters. Profile plots which show large departures from normality would indicate that the normal approximation for the confidence intervals might not be the best choice.
+Some interesting plots can be produced which illustrate the symmetry (or lack thereof) of the distribution for the model parameters. Profile plots which show large departures from normality would indicate that the normal approximation for the confidence intervals might not be the best choice.
 
 ```{r plot-profile}
 ## For the intercept
@@ -89,13 +91,13 @@ plot(profile(fit.lp, "xs"))
 
 Being able to see the whole profile for a parameter can be interesting in terms of understanding its behavior. For example, in this model, which has a 'break-point', we would not expect all the parameters to have identical shaped profiles and that is illustrated above for parameter 'xs'.
 
-In this case, bootstraping is an alternative to computing the confidence intervals and it can be used as a way to double check the previous results, but it can also be used when profiling fails. A function which can perform bootstraping for nonlinear models is 'Boot' in the 'car' pacakge. 
+In this case, bootstraping is an alternative to computing the confidence intervals and it can be used as a way to double-check the previous results, but it can also be used when profiling fails. A function which can perform bootstraping for nonlinear models is 'Boot' in the 'car' pacakge. 
 
 ```{r barley-Boot}
 fit.lp.Bt <- Boot(fit.lp)
 ```
 
-In this case this function uses the base 'boot' package under the hood and it returns an object of that class. This also allows for other options such as defining a function as a combination of model parameters, and the use of more than one core to speed up computation. In this case, since we are also interested in the asymptote, which is 'a + b * xs', we can obtain confidence intervals for this parameter by doing the following.
+In this case, this function uses the base 'boot' package under the hood and it returns an object of that class. This also allows for other options such as defining a function as a combination of model parameters, and the use of more than one core to speed up computation. In this case, since we are also interested in the asymptote, which is 'a + b * xs', we can obtain confidence intervals for this parameter by doing the following.
 
 ```{r barley-Boot-asymp}
 fn <- function(x) coef(x)[1] + coef(x)[2] * coef(x)[3]
@@ -104,7 +106,7 @@ confint(fit.lp.Bt.asymp)
 hist(fit.lp.Bt.asymp)
 ```
 
-The bootstrap method takes a few seconds here, but it can be computationally much more demanding in larger problems since it re-fits the model many, many times. An alternative is to use the delta method, for which there is a function in the 'car' pacakge. The delta method has the disadvantage that it makes the assumption of a normal distribution. In this case the lower bound for the confidence interval is similar to the one obtained with the bootstrap, but the upper bound for the confidence interval is somewhat higher using the bootstrap (381 vs. 370). Since the bootstrap method makes fewer assumptions it is probably the better one to report.
+The bootstrap method takes a few seconds here, but it can be computationally much more demanding in larger problems since it re-fits the model many, many times. An alternative is to use the delta method, for which there is a function in the 'car' pacakge. The delta method has the advantage of being fast and the disadvantage that it makes the assumption of a normal distribution. In this case the lower bound for the confidence interval is similar to the one obtained with the bootstrap, but the upper bound for the confidence interval is somewhat higher using the bootstrap (381 vs. 370). Since the bootstrap method makes fewer assumptions it is probably the better one to report.
 
 ```{r barley-Boot-deltaMethod}
 fit.lp.Dlt.asymp <- deltaMethod(fit.lp, "a + b * xs")
@@ -115,7 +117,7 @@ In order to answer our second question above related to the uncertainty around t
 
 ```{r fit-lp-pred-uncertainty}
 ## The object 't' in the bootstrap run has 
-## the parameter values
+## the parameter estimate values
 ## First remove missing values
 fit.lp.Bt.prms <- na.omit(fit.lp.Bt$t)
 
@@ -136,10 +138,10 @@ for(i in 1:nrp){
 
 ## Plot the data with the original fit and the uncertainty
 ggplot() + 
-  geom_point(data = barley, aes(x = NF, y = yield)) + 
   geom_line(data = prd.dat, aes(x = NF, y = prd, group = i), 
             color = "gray", alpha = 0.2) +
   geom_line(data = barley, aes(x = NF, y = fitted(fit.lp))) + 
+  geom_point(data = barley, aes(x = NF, y = yield)) + 
   ylab("Yield") + xlab("Nitrogen rate") + 
   ggtitle("Using results from Boot \n and plug-in into linp")
 ```
@@ -159,16 +161,16 @@ ndat$prd <- prds
 
 ## Essentially the same graph as the one above
 ggplot() + 
-  geom_point(data = barley, aes(x = NF, y = yield)) + 
   geom_line(data = ndat, aes(x = NF, y = prd, group = i), 
             color = "gray", alpha = 0.2) + 
-    geom_line(data = barley, aes(x = NF, y = fitted(fit.lp))) + 
+  geom_line(data = barley, aes(x = NF, y = fitted(fit.lp))) + 
+  geom_point(data = barley, aes(x = NF, y = yield)) + 
   ylab("Yield") + xlab("Nitrogen rate")
 ```
 
 ## Bootstrapping generalized nonlinear models
 
-Implementing bootstrap for more complex models takes extra work. For this, I'm taking the approach of sampling from the vector of fixed parameters and also bootstrapping the standardized residuals for 'gnls' and 'nlme' objects. (This is semi-parametric bootstrap and the methodology can be improved in the future.) This takes advantage that we assume that the residuals are normally distributed. 
+Implementing bootstrap for more complex models takes extra work. For this, I'm taking the approach of sampling from the vector of fixed parameters and also bootstrapping the standardized residuals for 'gnls' and 'nlme' objects. (This methodology can be improved in the future.) This takes advantage that we assume that the residuals are normally distributed. 
 
 As a first example, we can compare the bootstrapped confidence intervals with the ones obtained by 'intervals'. Note: I'm running this only a few hundred times in the examples below for efficiency, but it is a good practice to run these a few thousand times.
 
@@ -203,6 +205,7 @@ fit.lp.gnls3 <- update(fit.lp.gnls2,
                                 cfs[2], 0, 0, 0,
                                 cfs[3], 0, 0, 0))
 
+## This bootstraps the vector of parameters
 fit.lp.gnls3.bt <- boot_nlme(fit.lp.gnls3, R = 300)
 
 confint(fit.lp.gnls3.bt, type = "perc")
@@ -229,15 +232,18 @@ fit.bar.nlme <- nlme(fitL.bar, random = pdDiag(a + b + xs ~ 1))
 ## Confidence intervals of the model fixed parameters
 intervals(fit.bar.nlme, which = "fixed")
 
-## Bootstrap for the asymptote
+## Function which computes the asymptote
 fna <- function(x) fixef(x)[1] + fixef(x)[2] * fixef(x)[3]
 
+## Bootstrap the model for the asymptote
 fit.bar.nlme.bt <- boot_nlme(fit.bar.nlme, f = fna, R = 200)
 
 confint(fit.bar.nlme.bt, type = "perc")
 
 hist(fit.bar.nlme.bt, ci = "perc")
 ```
+
+For this model the estimate for the asymptote is `r round(fna(fit.bar.nlme))`, but from the model fit we do not get a direct confidence interval. Bootstrapping makes this easy (but it takes a bit of time) and it results in `r round(as.vector(confint(fit.bar.nlme.bt, type = "perc")))`.
 
 ## Confidence bands for generalized nonlinear models
 
@@ -256,7 +262,7 @@ fitg <- gnls(circumference ~ SSlogis(age, Asym, xmid, scal),
 ## the uncertainty around the fitted values
 fitg.bt1 <- boot_nlme(fitg, fitted, psim = 1, R = 300)
   
-## Compute 90% quantiles
+## Compute 90% quantile confidence bands
 lwr1.q <- apply(t(fitg.bt1$t), 1, quantile, probs = 0.05, na.rm = TRUE)
 upr1.q <- apply(t(fitg.bt1$t), 1, quantile, probs = 0.95, na.rm = TRUE)
 
@@ -268,15 +274,98 @@ ggplot() +
   ggtitle("Orange fit using the logistic: \n 90% confidence band for the mean function")
 ```
 
-This is a first attempt at introducing bootstrapping methods for generalized nonlinear models and nonlinear mixed models. In the future, I will investigate the performance of this method in more complex examples.
+# Simulation
+
+Here I will continue with the Orange dataset and illustrate different types of simulation which are relevant depending on what the inference scope is. This simulation is, in fact, used inside of the bootstrap function above; it is a necessary step for bootstrap for these type of models.
+
+## Fitted values
+
+The first level of predictions we can generate for the Orange dataset are at the 'population' level. These are similar to the fitted values for the 'gnls' case above. Notice that we do not have the option of requesting standard errors for the predicitons for this model either. 
+
+```{r Orange-psim-0-level-0}
+fmoL <- nlsList(circumference ~ SSlogis(age, Asym, xmid, scal), data = Orange)
+
+fmo <- nlme(fmoL, random = pdDiag(Asym + xmid + scal ~ 1))
+
+## Just one simulation, because with psim = 0 and level = 0, we are 
+## computing the predicted values at level = 0 (?predict.nlme)
+sim00 <- simulate_nlme(fmo, nsim = 1, psim = 0, level = 0)
+
+dat00 <- cbind(Orange, prd = as.vector(sim00))
+
+ggplot(data = dat00) + 
+  geom_point(aes(x = age, y = circumference)) + 
+  geom_line(aes(x = age, y = prd)) + 
+  ggtitle("psim = 0, level = 0")
+```
+
+One approach we can use to assess the uncertainty in the response would be to sample from the vector of parameters and the associated variance-covariance matrix. In this case, we could do many realizations, but I'll keep it to just 100. A frequentist interpretation of the bands below would be that in repeated sampling from this same population we would expect that the true relationship will be within this band with a specified probability. One way to compute these bands (which I'm not doing below), would be to calculate the quantiles of the empirical distribution. These could be called confidence bands, which would be equivalent to the 'interval = confidence' in a linear model (?predict.lm).
+
+```{r Orange-psim-1-level-0}
+sdat10 <- simulate_nlme(fmo, nsim = 100, psim = 1, level = 0, value = "data.frame")
+
+ggplot(data = sdat10) + 
+  geom_line(aes(x = age, y = y.sim, group = ii), color = "gray", alpha = 0.5) + 
+  geom_point(aes(x = age, y = circumference)) + 
+  ggtitle("psim = 1, level = 0") + 
+  ylab("circumference")
+```
+
+In this case, each tree is an 'individual' and the previous one is a population level confidence. Next, we would like to produce individual level 'prediction' bands. This is, if we were able to resample from a population with a similar structure and if we wanted to have bands that include the true relationship between circumference and age for these trees, we could produce the confidence bands from the quantiles of the empirical distribution of the lines in the figure below (we would need a few thousand samples in order to do this).
+
+```{r Orange-psim-1-level-1}
+sdat11 <- simulate_nlme(fmo, nsim = 100, psim = 1, level = 1, value = "data.frame")
+
+## We need a tree simulation ID
+## for plotting
+sdat11$Tree_ID <- with(sdat11, paste0(Tree,"_",ii))
+
+ggplot(data = sdat11) + 
+  facet_wrap(~ Tree) + 
+  geom_line(aes(x = age, y = y.sim, color = Tree, group = Tree_ID), 
+            alpha = 0.5) + 
+  geom_point(aes(x = age, y = circumference)) + 
+  ggtitle("psim = 1, level = 1") + 
+  ylab("circumference") + 
+  theme(legend.position = "none")
+```
+
+Finally, the next level would be to produce intervals that would likely contain a future observation instead of just the relationship, which was captured in the figure above. The 'bands' below are wider than in the previous figure. The reason why the difference is small, is, because in this case the residual variance is comparatively small.
+
+```{r Orange-psim-2-level-1}
+sdat21 <- simulate_nlme(fmo, nsim = 100, psim = 2, level = 1, value = "data.frame")
+
+## Here I'm plotting points to emphasize that we are making
+## predictions at the level of a single observation
+ggplot(data = sdat21) + 
+  facet_wrap(~ Tree) + 
+  geom_point(aes(x = age, y = y.sim, color = Tree), 
+            alpha = 0.5) + 
+  geom_point(aes(x = age, y = circumference)) + 
+  ggtitle("psim = 2, level = 1") + 
+  ylab("circumference") + 
+  theme(legend.position = "none")
+```
+
+The previous examples are simulations, but in order to generate confidence intervals or bands we would need to perform bootstrap, but it takes much longer, so I'm not including it in this vignette.
+
+# Appendix
+
+## Note on simulate methodology
+
+In the case of simulating data from a nonlinear model and how this relates to bootstrapping. I've been thinking about a number of things. In a nonlinear model, the mean function should account for a *substantial* part of the variability. If we think about models in terms of
+
+$$
+data = signal + noise
+$$
+And for mixed models:
+$$
+data = fixed + random + residual
+$$
+
+I can see how in the linear case often the random part can be of substantial interest and sometimes more important than the fixed part, but for nonlinear models, the *fixed* part should dominate, otherwise we would need a better function or the data are not amenable to nonlinear modeling. In simulate_nlme, psim = 0, gives you the fitted values, so should be equivalent to 'predict.nlme', if theres is ever a discrepancy, then that is a bug. For psim = 1, I sample from the vector of parameters assuming that they are normally distributed. This seems to be very reasonable in practice and, in fact, much more important is the variance-covariance matrix of the vector of parameters and in particular the correlations. The problem is that in nonlinear mixed models, the relationship among parameters is not linear and can look a bit like a 'banana'. This can be investigated through the use of bootstrap. For psim = 2, I add the residual variability which considers the modeling of the variance (heterogeneous variances), but not the possible lack of independence of the residuals. (This seems to be unlikely to arise for the type of models that we usually fit. Adding the correlation structure of the residuals can be done, but I'll work on it when the need arises - not a priority.) It would be possible to add an options for psim = 3, where I also consider the uncertainty in the 'random' part above, this is is better captures, in my opinion, the 'level' argument in the 'simulate_nlme' function. By default, 'predict.nlme' predicts at the deepest level in the hierarchy (i.e. Q) and changing this argument allows for simulations at the different levels. Another reason, for not implementing psim = 3 (meaning sampling for the random part) is that, often, there is meaning or interest in these specific random terms. For example, sites/locations/subjects/experimenta.units are higher or lower because, in part, some characteristics that are know and some unknown, but which are out of our control. For this reason, assigning resampling or assigning a deviation at random at this level might be undesirable. If we have 10 sites labeled "A" through "J" and we know that site "A" is higher due to some characteristics (which we do not control), it would not make sense to assign the deviation from site "A" to "J" (which might be the lowest). In our analysis it might still make sense to treat 'sites' as random. In this case, when we use simulate_nlme, it makes more sense to use 'psim = 2, level = 1' ('site' would be our deepest level in the hierarchy - like 'Tree' in the 'Orange' example above) to generate data which appears similar to the data which was actually collected. It is true that this does not allow us to incorporate the uncertainty from the fact that we obtained these specific random deviates at the level of site (or Tree), but these will vary anyway because we are simulating forward from the vector of fixed parameters, which should account for the majority of the variability in these models. For this reason, I know that my approach is not perfect, but, so far, it seems to be usable. I'm thinking about Morris argument (see References) and I tested whether there is bias in the estimate of the random term variances using my method and I did not detect a bias - but I'm not resampling from the BLUPs. I'm also thinking that the non-parameteric part of my method (resampling the residuals) is somewhat trivial and implementing a fully parameteric option is feasible. 
 
 # References
-
-* http://sia.webpopix.org/nonlinearRegression.html#confidence-intervals-and-prediction-intervals
-
-* propagate: https://rmazing.wordpress.com/2013/08/31/introducing-propagate/
-
-* For linear mixed models: package 'lmeresampler':  https://CRAN.R-project.org/package=lmeresampler  
 
 * J. Fox and S. Weisberg. An R Companion to Applied Regression. Sage, Thousand Oaks CA, 2nd edition, 2011. URL http://z.umn.edu/carbook.
 
@@ -285,3 +374,16 @@ This is a first attempt at introducing bootstrapping methods for generalized non
 * J. Fox and S. Weisberg. Nonlinear Regression, Nonlinear Least Squares, and Nonlinear
 Mixed Models in R. Appendix, 2018. 
 URL: https://socialsciences.mcmaster.ca/jfox/Books/Companion/appendices/Appendix-Nonlinear-Regression.pdf
+
+* Morris, J. S. (2002). The BLUPs Are Not ‘best’ When It Comes to Bootstrapping. Statistics & Probability Letters 56(4): 425–430. doi:10.1016/S0167-7152(02)00041-X.
+
+* http://sia.webpopix.org/nonlinearRegression.html#confidence-intervals-and-prediction-intervals
+
+* propagate: https://rmazing.wordpress.com/2013/08/31/introducing-propagate/
+
+* For linear mixed models: package 'lmeresampler':  https://CRAN.R-project.org/package=lmeresampler  
+
+* https://stats.stackexchange.com/questions/231074/confidence-intervals-on-predictions-for-a-non-linear-mixed-model-nlme
+
+* https://rpubs.com/bbolker/3423
+

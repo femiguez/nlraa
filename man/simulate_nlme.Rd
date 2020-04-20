@@ -4,7 +4,8 @@
 \alias{simulate_nlme}
 \title{Simulate samples from a nonlinear mixed model from fixed effects}
 \usage{
-simulate_nlme(object, nsim = 1, psim = 1, ...)
+simulate_nlme(object, nsim = 1, psim = 1, value = c("matrix",
+  "data.frame"), ...)
 }
 \arguments{
 \item{object}{object of class \code{\link[nlme]{gnls}} or \code{\link[nlme]{nlme}}}
@@ -13,12 +14,16 @@ simulate_nlme(object, nsim = 1, psim = 1, ...)
 
 \item{psim}{simulation level for vector of fixed parameters for \code{\link{simulate_nlme_one}}}
 
+\item{value}{whether to return a matrix (default) or an augmented data frame}
+
 \item{...}{additional arguments to be passed to either \code{\link{simulate_gnls}} or \code{\link{simulate_nlme_one}}}
 }
 \value{
 It returns a matrix with simulated values from the original object
 with number of rows equal to the number of rows of \code{\link{fitted}} and number
-of columns equal to the number of simulated samples (\sQuote{nsim}).
+of columns equal to the number of simulated samples (\sQuote{nsim}). In the case of 'data.frame'
+it returns an augmented data.frame, which can potentially be a very large object, but which
+makes furhter plotting more convenient.
 }
 \description{
 Simulate multiple samples from a nonlinear model

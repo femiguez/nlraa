@@ -21,6 +21,9 @@
 #' This function is based on \code{\link[nlme]{predict.gnls}} function 
 #' 
 #' @title Simulate fitted values from an object of class \code{\link[nlme]{gnls}}
+#' @description Simulate values from an object of class gnls. Unequal variances, 
+#' as modeled using the \sQuote{weights} option are supported, but the \sQuote{correlation}
+#' is not taken into account when sampling residuals.
 #' @name simulate_gnls
 #' @param object object of class \code{\link[nlme]{gnls}}
 #' @param psim parameter simulation level, 0: for fitted values, 1: for simulation from 
@@ -30,8 +33,12 @@
 #' @param na.action default \sQuote{na.fail}. See \code{\link[nlme]{predict.gnls}}
 #' @param naPattern missing value pattern. See \code{\link[nlme]{predict.gnls}}
 #' @param ... additional arguments (none used at the moment)
+#' @return It returns a vector with simulated values with length equal to the number of rows 
+#' in the original data
 #' @details It uses function \code{\link[MASS]{mvrnorm}} to generate new values for the coefficients
-#' of the model using the Variance-Covariance matrix \code{\link{vcov}}
+#' of the model using the Variance-Covariance matrix \code{\link{vcov}}. This variance-covariance matrix 
+#' refers to the one for the parameters 'beta', not the one for the residuals.
+#' @seealso \code{\link[nlme]{predict.gnls}}
 #' @export
 #' @examples 
 #' \donttest{
@@ -130,7 +137,7 @@ simulate_gnls <- function(object, psim = 1, na.action = na.fail, naPattern = NUL
       ## residual standard error
       ## N is the number of rows in the data
       rsds.std <- stats::rnorm(N, 0, 1)
-      rsds <- rsds.std * attr(residuals(object), "std") ## This last term is 'sigma'
+      rsds <- rsds.std * attr(nlme::residuals(object), "std") ## This last term is 'sigma'
     }
     ##------ End FEM section ----------------------##
     

@@ -5,13 +5,16 @@
 #' @param object object of class \code{\link[nlme]{gnls}} or \code{\link[nlme]{nlme}}
 #' @param nsim number of samples, default 1
 #' @param psim simulation level for vector of fixed parameters for \code{\link{simulate_nlme_one}}
+#' @param value whether to return a matrix (default) or an augmented data frame
 #' @param ... additional arguments to be passed to either \code{\link{simulate_gnls}} or \code{\link{simulate_nlme_one}}
 #' @details The details can be found in either \code{\link{simulate_gnls}} or \code{\link{simulate_nlme_one}}.
 #' This function is very simple and it only sets up a matrix and a loop in order to simulate several instances of 
 #' model outputs.
 #' @return It returns a matrix with simulated values from the original object
 #' with number of rows equal to the number of rows of \code{\link{fitted}} and number
-#' of columns equal to the number of simulated samples (\sQuote{nsim}).
+#' of columns equal to the number of simulated samples (\sQuote{nsim}). In the case of 'data.frame'
+#' it returns an augmented data.frame, which can potentially be a very large object, but which
+#' makes furhter plotting more convenient.  
 #' @export
 #' @examples 
 #' \donttest{
@@ -34,10 +37,13 @@
 
 simulate_nlme <- function(object, 
                           nsim = 1, 
-                          psim = 1, ...){
+                          psim = 1, 
+                          value = c("matrix", "data.frame"),...){
   
   ## Error checking
   if(!inherits(object, c("gnls","nlme"))) stop("object should be of class 'gnls' or 'nlme'")
+  
+  value <- match.arg(value)
   
   sim.mat <- matrix(ncol = nsim, nrow = length(fitted(object)))
   
@@ -51,6 +57,16 @@ simulate_nlme <- function(object,
       }
   }
 
-  return(sim.mat)
+  if(value == "matrix"){
+    return(sim.mat)  
+  }else{
+    dat <- eval(object$call$data)
+    adat <- data.frame(ii = as.factor(rep(1:nsim, each = nrow(dat))),
+                      dat,
+                      y.sim = c(sim.mat),
+                      row.names = 1:c(nsim * nrow(dat)))   
+    return(adat)
+  }
+  
 }
 

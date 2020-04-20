@@ -171,15 +171,15 @@ simulate_nlme_one <- function(object, psim = 1, level = Q, asList = FALSE, na.ac
 
     ## This section was included by FEM    
     if(psim == 0){
-      fix <- fixef(object)  
+      fix <- nlme::fixef(object)  
     }
     
     if(psim == 1){
-      fix <- MASS::mvrnorm(n = 1, mu = fixef(object), Sigma = vcov(object))
+      fix <- MASS::mvrnorm(n = 1, mu = nlme::fixef(object), Sigma = vcov(object))
     }
     
     if(psim == 2){
-      fix <- MASS::mvrnorm(n = 1, mu = fixef(object), Sigma = vcov(object))
+      fix <- MASS::mvrnorm(n = 1, mu = nlme::fixef(object), Sigma = vcov(object))
       rsds.std <- stats::rnorm(N, 0, 1) ## These are standardized residuals 'pearson'?
       rsds <- rsds.std * attr(object[["residuals"]], "std") ## This last term is 'sigma'
     }
@@ -278,9 +278,19 @@ simulate_nlme_one <- function(object, psim = 1, level = Q, asList = FALSE, na.ac
         lab <- paste(lab, aux)
       }
       
+      #-------- FEM 2020--04-20 --------------------------#
+      #-- Adding the residuals to the predicted values ---#
+      #-- Only if psim = 2 -------------------------------#
+      if(psim == 2) val <- val + rsds
+        
       attr(val, "label") <- lab
       return(val)
     }else{
+      #-------- FEM 2020--04-20 --------------------------#
+      #-- Adding the residuals to the predicted values ---#
+      #-- Only if psim = 2 -------------------------------#
+      if(psim == 2) val <- val + rsds
+      
       return(data.frame(oGrps, predict = val))
     }
 }
