@@ -12,7 +12,7 @@
 
 <meta name="author" content="Fernando Miguez" />
 
-<meta name="date" content="2020-04-16" />
+<meta name="date" content="2020-04-20" />
 
 <title>Nonlinear Regression Agricultural Applications</title>
 
@@ -303,7 +303,7 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 
 <h1 class="title toc-ignore">Nonlinear Regression Agricultural Applications</h1>
 <h4 class="author">Fernando Miguez</h4>
-<h4 class="date">2020-04-16</h4>
+<h4 class="date">2020-04-20</h4>
 
 
 
@@ -353,6 +353,7 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 <li>SSratio (rational function)</li>
 <li>SSlogis5 (five-parameter logistic)</li>
 <li>SStrlin (tri-linear function)</li>
+<li>SSexplin (expolinear)</li>
 </ol>
 <p>For the reference on the Beta growth function see Yin et al. 2003 (<a href="https://doi.org/10.1093/aob/mcg029" class="uri">https://doi.org/10.1093/aob/mcg029</a>) and Erratum: (<a href="https://doi.org/10.1093/aob/mcg091" class="uri">https://doi.org/10.1093/aob/mcg091</a>). For a reference on a use of the declining logistic see Oddi et al. (2019) (and vignette in this package). For the Ricker model see: (<a href="https://en.wikipedia.org/wiki/Ricker_model" class="uri">https://en.wikipedia.org/wiki/Ricker_model</a>). For the protein profile in the canopy see Johnson et al. (2010) (<a href="https://doi.org/10.1093/aob/mcq183" class="uri">https://doi.org/10.1093/aob/mcq183</a>).</p>
 <p>The <em>SSbgrp</em> function is a reparameterized version of <em>SSbgf</em>. The original <em>SSbgf</em> does not enforce the constraint that <em>t.m &lt; t.e</em> and this makes it somewhat numerically unstable for routine use (but more testing is needed). To recover the original parameters from <em>SSbgrp</em>, take the exponential of <em>lt.e</em>, so <em>t.e = exp(lt.e)</em> and likewise <em>t.m = exp(lt.e) - exp(ldt)</em>. There is a similar function for the four parameter Beta growth <em>SSbg4rp</em>.</p>
@@ -363,10 +364,10 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 <pre><code>##  [1] &quot;SS&quot;          &quot;SSasymp&quot;     &quot;SSasympOff&quot;  &quot;SSasympOrig&quot; &quot;SSbell&quot;     
 ##  [6] &quot;SSbg4rp&quot;     &quot;SSbgf&quot;       &quot;SSbgf4&quot;      &quot;SSbgrp&quot;      &quot;SSbiexp&quot;    
 ## [11] &quot;SSblin&quot;      &quot;SSD&quot;         &quot;SSdlf&quot;       &quot;SSexpf&quot;      &quot;SSexpfp&quot;    
-## [16] &quot;SSfol&quot;       &quot;SSfpl&quot;       &quot;SSgompertz&quot;  &quot;SSlinp&quot;      &quot;SSlogis&quot;    
-## [21] &quot;SSlogis5&quot;    &quot;SSmicmen&quot;    &quot;SSnrh&quot;       &quot;SSpexpf&quot;     &quot;SSplin&quot;     
-## [26] &quot;SSpquad&quot;     &quot;SSprofd&quot;     &quot;SSquadp&quot;     &quot;SSratio&quot;     &quot;SSricker&quot;   
-## [31] &quot;SStrlin&quot;     &quot;SSweibull&quot;</code></pre>
+## [16] &quot;SSexplin&quot;    &quot;SSfol&quot;       &quot;SSfpl&quot;       &quot;SSgompertz&quot;  &quot;SSlinp&quot;     
+## [21] &quot;SSlogis&quot;     &quot;SSlogis5&quot;    &quot;SSmicmen&quot;    &quot;SSnrh&quot;       &quot;SSpexpf&quot;    
+## [26] &quot;SSplin&quot;      &quot;SSpquad&quot;     &quot;SSprofd&quot;     &quot;SSquadp&quot;     &quot;SSratio&quot;    
+## [31] &quot;SSricker&quot;    &quot;SStrlin&quot;     &quot;SSweibull&quot;</code></pre>
 </div>
 </div>
 </div>
