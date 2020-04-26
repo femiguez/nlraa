@@ -282,6 +282,11 @@ And additional models, such as:
 3. Campbel
 4. Expo
 
+## Nonlinear mixed models packages
+
+**saemix**, **nlmixr** and **brms** (Bayesian). I'm planning to review these pacakges in a
+next version of nlraa.
+
 ## Additional material on growth models
 
 1. A unified approach to the Richards-model family for use in growth analyses:

@@ -137,7 +137,7 @@ simulate_gnls <- function(object, psim = 1, na.action = na.fail, naPattern = NUL
       ## residual standard error
       ## N is the number of rows in the data
       rsds.std <- stats::rnorm(N, 0, 1)
-      rsds <- rsds.std * attr(nlme::residuals(object), "std") ## This last term is 'sigma'
+      rsds <- rsds.std * attr(residuals(object), "std") ## This last term is 'sigma'
     }
     ##------ End FEM section ----------------------##
     

@@ -116,6 +116,8 @@ doys <- 168:303
 ndat <- expand.grid(DOY=doys, Crop= unique(smG$Crop), Input=c(1,2))
 ndat$preds <- predict(fit8.me2, newdata = ndat)
 
+## Here I'm just removing prediction for maize that go beyond
+## day of the year 270
 ndat2 <- ndat
 ndat2[ndat2$Crop == "M" & ndat2$DOY > 270,"preds"] <- NA
 ndat2 <- na.omit(ndat2)

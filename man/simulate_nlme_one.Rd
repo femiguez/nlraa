@@ -14,7 +14,8 @@ simulate_nlme_one(object, psim = 1, level = Q, asList = FALSE,
 fixed parameters (assuming a fixed vcov matrix), 2: for simulation considering the 
 residual error (sigma), this returns data which will appear similar to the observed values}
 
-\item{level}{level at which simulations are performed. See \code{\link[nlme]{predict.nlme}}}
+\item{level}{level at which simulations are performed. See \code{\link[nlme]{predict.nlme}}. 
+An important difference is that for this function multiple levels are not allowed.}
 
 \item{asList}{optional logical value. See \code{\link[nlme]{predict.nlme}}}
 
@@ -23,6 +24,9 @@ residual error (sigma), this returns data which will appear similar to the obser
 \item{naPattern}{missing value pattern. See \code{\link[nlme]{predict.nlme}}}
 
 \item{...}{additional arguments to be passed (not used at the moment)}
+}
+\value{
+This function should always return a vector with the same dimensions as the original data
 }
 \description{
 This function is based on \code{\link[nlme]{predict.nlme}} function

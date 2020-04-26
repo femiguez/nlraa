@@ -375,7 +375,7 @@ I can see how in the linear case often the random part can be of substantial int
 Mixed Models in R. Appendix, 2018. 
 URL: https://socialsciences.mcmaster.ca/jfox/Books/Companion/appendices/Appendix-Nonlinear-Regression.pdf
 
-* Morris, J. S. (2002). The BLUPs Are Not ‘best’ When It Comes to Bootstrapping. Statistics & Probability Letters 56(4): 425–430. doi:10.1016/S0167-7152(02)00041-X.
+* Morris, J. S. (2002). The BLUPs Are Not ‘best’ When It Comes to Bootstrapping. Statistics & Probability Letters 56(4): 425–430. https://doi.org/10.1016/S0167-7152(02)00041-X.
 
 * http://sia.webpopix.org/nonlinearRegression.html#confidence-intervals-and-prediction-intervals
 

@@ -26,13 +26,15 @@
 #' @param psim parameter simulation level, 0: for fitted values, 1: for simulation from 
 #' fixed parameters (assuming a fixed vcov matrix), 2: for simulation considering the 
 #' residual error (sigma), this returns data which will appear similar to the observed values
-#' @param level level at which simulations are performed. See \code{\link[nlme]{predict.nlme}}
+#' @param level level at which simulations are performed. See \code{\link[nlme]{predict.nlme}}. 
+#' An important difference is that for this function multiple levels are not allowed.
 #' @param asList optional logical value. See \code{\link[nlme]{predict.nlme}}
 #' @param na.action missing value action. See \code{\link[nlme]{predict.nlme}}
 #' @param naPattern missing value pattern. See \code{\link[nlme]{predict.nlme}}
 #' @param ... additional arguments to be passed (not used at the moment)
 #' @details It uses function \code{\link[MASS]{mvrnorm}} to generate new values for the coefficients
 #' of the model using the Variance-Covariance matrix \code{\link{vcov}}
+#' @return This function should always return a vector with the same dimensions as the original data
 
 simulate_nlme_one <- function(object, psim = 1, level = Q, asList = FALSE, na.action = na.fail,
            naPattern = NULL, ...){
@@ -42,7 +44,24 @@ simulate_nlme_one <- function(object, psim = 1, level = Q, asList = FALSE, na.ac
    
   if(!inherits(object, "nlme")) stop("Only for objects of class 'nlme'")
   
+  if(!missing(level) && length(level) > 1) stop("level must be of length = 1")
+  
   Q <- object$dims$Q
+
+  if(!missing(level) && psim == 2 && level < Q)
+    stop("psim = 2 whould only be used for the deepest level of the hierarchy")
+    
+  o.level <- level
+  
+  ## If we request a simulation at a level greater than zero AND there is more than
+  ## one group AND the level requested is less than the maximum we get NAs, 
+  ## so I need to simulate at the deepest level
+  ## Later I extract simulations at the original level (o.level) above
+  if(level > 0 && level < Q && length(strsplit(as.character(object$call$groups),"/",fixed = TRUE)[[2]]) > 1){
+    ## this is the only condition at which this function would return a data.frame in the original function
+    ## but this function will never return a data.frame
+    level <- 0:Q
+  }
     
   newdata <- eval(object$call$data)
     
@@ -70,16 +89,17 @@ simulate_nlme_one <- function(object, psim = 1, level = Q, asList = FALSE, na.ac
                deparse(nlme::getResponseFormula(object)[[2]]))),
       data = newdata, na.action = na.action,
       drop.unused.levels = TRUE)
-    dataMix <- do.call(model.frame, mfArgs)
-    origOrder <- row.names(dataMix)	# preserve the original order
-    whichRows <- match(origOrder, row.names(newdata))
+  
+  dataMix <- do.call(model.frame, mfArgs)
+  origOrder <- row.names(dataMix)	# preserve the original order
+  whichRows <- match(origOrder, row.names(newdata))
     
-    if(maxQ > 0){
-      ## sort the model.frame by groups and get the matrices and parameters
-      ## used in the estimation procedures
-      grps <- nlme::getGroups(newdata, eval(substitute(~ 1 | GRPS, list(GRPS = groups[[2]]))))
-      ## ordering data by groups
-      if (inherits(grps, "factor")) {	# single level
+  if(maxQ > 0){
+    ## sort the model.frame by groups and get the matrices and parameters
+    ## used in the estimation procedures
+    grps <- nlme::getGroups(newdata, eval(substitute(~ 1 | GRPS, list(GRPS = groups[[2]]))))
+    ## ordering data by groups
+    if (inherits(grps, "factor")) {	# single level
         grps <- grps[whichRows, drop = TRUE]
         oGrps <- data.frame(grps)
         ## checking if there are missing groups
@@ -169,7 +189,8 @@ simulate_nlme_one <- function(object, psim = 1, level = Q, asList = FALSE, na.ac
     fnames <- unlist(lapply(fixed, function(el) deparse(el[[2]])))
     names(fixed) <- fnames
 
-    ## This section was included by FEM    
+    ## ----------- This section was included by FEM ---------------##
+    ## ------------------------------------------------------------##
     if(psim == 0){
       fix <- nlme::fixef(object)  
     }
@@ -183,7 +204,8 @@ simulate_nlme_one <- function(object, psim = 1, level = Q, asList = FALSE, na.ac
       rsds.std <- stats::rnorm(N, 0, 1) ## These are standardized residuals 'pearson'?
       rsds <- rsds.std * attr(object[["residuals"]], "std") ## This last term is 'sigma'
     }
-
+    ##-------------------------------------------------------------##
+    
     for(nm in fnames){
       if (!is.logical(plist[[nm]]$fixed)) {
         oSform <- stats::asOneSidedFormula(fixed[[nm]][[3]])
@@ -201,7 +223,7 @@ simulate_nlme_one <- function(object, psim = 1, level = Q, asList = FALSE, na.ac
       for(i in seq_along(ranForm)) {
         names(ranForm[[i]]) <- rnames[[i]]
       }
-      ran <- ranef(object)
+      ran <- nlme::ranef(object)
       ran <- if(is.data.frame(ran)) list(ran) else rev(ran)
       ##    rn <- lapply(ran[whichQ], names)
       ran <- lapply(ran, t)
@@ -214,14 +236,14 @@ simulate_nlme_one <- function(object, psim = 1, level = Q, asList = FALSE, na.ac
             plist[[nm]]$random[[i]] <-
               if (length(wch) == 1) {         # only one formula for nm
                 oSform <- stats::asOneSidedFormula(ranForm[[i]][[nm]][[3]])
-                model.matrix(oSform, model.frame(oSform, dataMix))
+                stats::model.matrix(oSform, stats::model.frame(oSform, dataMix))
               } else {                        # multiple formulae
                 lapply(ranForm[[i]][wch], function(el) {
                   if (el[[3]] == "1") {
                     TRUE
                   } else {
                     oSform <- stats::asOneSidedFormula(el[[3]])
-                    model.matrix(oSform, model.frame(oSform, dataMix))
+                    stats::model.matrix(oSform, stats::model.frame(oSform, dataMix))
                   } })
               }
           }
@@ -286,12 +308,15 @@ simulate_nlme_one <- function(object, psim = 1, level = Q, asList = FALSE, na.ac
       attr(val, "label") <- lab
       return(val)
     }else{
-      #-------- FEM 2020--04-20 --------------------------#
-      #-- Adding the residuals to the predicted values ---#
-      #-- Only if psim = 2 -------------------------------#
-      if(psim == 2) val <- val + rsds
-      
-      return(data.frame(oGrps, predict = val))
+
+      ## Under these conditions I need to extract the right level of nesting
+      ## So if o.level was 1, I extract column 2, since column1 corresponds to level 0
+      ## What I'm not sure about is if the order of the data will always be preserved or not
+      ## print(head(val))
+      ## At this point it does not make sense to implement psim = 2 here
+      ## because this is only for the deepest level of simulation (not the case here)
+      val <- val[,c(o.level + 1)]
+      return(val)
     }
 }
 
@@ -327,8 +352,9 @@ nlraa_getParsNlme <-
         if (f)
           pars[, nm] <- beta[fmap[[nm]]]
         ## else pars[, nm] <- 0  (as f == FALSE)
-      } else
+      } else {
         pars[, nm] <- f %*% beta[fmap[[nm]]]
+      }
       
       ## 2) Random effects
       for(i in iQ)
