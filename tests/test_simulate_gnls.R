@@ -14,12 +14,12 @@ if(run.simulate.gnls.test){
   
   fitg <- gnls(circumference ~ SSlogis(age, Asym, xmid, scal), data = Orange, weights = varPower())
   
-  fitg.bt0 <- boot_nlme(fitg, fitted, psim = 0)
+  fitg.bt0 <- boot_nlme(fitg, fitted, psim = 0, parallel = "multicore", ncpus = 4)
   
   lwr0.q <- apply(t(fitg.bt0$t), 1, quantile, probs = 0.05, na.rm = TRUE)
   upr0.q <- apply(t(fitg.bt0$t), 1, quantile, probs = 0.95, na.rm = TRUE)
  
-  fitg.bt1 <- boot_nlme(fitg, fitted, psim = 1)
+  fitg.bt1 <- boot_nlme(fitg, fitted, psim = 1, parallel = "multicore", ncpus = 4)
   
   lwr1.q <- apply(t(fitg.bt1$t), 1, quantile, probs = 0.05, na.rm = TRUE)
   upr1.q <- apply(t(fitg.bt1$t), 1, quantile, probs = 0.95, na.rm = TRUE)
@@ -31,8 +31,8 @@ if(run.simulate.gnls.test){
     geom_ribbon(aes(x = Orange$age, ymin = lwr1.q, ymax = upr1.q), fill = "purple", alpha = 0.2)
   
   ## What about the model coefficients?
-  fitg.cfs.bt0 <- boot_nlme(fitg, psim = 0) 
-  fitg.cfs.bt1 <- boot_nlme(fitg, psim = 1) 
+  fitg.cfs.bt0 <- boot_nlme(fitg, psim = 0, parallel = "multicore", ncpus = 4) 
+  fitg.cfs.bt1 <- boot_nlme(fitg, psim = 1, parallel = "multicore", ncpus = 4) 
 
   summary(fitg.cfs.bt0)
   summary(fitg.cfs.bt1)
@@ -46,9 +46,9 @@ if(run.simulate.gnls.test){
   hist(fitg.cfs.bt0)
   hist(fitg.cfs.bt1)
   
-  sims0 <- simulate_gnls(fitg, psim = 0)
-  sims1 <- simulate_gnls(fitg, psim = 1)
-  sims2 <- simulate_gnls(fitg, psim = 2)
+  sims0 <- simulate_gnls(fitg, psim = 0) ## Fitted values
+  sims1 <- simulate_gnls(fitg, psim = 1) ## One simulation from the mean or population-level
+  sims2 <- simulate_gnls(fitg, psim = 2) ## One simulation from the individual-level
   
   Orange2 <- Orange
   Orange2$sims0 <- sims0
@@ -59,7 +59,6 @@ if(run.simulate.gnls.test){
     geom_point(data = Orange2, aes(x = age, y = circumference)) + 
     geom_line(data = Orange2, aes(x = age, y = sims0)) + 
     geom_point(data = Orange2, aes(x = age, y = sims1), color = "red") +
-    geom_line(data = Orange2, aes(x = age, y = sims1), color = "red") +
     geom_point(data = Orange2, aes(x = age, y = sims2), color = "green3")  
     
   ## What about a nlme?
@@ -71,22 +70,22 @@ if(run.simulate.gnls.test){
   plot(augPred(fit.nm, level = 0:1))
   
   ## Let's look at intervals first
-  fit.nm.bt <- boot_nlme(fit.nm)
+  fit.nm.bt <- boot_nlme(fit.nm, parallel = "multicore", ncpus = 4)
 
   confint(fit.nm.bt)  
-  intervals(fit.nm)
+  intervals(fit.nm, which = "fixed")
   
-  ## Fitted values...mmm?
+  ## Fitted values
   prdf <- function(x) predict(x, level = 0, newdata = data.frame(age = 50:1600)) 
   
-  fit.nm.bt.f0 <- boot_nlme(fit.nm, prdf, psim = 0)
+  fit.nm.bt.f0 <- boot_nlme(fit.nm, prdf, psim = 0, parallel = "multicore", ncpus = 4)
  
   lwr0.q <- apply(t(fit.nm.bt.f0$t), 1, quantile, probs = 0.05, na.rm = TRUE)
   upr0.q <- apply(t(fit.nm.bt.f0$t), 1, quantile, probs = 0.95, na.rm = TRUE)
  
   Orange$fttd <- predict(fit.nm, level = 0)
  
-  fit.nm.bt.f1 <- boot_nlme(fit.nm, prdf, psim = 1)
+  fit.nm.bt.f1 <- boot_nlme(fit.nm, prdf, psim = 1, parallel = "multicore", ncpus = 4)
   
   lwr1.q <- apply(t(fit.nm.bt.f1$t), 1, quantile, probs = 0.05, na.rm = TRUE)
   upr1.q <- apply(t(fit.nm.bt.f1$t), 1, quantile, probs = 0.95, na.rm = TRUE)
@@ -97,18 +96,36 @@ if(run.simulate.gnls.test){
     geom_ribbon(aes(x = 50:1600, ymin = lwr0.q, ymax = upr0.q), fill = "blue", alpha = 0.2) + 
     geom_ribbon(aes(x = 50:1600, ymin = lwr1.q, ymax = upr1.q), fill = "purple", alpha = 0.2)
     
-  ## What about GAMS
-  ## Can I use GAMS for just a few data points?
-  ## GAMs do not work for this example, we need more data
-  ## library(quantreg)
+  ## Testing the feature of sampling correlated errors
+  ## The way to really test this would be to look at the correlation
+  ## structure in the new simulations. This is not a good dataset for this
+  ## Need to check in Pinheiro and Bates for a good example
+  data("ChickWeight")
   
-  ## fit.rq <- nlrq(circumference ~ SSlogis(age, Asym, xmid, scal), data = Orange)
+  fitcw <- gnls(weight ~ SSlogis(Time, Asym, xmid, scal), data = ChickWeight, 
+                correlation = corCAR1(form = ~ Time | Chick),
+                weights = varPower())
   
-  # ggplot(data = Orange, aes(x = age, y = circumference)) + 
-  #   geom_point() + 
-  #   geom_smooth(method = "gam") + 
-  #   geom_line(aes(x = age, y = fit.gm.prd$fit)) + 
-  #   geom_ribbon(aes(x = age, ymin = fit.gm.prd$fit - fit.gm.prd$se.fit, ymax = fit.gm.prd$fit + fit.gm.prd$se.fit))
-  # 
+  fitcw.vc <- var_cov(fitcw) 
+  image(fitcw.vc[,ncol(fitcw.vc):1])
+  fitcw.vc2 <- fitcw.vc[1:25,1:25]
+  image(fitcw.vc2[,ncol(fitcw.vc2):1])
+  ## In this case, this is much slower, because of the huge matrix involved
+  fitcw.sim <- simulate_nlme(fitcw, nsim = 100, psim = 2, value = "data.frame")
+ 
+  fitcw.sim$Chick_ID <- with(fitcw.sim, paste0(Chick,"_",ii))
   
+  ## It looks like this approach does not capture the specific
+  ## Chick-level effect, but it does seem to produce
+  ## correlated lines.
+  ## Perhaps I cannot expect to reproduce the original data for this 'gnls'
+  ## object, but rather, I should check if it creates correlated errors
+  ## similar in structure to the ones in the original dataset
+  ggplot(data = fitcw.sim) + 
+    facet_wrap(~ Chick) + 
+    geom_line(aes(x = Time, y = y.sim, color = Chick, group = Chick_ID)) + 
+    geom_point(aes(x = Time, y = weight)) +
+    theme(legend.position = "none")
+  
+
 }

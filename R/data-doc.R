@@ -61,6 +61,8 @@
  "barley"
  
  #' Import packages needed for nlraa to work correctly
- #' @import knitr nlme stats
+ #' @import boot knitr MASS nlme stats
  #' @importFrom utils warnErrList
+ #' @importFrom Matrix bdiag Matrix as.matrix
+ #' 
  NULL

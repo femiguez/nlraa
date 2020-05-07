@@ -16,55 +16,42 @@ if(run.test.simulate.nlme){
 
   ## This first simulation is at the level of population (fixed, level = 0)
   ## It also means that psim = 0, so there is no sampling from mvrnorm
-  sim00 <- simulate_nlme(fmm, nsim = 100, psim = 0, level = 0)
+  sim00 <- simulate_nlme(fmm, nsim = 100, psim = 0, level = 0, value = "data.frame")
   ## Level one means that we simlate at the level of individual Tree (or BLUP in this case)
-  sim01 <- simulate_nlme(fmm, nsim = 100, psim = 0, level = 1)
+  ## But psim = 0, so this is the same as predict(x, level = 0)
+  sim01 <- simulate_nlme(fmm, nsim = 100, psim = 0, level = 1, value = "data.frame")
 
   ## What if I simulate?
-  sim10 <- simulate_nlme(fmm, nsim = 100, psim = 1, level = 0)
-  sim11 <- simulate_nlme(fmm, nsim = 100, psim = 1, level = 1)
+  sim10 <- simulate_nlme(fmm, nsim = 100, psim = 1, level = 0, value = "data.frame")
+  sim11 <- simulate_nlme(fmm, nsim = 100, psim = 1, level = 1, value = "data.frame")
 
   ## Level 2?
   ## Not sure if it is correct, but it seems to work as intended
-  sim20 <- simulate_nlme(fmm, nsim = 100, psim = 2, level = 0)
-  sim21 <- simulate_nlme(fmm, nsim = 100, psim = 2, level = 1)
+  ## The line below does not make sense because we are adding error
+  ## at the population level
+  ## sim20 <- simulate_nlme(fmm, nsim = 100, psim = 2, level = 0)
+  sim21 <- simulate_nlme(fmm, nsim = 100, psim = 2, level = 1, value = "data.frame")
 
-  ## Reformating and trying ggplot2
-  dat00 <- data.frame(i = rep(1:100, each = nrow(Orange)),
-                      Orange, y.sim = c(sim00))
-  
-  ggplot(data = dat00, aes(x = age, y = circumference)) + 
+  ggplot(data = sim00, aes(x = age, y = circumference)) + 
     geom_point() + 
-    geom_line(aes(y = y.sim, group = i)) + 
+    geom_line(aes(y = y.sim, group = ii)) + 
     ggtitle("psim = 0, level = 0")
 
-  dat01 <- data.frame(ii = as.factor(rep(1:100, each = nrow(Orange))),
-                      Orange, 
-                      y.sim = c(sim01))
-
-  ggplot(data = dat01) + 
+  ggplot(data = sim01) + 
     geom_point(aes(x = age, y = circumference, color = Tree)) + 
     geom_line(aes(y = y.sim, x = age, color = Tree)) + 
     theme(legend.position = "none") + 
     ggtitle("psim = 0, level = 1")
     
-  dat10 <- data.frame(ii = as.factor(rep(1:100, each = nrow(Orange))),
-                        Orange, 
-                        y.sim = c(sim10))
-  
-  ggplot(data = dat10) + 
+  ggplot(data = sim10) + 
     geom_line(aes(y = y.sim, x = age, group = ii), color = "gray", alpha = 0.4) + 
     geom_point(aes(x = age, y = circumference)) + 
     theme(legend.position = "none") + 
     ggtitle("psim = 1, level = 0")
 
-  dat11 <- data.frame(ii = as.factor(rep(1:100, each = nrow(Orange))),
-                      Orange, 
-                      y.sim = c(sim11))
+  sim11$Tree_ID <- with(sim11, paste0(Tree,"_",ii))
   
-  dat11$Tree_ID <- with(dat11, paste0(Tree,"_",ii))
-  
-  ggplot(data = dat11) + 
+  ggplot(data = sim11) + 
     facet_wrap(~ Tree) + 
     geom_line(aes(y = y.sim, x = age, color = Tree, group = Tree_ID), alpha = 0.4) + 
     geom_point(aes(x = age, y = circumference)) + 
@@ -79,7 +66,8 @@ if(run.test.simulate.nlme){
 
   fxf <- fixef(fmsm)
   fmsm2 <- update(fmsm, fixed = list(Asym + xmid + scal ~ Variety),
-                  start = c(fxf[1], 0, fxf[2], 0, fxf[3], 0))
+                  start = c(fxf[1], 0, fxf[2], 0, fxf[3], 0),
+                  random = pdDiag(Asym + xmid + scal ~ 1))
   
   fmsm.s <- simulate_nlme(fmsm2, nsim = 100, value = "data.frame")
 
@@ -111,9 +99,8 @@ if(run.test.simulate.nlme){
     geom_point() 
   
   ## What about bootstrap?
-  system.time(fmcm2.bt <- boot_nlme(fmcm2)) ## 35 seconds on my laptop MacBook Pro
-  ## system.time(fmcm2.bt <- boot_nlme(fmcm2, parallel = "multicore", ncpus = 4)) ## ~15 second on laptop
- 
+  system.time(fmcm2.bt <- boot_nlme(fmcm2, parallel = "multicore", ncups = 4)) ## 35 seconds on my laptop MacBook Pro
+  
   hist(fmcm2.bt, 2) 
 
   ## predictions
@@ -168,6 +155,4 @@ if(run.test.simulate.nlme){
   #   facet_grid( Type ~ Treatment) + 
   #   geom_line(aes(y = fitted(fit))) + 
   #   geom_point()
-
-  
-  }
+}

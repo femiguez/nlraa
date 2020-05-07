@@ -136,8 +136,19 @@ simulate_gnls <- function(object, psim = 1, na.action = na.fail, naPattern = NUL
       ## Sample standardized residuals and scale by the 
       ## residual standard error
       ## N is the number of rows in the data
-      rsds.std <- stats::rnorm(N, 0, 1)
-      rsds <- rsds.std * attr(residuals(object), "std") ## This last term is 'sigma'
+      ## this works for uncorrelated errors
+      if(is.null(object$modelStruct$corStruct)){
+        rsds.std <- stats::rnorm(N, 0, 1)
+        rsds <- rsds.std * attr(residuals(object), "std") ## This last term is 'sigma'
+      }else{
+        ## This was added 2020-05-04
+        ## This extracts the variance covariance of the error matrix
+        ## This is potentially a huge matrix
+        var.cov.err <- var_cov(object)
+        ## This generates residuals considering the variance covariance of the error matrix
+        ## It is computationally demanding
+        rsds <- MASS::mvrnorm(mu = rep(0, nrow(var.cov.err)), Sigma = var.cov.err)
+      }
     }
     ##------ End FEM section ----------------------##
     
