@@ -45,6 +45,15 @@ fit <- nls(y ~ SSblin(x, a, b, xs, c), data = dat)
 ggplot(data = dat, aes(x = x, y = y)) + 
   geom_point() + 
   geom_line(aes(y = fitted(fit)))
+## Minimal example
+## This is probably about the smallest dataset you 
+## should use with this function
+dat2 <- data.frame(x = 1:5, y = c(1.1, 1.9, 3.1, 2, 0.9))
+fit2 <- nls(y ~ SSblin(x, a, b, xs, c), data = dat2)
+ggplot(data = dat2, aes(x = x, y = y)) + 
+  geom_point() + 
+  geom_line(aes(y = fitted(fit2)))
+
 }
 }
 \seealso{

@@ -4,7 +4,7 @@
 \alias{boot_nlme}
 \title{Bootstraping for generalized nonlinear models and nonlinear mixed models}
 \usage{
-boot_nlme(object, f = NULL, R = 999, psim = 1, ...)
+boot_nlme(object, f = NULL, R = 999, psim = 1, cores = 1L, ...)
 }
 \arguments{
 \item{object}{object of class \code{\link[nlme]{nlme}} or \code{\link[nlme]{gnls}}}
@@ -14,6 +14,8 @@ boot_nlme(object, f = NULL, R = 999, psim = 1, ...)
 \item{R}{number of bootstrap samples, default 999}
 
 \item{psim}{simulation level for vector of fixed parameters either for \code{\link{simulate_gnls}} or \code{\link{simulate_nlme_one}}}
+
+\item{cores}{number of cores to use for parallel computation}
 
 \item{...}{additional arguments to be passed to function \code{\link[boot]{boot}}}
 }
@@ -30,7 +32,7 @@ I do not believe this to be a big problem given the models we typically fit.
 \donttest{
 require(car)
 require(nlme)
-data(barley)
+data(barley, package = "nlraa")
 barley2 <- subset(barley, year < 1974)
 fit.lp.gnls2 <- gnls(yield ~ SSlinp(NF, a, b, xs), data = barley2)
 barley2$year.f <- as.factor(barley2$year)

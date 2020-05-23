@@ -32,7 +32,7 @@
 #' will appear similar to the observed values
 #' @param na.action default \sQuote{na.fail}. See \code{\link[nlme]{predict.gnls}}
 #' @param naPattern missing value pattern. See \code{\link[nlme]{predict.gnls}}
-#' @param ... additional arguments (none used at the moment)
+#' @param ... additional arguments (it is possible to supply a newdata this way)
 #' @return It returns a vector with simulated values with length equal to the number of rows 
 #' in the original data
 #' @details It uses function \code{\link[MASS]{mvrnorm}} to generate new values for the coefficients
@@ -58,7 +58,14 @@ simulate_gnls <- function(object, psim = 1, na.action = na.fail, naPattern = NUL
   
     mCall <- object$call
     
-    ndata <- eval(object$call$data)
+    ## ndata <- eval(object$call$data)
+    ## Is this more robust?
+    args <- list(...)
+    if(!is.null(args$newdata)){
+      ndata <- args$newdata
+    }else{
+      ndata <- nlme::getData(object)      
+    } 
     
     mfArgs <- list(formula =
                      nlme::asOneFormula(formula(object),

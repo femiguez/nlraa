@@ -23,15 +23,17 @@ if(run.boot.test){
   
   intervals(fit.gnls)
   
-  system.time(fit.gnls.bt <- boot_nlme(fit.gnls, R = 999))
+  system.time(fit.gnls.bt <- boot_nlme(fit.gnls, R = 999, cores = 4))
   
-  fit.gnls.bt2 <- boot_nlme(fit.gnls, R = 999, psim = 0)
+  fit.gnls.bt2 <- boot_nlme(fit.gnls, R = 999, psim = 0, cores = 4)
   
-  confint(fit.gnls.bt)
-  
-  ## I do not know which one is "correct"
-  ## Boot seems to have narrower confidence intervals
-  ## It does not consider the uncertainty in the fitted values
+  ## Compare confidence intervals
+  confint(fit.nls) ## nls profile
+  confint(fit.nls.bt) ## Boot
+  confint(fit.gnls.bt) ## boot_nlme psim = 1
+  confint(fit.gnls.bt2) ## boot_nlme psim = 0
+  ## These intervals do not agree exaclty because different assumptions 
+  ## are made and I'm running bootstrap a relatively small number of times
 }
 
 if(run.boot.test){
@@ -45,9 +47,9 @@ if(run.boot.test){
   intervals(fit.lp.gnls2)
 
   ## Compare this to the bootstrapping approach
-  fit.lp.gnls2.bt <- boot_nlme(fit.lp.gnls2, R = 2000)
+  system.time(fit.lp.gnls2.bt <- boot_nlme(fit.lp.gnls2, R = 2000, cores = 4))
 
-  summary(fit.lp.gnls2.bt)
+  summary(fit.lp.gnls2.bt) ## Bias is low, which is good
 
   confint(fit.lp.gnls2.bt, type = "perc")
 
@@ -70,7 +72,8 @@ if(run.boot.test){
 
   intervals(fit.lp.gnls3)
 
-  fit.lp.gnls3.bt <- boot_nlme(fit.lp.gnls3, R = 3000)
+  ## This takes 13 seconds, not bad
+  system.time(fit.lp.gnls3.bt <- boot_nlme(fit.lp.gnls3, R = 3000, cores = 4))
 
   summary(fit.lp.gnls3.bt)
   
@@ -96,7 +99,8 @@ if(run.boot.test){
   ## Bootstrap for the asymptote
   fna <- function(x) fixef(x)[1] + fixef(x)[2] * fixef(x)[3]
 
-  fit.bar.nlme.bt <- boot_nlme(fit.bar.nlme, f = fna, R = 2000)
+  ## This takes much longer... 237 seconds on my laptop
+  system.time(fit.bar.nlme.bt <- boot_nlme(fit.bar.nlme, f = fna, R = 2000, cores = 4))
 
   confint(fit.bar.nlme.bt, type = "perc")
 
@@ -118,22 +122,31 @@ if(run.boot.test){
   
   fm1 <- nlme(fmL1)
   
-  ## fm2 <- nlmer(yield ~ SSasymp(NF, Asym, R0, lrc) ~ (Asym | year.f) + (R0 | year.f), data = barley,
+  fm2 <- update(fm1, random = pdDiag(Asym + R0 + lrc ~ 1))
+  ## Arguably the second model is better
+  
+  ## fm3 <- nlmer(yield ~ SSasymp(NF, Asym, R0, lrc) ~ (Asym | year.f) + (R0 | year.f), data = barley,
   ##             start = getInitial(yield ~ SSasymp(NF, Asym, R0, lrc), data = barley))
-  ## This fails. Is nlmer usable?
+  ## This does not fail now, but it did before. 
   
-  system.time(fm1.bt <- boot_nlme(fm1, R = 999, parallel = "multicore", ncpus = 2))
+  ## This is very slow... 17 seconds for 10 attempts
+  ## system.time(fm1.bt <- boot_nlme(fm1, R = 10, cores = 4))
+  ## What about the second model?
+  ## This one takes about a minute
+  system.time(fm2.bt <- boot_nlme(fm2, R = 1000, cores = 4))
   
-  summary(fm1.bt)
+  summary(fm2.bt)
   
-  confint(fm1.bt)
+  confint(fm2.bt)
   
-  hist(fm1.bt)
+  hist(fm2.bt)
   
   ## I feel validated! These intervals are very, very close to the ones
   ## obtained through normal approximation
+  ## I wrote the previous statement a long time aga, I don't know
+  ## if it is still true (2020-5-22)
 
-  ## rstanarm also failed with this example. Chains did not converge
+  ## rstanarm failed with this example. Chains did not converge (2020-05-22)
   ## fm3 <- stan_nlmer(yield ~ SSasymp(NF, Asym, R0, lrc) ~ Asym + R0 + lrc | year.f, 
   ##                  data = barley, cores = 2)  
   

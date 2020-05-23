@@ -6,6 +6,7 @@
 #' @param f function to be applied (and bootstrapped), default coef (gnls) or fixef (nlme)
 #' @param R number of bootstrap samples, default 999
 #' @param psim simulation level for vector of fixed parameters either for \code{\link{simulate_gnls}} or \code{\link{simulate_nlme_one}}
+#' @param cores number of cores to use for parallel computation
 #' @param ... additional arguments to be passed to function \code{\link[boot]{boot}}
 #' @details This function is inspired by \code{\link[car]{Boot}}, which does not
 #' seem to work with 'gnls' or 'nlme' objects. This function makes multiple copies 
@@ -16,7 +17,7 @@
 #' \donttest{
 #' require(car)
 #' require(nlme)
-#' data(barley)
+#' data(barley, package = "nlraa")
 #' barley2 <- subset(barley, year < 1974)
 #' fit.lp.gnls2 <- gnls(yield ~ SSlinp(NF, a, b, xs), data = barley2)
 #' barley2$year.f <- as.factor(barley2$year)
@@ -36,6 +37,7 @@ boot_nlme <- function(object,
                       f = NULL, 
                       R = 999, 
                       psim = 1, 
+                      cores = 1L,
                       ...){
   ## I chose to write it in this way instead of UseMethod
   ## because I feel it is more efficient and results in less code
@@ -43,21 +45,22 @@ boot_nlme <- function(object,
   ## Error checking
   if(!inherits(object, c("gnls","nlme"))) stop("object should be of class 'gnls' or 'nlme'")
 
-  ## extract the data
-  dat <- eval(object$call$data)
-  ## This is a copy for bootstrap
-  bdat <- dat
-  
+  ## extract the original data
+  ## This is needed for 'boot'
+  ## dat <- eval(object$call$data) -- old version
+  dat <- nlme::getData(object)
+
   if(missing(f)){
     if(inherits(object, "gnls")) f <- coef
     if(inherits(object, "nlme")) f <- fixef
   }
   
   f0 <- f(object) ## To model the behavior of the orignial function
-  NA.j <- 0
   
-  boot_fun_resid <- function(data, indices, fn, model, psim,...){
-    
+  boot_fun_resid <- function(data, indices, fn, model, psim, ...){
+  
+    ## Copy for bootstrap
+    bdat <- data
     ## I need a hack to make the first iteration be t0 for boot
     if(identical(get(".k.boot", envir = nlraa.env), 0L)){
       ## This makes the assumption that the first time
@@ -66,8 +69,9 @@ boot_nlme <- function(object,
       assign(".k.boot", 1L, envir = nlraa.env)
     }else{
       ## Fitted values, which are simulated values if psim = 1
-      if(inherits(model, "gnls")) fttd <- simulate_gnls(model, psim = psim, ...)
-      if(inherits(model, "nlme")) fttd <- simulate_nlme_one(model, psim = psim, ...)
+      ## The newdata argument is really only needed to be able to parallelize the code under Windows
+      if(inherits(model, "gnls")) fttd <- simulate_gnls(model, psim = psim, newdata = data)
+      if(inherits(model, "nlme")) fttd <- simulate_nlme_one(model, psim = psim, newdata = data)
     }
     
     rsds.std <- residuals(model, type = "pearson") ## Extract 'pearson' residuals
@@ -78,33 +82,70 @@ boot_nlme <- function(object,
 
     new.y <- as.vector(fttd + rsds.std[indices] * rsds.sigma)
     resp.var <- all.vars(formula(model))[1]
-    bdat[[resp.var]] <<- new.y
+    bdat[[resp.var]] <- new.y
     
     assign(".bdat", bdat, envir = nlraa.env)
     umod <- tryCatch(update(model, data = get(".bdat", envir = nlraa.env)), error = function(e){invisible(e)})
+    ## umod <- update(model, data = get(".bdat", envir = nlraa.env))
       
     ## Trying to catch any condition in which the model above does not converge
     if(inherits(umod, "error") || any(is.na(fn(umod))) || is.null(fn(umod)) || any(is.nan(fn(umod)))){
       out <- rep(NA, length(f0))
-      NA.j <<- NA.j + 1
     }else{
       out <- fn(umod)
     }
     out
   }
+  
+  prll <- "no" ## default
+  clst <- NULL
+  if(.Platform$OS.type == "unix" && cores > 1L){
+    prll <- "multicore"
+  }
+  
+  if(.Platform$OS.type == "windows" && cores > 1L){
+    prll <- "snow"
+    clst <- parallel::makeCluster(cores)
+    on.exit(parallel::stopCluster(clst))
+    ## This is the ugliest piece of code I have ever written, but this is a huge PITA
+    ## Potentially I need to extract the function name
+    vr.lst <- c("nlraa.env", ls(envir = .GlobalEnv), ## This exports all the objects in the GlobalEnv - overkill?
+                gsub("()", getCall(object)[1], replacement = ""), ## This exports the model (gnls or nlme)
+                gsub("()", getCall(object)[3], replacement = ""))
     
+    RHS <- grep("^SS", as.character(getCovariateFormula(object)[[2]]), value = TRUE)
+    if(length(RHS) > 0){
+      fn.nm <- strsplit(RHS, "(", fixed = TRUE)
+      vr.lst <- c(vr.lst, fn.nm)
+    }
+
+    parallel::clusterExport(clst, 
+                            varlist = vr.lst) ## This exports everything that might be needed?
+  }
+  
+  ## Override defaults
+  args <- list(...)
+  if(!is.null(args$parallel)){prll <- args$parallel; parallel <- NULL}
+  if(!is.null(args$ncpus)){cores <- args$ncpus; ncpus <- NULL}
+  if(!is.null(args$cl)){clst <- args$cl; cl <- NULL}
+
   ans <- boot::boot(data = dat, 
                     stype = "i",
                     statistic = boot_fun_resid, 
                     R = R, fn = f,
                     model = object,
-                    psim = psim, ...)
+                    psim = psim,
+                    parallel = prll,
+                    ncpus = cores,
+                    cl = clst,
+                    ...)
   
-  cat("Number of times model fit did not converge",NA.j,
+  cat("Number of times model fit did not converge",
+      sum(is.na(ans$t[,1])),
       "out of",R,"\n")
   
+  assign(".bdat", NA, envir = nlraa.env)
   assign(".k.boot", 0L, envir = nlraa.env)
-  assign(".bdat", NULL, envir = nlraa.env)
   return(ans)
 }
 

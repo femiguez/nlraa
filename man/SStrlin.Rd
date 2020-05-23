@@ -51,6 +51,18 @@ fit <- nls(y ~ SStrlin(x, a, b, xs1, c, xs2, d), data = dat)
 ggplot(data = dat, aes(x = x, y = y)) + 
   geom_point() + 
   geom_line(aes(y = fitted(fit)))
+## Minimal example
+## This is probably about the smallest dataset you 
+## should use with this function
+dat2 <- data.frame(x = 1:8, y = c(1.1, 1.9, 3.1, 2.5, 1.4, 0.9, 2.2, 2.9))
+fit2 <- nls(y ~ SStrlin(x, a, b, xs1, c, xs2, d), data = dat2)
+## expangin for plotting
+ndat <- data.frame(x = seq(1, 8, by = 0.1))
+ndat$prd <- predict(fit2, newdata = ndat)
+ggplot() + 
+  geom_point(data = dat2, aes(x = x, y = y)) + 
+  geom_line(data = ndat, aes(x = x, y = prd))
+
 }
 }
 \seealso{

@@ -30,6 +30,18 @@
 #' ggplot(data = dat, aes(x = x, y = y)) + 
 #'   geom_point() + 
 #'   geom_line(aes(y = fitted(fit)))
+#' ## Minimal example
+#' ## This is probably about the smallest dataset you 
+#' ## should use with this function
+#' dat2 <- data.frame(x = 1:8, y = c(1.1, 1.9, 3.1, 2.5, 1.4, 0.9, 2.2, 2.9))
+#' fit2 <- nls(y ~ SStrlin(x, a, b, xs1, c, xs2, d), data = dat2)
+#' ## expangin for plotting
+#' ndat <- data.frame(x = seq(1, 8, by = 0.1))
+#' ndat$prd <- predict(fit2, newdata = ndat)
+#' ggplot() + 
+#'   geom_point(data = dat2, aes(x = x, y = y)) + 
+#'   geom_line(data = ndat, aes(x = x, y = prd))
+#' 
 #' }
 NULL
 
@@ -40,9 +52,8 @@ trlinInit <- function(mCall, LHS, data){
   if(nrow(xy) < 5){
     stop("Too few distinct input values to fit a trlinear")
   }
-  ## Dumb guess for a and b is to fit a linear regression to the first
-  ## half and another linear regression to the second half
-  xy1 <- xy[1:(floor(nrow(xy)/2)),]
+  ## Splitting this into two bilinear problems
+  xy1 <- xy[1:(ceiling(nrow(xy)/2)),]
   xy2 <- xy[floor(nrow(xy)/2):nrow(xy),]
   cfs1 <- getInitial(y ~ SSblin(x, a, b, xs, c), data = xy1)
   cfs2 <- getInitial(y ~ SSblin(x, a, b, xs, c), data = xy2)

@@ -19,7 +19,7 @@ will appear similar to the observed values}
 
 \item{naPattern}{missing value pattern. See \code{\link[nlme]{predict.gnls}}}
 
-\item{...}{additional arguments (none used at the moment)}
+\item{...}{additional arguments (it is possible to supply a newdata this way)}
 }
 \value{
 It returns a vector with simulated values with length equal to the number of rows 

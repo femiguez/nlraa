@@ -31,7 +31,7 @@
 #' @param asList optional logical value. See \code{\link[nlme]{predict.nlme}}
 #' @param na.action missing value action. See \code{\link[nlme]{predict.nlme}}
 #' @param naPattern missing value pattern. See \code{\link[nlme]{predict.nlme}}
-#' @param ... additional arguments to be passed (not used at the moment)
+#' @param ... additional arguments to be passed (possible to pass newdata this way)
 #' @details It uses function \code{\link[MASS]{mvrnorm}} to generate new values for the coefficients
 #' of the model using the Variance-Covariance matrix \code{\link{vcov}}
 #' @return This function should always return a vector with the same dimensions as the original data
@@ -63,7 +63,15 @@ simulate_nlme_one <- function(object, psim = 1, level = Q, asList = FALSE, na.ac
     level <- 0:Q
   }
     
-  newdata <- eval(object$call$data)
+  ## newdata <- eval(object$call$data)
+  ## This might be more robust, but the problme is that 
+  ## it still calls eval on the default environment
+  args <- list(...)
+  if(!is.null(args$newdata)){
+    newdata <- args$newdata
+  }else{
+    newdata <- nlme::getData(object)  
+  } 
     
   maxQ <- max(level)			# maximum level for predictions
   nlev <- length(level)
