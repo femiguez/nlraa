@@ -18,6 +18,7 @@ if(run.boot.test){
 
   ## Does bootstrap as implemented in car underestimates confidence intervals?  
   fit.nls.bt <- Boot(fit.nls)
+  ## It is not possible to parallelize the previous code
   
   fit.gnls <- gnls(yield ~ SSlinp(NF, a, b, xs), data = barley)
   
@@ -47,6 +48,7 @@ if(run.boot.test){
   intervals(fit.lp.gnls2)
 
   ## Compare this to the bootstrapping approach
+  ## This take about ~10 seconds (Windows)
   system.time(fit.lp.gnls2.bt <- boot_nlme(fit.lp.gnls2, R = 2000, cores = 4))
 
   summary(fit.lp.gnls2.bt) ## Bias is low, which is good
@@ -72,7 +74,7 @@ if(run.boot.test){
 
   intervals(fit.lp.gnls3)
 
-  ## This takes 13 seconds, not bad
+  ## This takes 13 seconds (Mac), not bad. Windows (21 seconds)
   system.time(fit.lp.gnls3.bt <- boot_nlme(fit.lp.gnls3, R = 3000, cores = 4))
 
   summary(fit.lp.gnls3.bt)

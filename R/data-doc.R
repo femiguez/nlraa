@@ -64,5 +64,6 @@
  #' @import boot knitr MASS nlme stats
  #' @importFrom utils warnErrList
  #' @importFrom Matrix bdiag Matrix as.matrix
+ #' @importFrom mgcv extract.lme.cov
  #' 
  NULL

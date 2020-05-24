@@ -53,8 +53,8 @@ nlsLMList.selfStart <-
             pool = TRUE, warn.nls = NA) # Deprecation: will be 'TRUE'
 {
     if(algorithm == "LM"){
-      if(!requireNamespace("minpack.lm",quietly = TRUE)){
-        warning("minpack.lm package is required for this algorithm function")
+      if(!requireNamespace("minpack.lm", quietly = TRUE)){
+        warning("minpack.lm package is required for this algorithm in this function")
         return(NULL)
       }
     }

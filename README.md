@@ -1,4 +1,4 @@
-# nlraa: R pacakge for Nonlinear Regression for Agricultural
+# nlraa: R package for Nonlinear Regression for Agricultural
 # Applications
 
 [![CRAN](http://www.r-pkg.org/badges/version/nlraa)](https://CRAN.R-project.org/package=nlraa)

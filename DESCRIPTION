@@ -15,7 +15,6 @@ Imports:
         boot,
         knitr,
 	MASS,
-	Matrix,
 	nlme,
         stats
 Suggests:
@@ -25,6 +24,8 @@ Suggests:
 	ggplot2,
 	HydroMe,
 	lattice,
+	Matrix,
+	mgcv,
 	minpack.lm,
 	NISTnls,
 	nlstools,

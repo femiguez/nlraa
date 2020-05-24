@@ -107,20 +107,19 @@ boot_nlme <- function(object,
     prll <- "snow"
     clst <- parallel::makeCluster(cores)
     on.exit(parallel::stopCluster(clst))
-    ## This is the ugliest piece of code I have ever written, but this is a huge PITA
     ## Potentially I need to extract the function name
-    vr.lst <- c("nlraa.env", ls(envir = .GlobalEnv), ## This exports all the objects in the GlobalEnv - overkill?
-                gsub("()", getCall(object)[1], replacement = ""), ## This exports the model (gnls or nlme)
-                gsub("()", getCall(object)[3], replacement = ""))
-    
-    RHS <- grep("^SS", as.character(getCovariateFormula(object)[[2]]), value = TRUE)
-    if(length(RHS) > 0){
-      fn.nm <- strsplit(RHS, "(", fixed = TRUE)
-      vr.lst <- c(vr.lst, fn.nm)
-    }
+    ## The specific environment depends on the object
+    ## Since this is only for gnls or nlme objects it should work...right?
+    vr.lst <- c("nlraa.env", class(object)[1], deparse(object$call$data), "fixef")
 
+    SSfun <- grep("^SS", as.character(getCovariateFormula(object)[[2]]), value = TRUE)
+    if(length(SSfun) > 0) vr.lst <- c(vr.lst, SSfun)
+    
     parallel::clusterExport(clst, 
                             varlist = vr.lst) ## This exports everything that might be needed?
+    ## It seems like in this case the start argument is also needed
+    if(inherits(object, "gnls")) object <- update(object, start = coef(object))
+    if(inherits(object, "nlme")) object <- update(object, start = fixef(object)) ## Don't know if this is enough for nlme
   }
   
   ## Override defaults
