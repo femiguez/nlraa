@@ -134,14 +134,16 @@ if(run.boot.test){
   ## This is very slow... 17 seconds for 10 attempts
   ## system.time(fm1.bt <- boot_nlme(fm1, R = 10, cores = 4))
   ## What about the second model?
-  ## This one takes about a minute
+  ## This one takes about a minute (Mac and Windows?)
   system.time(fm2.bt <- boot_nlme(fm2, R = 1000, cores = 4))
   
   summary(fm2.bt)
   
   confint(fm2.bt)
   
-  hist(fm2.bt)
+  hist(fm2.bt, 1)
+  hist(fm2.bt, 2)
+  hist(fm2.bt, 3)
   
   ## I feel validated! These intervals are very, very close to the ones
   ## obtained through normal approximation
