@@ -2,16 +2,16 @@
 % Please edit documentation in R/var_cov.R
 \name{var_cov}
 \alias{var_cov}
-\title{Variance Covariance matrix of the error vector for g(n)ls and (n)lme models}
+\title{Variance Covariance matrix of for g(n)ls and (n)lme models}
 \usage{
-var_cov(object, type = c("residual", "random"), aug = FALSE,
+var_cov(object, type = c("residual", "random", "all"), aug = FALSE,
   sparse = FALSE)
 }
 \arguments{
 \item{object}{object which inherits class \code{\link[stats]{lm}}, \code{\link[nlme]{gls}} or \code{\link[nlme]{lme}}}
 
-\item{type}{either \dQuote{residual} for the variance-covariance for the residuals or \dQuote{random}
-for th variance-covariance of the random effects.}
+\item{type}{\dQuote{residual} for the variance-covariance for the residuals, \dQuote{random}
+for the variance-covariance of the random effects or \dQuote{all} for the sum of both.}
 
 \item{aug}{whether to augment the matrix of the random effects to the dimensions of the data}
 
@@ -21,10 +21,10 @@ for th variance-covariance of the random effects.}
 It returns a \code{\link[base]{matrix}} or a sparse matrix \code{\link[Matrix]{Matrix}}.
 }
 \description{
-Extracts the variance covariance matrix of the errors
+Extracts the variance covariance matrix (residuals, random or all)
 }
 \details{
-Variance Covariance matrix of the errors for nonlinear mixed models
+Variance Covariance matrix for (non)linear mixed models
 }
 \note{
 See Chapter 5 of Pinheiro and Bates. This returns potentially a very large 
@@ -49,7 +49,7 @@ v1 <- var_cov(fit1)
 ## Only the correlation structure is defined and there are no groups
 fit2 <- gls(weight ~ Time, data = ChickWeight, correlation = corAR1())
 v2 <- var_cov(fit2)
-## Only the correlation structure is defined and there are groups present
+## The correlation structure is defined and there are groups present
 fit3 <- gls(weight ~ Time, data = ChickWeight, correlation = corCAR1(form = ~ Time | Chick))
 v3 <- var_cov(fit3)
 ## There are both weights and correlations

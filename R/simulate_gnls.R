@@ -154,7 +154,8 @@ simulate_gnls <- function(object, psim = 1, na.action = na.fail, naPattern = NUL
         var.cov.err <- var_cov(object)
         ## This generates residuals considering the variance covariance of the error matrix
         ## It is computationally demanding
-        rsds <- MASS::mvrnorm(mu = rep(0, nrow(var.cov.err)), Sigma = var.cov.err)
+        ## I'm going to try using the mean of the errors for the mean (2020-05-26)
+        rsds <- MASS::mvrnorm(mu = residuals(object), Sigma = var.cov.err)
       }
     }
     ##------ End FEM section ----------------------##

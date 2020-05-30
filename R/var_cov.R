@@ -1,8 +1,8 @@
-#' Variance Covariance matrix of the errors for nonlinear mixed models 
+#' Variance Covariance matrix for (non)linear mixed models 
 #' 
-#' @title Variance Covariance matrix of the error vector for g(n)ls and (n)lme models
+#' @title Variance Covariance matrix of for g(n)ls and (n)lme models
 #' @name var_cov
-#' @description Extracts the variance covariance matrix of the errors
+#' @description Extracts the variance covariance matrix (residuals, random or all)
 #' @param object object which inherits class \code{\link[stats]{lm}}, \code{\link[nlme]{gls}} or \code{\link[nlme]{lme}}
 #' @param type \dQuote{residual} for the variance-covariance for the residuals, \dQuote{random}
 #' for the variance-covariance of the random effects or \dQuote{all} for the sum of both.

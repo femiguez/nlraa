@@ -289,8 +289,8 @@ if(test.other.examples){
   ggplot(data = Ratkowsky2, aes(x = x, y = y)) + geom_point() + geom_line(aes(y = fitted(fit2)))
   ## Comparing the models
   anova(fit1, fit2)
-  fit2.bt <- Boot(fit2)
-  hist(fit2.bt)
+  ## fit2.bt <- Boot(fit2) It takes too long to run
+  ## hist(fit2.bt)
   ## These shows that the parameters are not well constrained under this model
   
   data("Ratkowsky3")
@@ -304,8 +304,8 @@ if(test.other.examples){
   
   ## Five-parameter logistic fits a little bit better
   anova(fit1, fit2, fit3)
-  fit2.bt <- Boot(fit2)
-  hist(fit2.bt)
+  ## fit2.bt <- Boot(fit2) takes too long to run
+  ## hist(fit2.bt)
   
   data(Roszman1)
   fit <- nls(y ~ SSexpf(x, a, c), data = Roszman1)
@@ -351,4 +351,33 @@ if(test.other.examples){
   fit2 <- nls(v ~ SSasymp(S, Asym, R0, lrc), data = vmkm)
   ggplot(data = vmkm, aes(x = S, y = v)) + geom_point() + geom_line(aes(y = fitted(fit2)))
   
+  ## Testing function SShill3
+  ## With Soybean
+  fit <- nls(weight ~ SShill3(Time, Ka, n, a), data = Soybean)
+  
+  ggplot(data = Soybean, aes(Time, weight)) + 
+    geom_point() + 
+    geom_line(aes(y = fitted(fit)))
+  
+  ## With Indometh
+  fit <- nls(conc ~ SShill3(time, Ka, n, a), data = Indometh)
+  
+  ggplot(data = Indometh, aes(x = time, y = conc)) + 
+    geom_point() + 
+    geom_line(aes(y = fitted(fit)))
+  
+  ## With Loblolly
+  fit <- nls(height ~ SShill3(age, Ka, n, a), data = Loblolly)
+  
+  ggplot(data = Loblolly, aes(x = age, y = height)) + 
+    geom_point() + 
+    geom_line(aes(y = fitted(fit)))
+  
+  ## With Thurber
+  Thurber$x2 <- Thurber$x + 6
+  fit <- nlsLM(y ~ SShill3(x2, Ka, n, a), data = Thurber)
+
+  ggplot(data = Thurber, aes(x = x2, y = y)) + 
+    geom_point() + 
+    geom_line(aes(y = fitted(fit))) 
 }
