@@ -22,8 +22,8 @@
 #' 
 #' @title Simulate fitted values from an object of class \code{\link[nlme]{gnls}}
 #' @description Simulate values from an object of class gnls. Unequal variances, 
-#' as modeled using the \sQuote{weights} option are supported, but the \sQuote{correlation}
-#' is not taken into account when sampling residuals.
+#' as modeled using the \sQuote{weights} option are supported, and there is experimental
+#' code for dealing with the \sQuote{correlation} structure. 
 #' @name simulate_gnls
 #' @param object object of class \code{\link[nlme]{gnls}}
 #' @param psim parameter simulation level, 0: for fitted values, 1: for simulation from 

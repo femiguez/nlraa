@@ -4,8 +4,15 @@
 \alias{simulate_nlme_one}
 \title{Simulate fitted values from an object of class \code{\link[nlme]{nlme}}}
 \usage{
-simulate_nlme_one(object, psim = 1, level = Q, asList = FALSE,
-  na.action = na.fail, naPattern = NULL, ...)
+simulate_nlme_one(
+  object,
+  psim = 1,
+  level = Q,
+  asList = FALSE,
+  na.action = na.fail,
+  naPattern = NULL,
+  ...
+)
 }
 \arguments{
 \item{object}{object of class \code{\link[nlme]{nlme}}}

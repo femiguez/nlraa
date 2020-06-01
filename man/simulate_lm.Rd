@@ -4,8 +4,14 @@
 \alias{simulate_lm}
 \title{Simulate responses from a linear model \code{\link[stats]{lm}}}
 \usage{
-simulate_lm(object, psim = 1, nsim = 1, resid.type = c("resample",
-  "normal", "wild"), value = c("matrix", "data.frame"), ...)
+simulate_lm(
+  object,
+  psim = 1,
+  nsim = 1,
+  resid.type = c("resample", "normal", "wild"),
+  value = c("matrix", "data.frame"),
+  ...
+)
 }
 \arguments{
 \item{object}{object of class \code{\link[stats]{lm}}}
@@ -17,6 +23,8 @@ simulate_lm(object, psim = 1, nsim = 1, resid.type = c("resample",
 \item{resid.type}{type of residual to include (resample, normal or wild)}
 
 \item{value}{either \sQuote{matrix} or \sQuote{data.frame}}
+
+\item{...}{additional arguments (none used at the moment)}
 }
 \value{
 matrix or data.frame with responses
@@ -52,7 +60,7 @@ fit <- lm(circumference ~ age, data = Orange)
 sims <- simulate_lm(fit, nsim = 100, value = "data.frame")
 
 ggplot(data = sims) + 
-  geom_line(aes(x = age, y = y.sim, group = ii), 
+  geom_line(aes(x = age, y = sim.y, group = ii), 
             color = "gray", alpha = 0.5) + 
   geom_point(aes(x = age, y = circumference)) 
 }

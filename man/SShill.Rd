@@ -44,7 +44,7 @@ Self starter for Hill function with parameters Ka, n and a
 \details{
 For details see https://en.wikipedia.org/wiki/Hill_equation_(biochemistry)
 
-The form of the equations are: 
+The form of the equations are: \cr
 hill1: \deqn{1 / (1 + (Ka/x))}. \cr 
 hill2: \deqn{1 / (1 + (Ka/x)^n)}. \cr
 hill3: \deqn{a / (1 + (Ka/x)^n)}. \cr
@@ -54,6 +54,7 @@ Zero values are not allowed.
 }
 \examples{
 \donttest{
+require(ggplot2)
 ## Example for hill1
 set.seed(1234)
 x <- 1:20

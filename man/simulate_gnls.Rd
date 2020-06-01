@@ -4,8 +4,7 @@
 \alias{simulate_gnls}
 \title{Simulate fitted values from an object of class \code{\link[nlme]{gnls}}}
 \usage{
-simulate_gnls(object, psim = 1, na.action = na.fail,
-  naPattern = NULL, ...)
+simulate_gnls(object, psim = 1, na.action = na.fail, naPattern = NULL, ...)
 }
 \arguments{
 \item{object}{object of class \code{\link[nlme]{gnls}}}
@@ -27,8 +26,8 @@ in the original data
 }
 \description{
 Simulate values from an object of class gnls. Unequal variances, 
-as modeled using the \sQuote{weights} option are supported, but the \sQuote{correlation}
-is not taken into account when sampling residuals.
+as modeled using the \sQuote{weights} option are supported, and there is experimental
+code for dealing with the \sQuote{correlation} structure.
 }
 \details{
 This function is based on \code{\link[nlme]{predict.gnls}} function

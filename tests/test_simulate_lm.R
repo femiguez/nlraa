@@ -13,7 +13,7 @@ if(run.simulte.lm.test){
   sims1 <- simulate_lm(fit1, nsim = 100, value = "data.frame")
    
   ggplot(data = sims1) + 
-    geom_line(aes(x = age, y = y.sim, group = ii), 
+    geom_line(aes(x = age, y = sim.y, group = ii), 
                color = "gray", alpha = 0.5) + 
     geom_point(aes(x = age, y = circumference)) + 
     geom_smooth(aes(x = age, y = circumference), method = "lm", 
@@ -31,7 +31,7 @@ if(run.simulte.lm.test){
   sims2 <- simulate_lm(fit2, nsim = 100, value = "data.frame")
   
   ggplot(data = sims2) + 
-    geom_line(aes(x = age, y = y.sim, group = ii), 
+    geom_line(aes(x = age, y = sim.y, group = ii), 
               color = "gray", alpha = 0.5) + 
     geom_point(aes(x = age, y = circumference)) 
   
@@ -39,7 +39,7 @@ if(run.simulte.lm.test){
   sims3 <- simulate_lm(fit1, psim = 2, nsim = 100, value = "data.frame")
   
   ggplot(data = sims3) + 
-    geom_line(aes(x = age, y = y.sim, group = ii), 
+    geom_line(aes(x = age, y = sim.y, group = ii), 
               color = "gray", alpha = 0.5) + 
     geom_point(aes(x = age, y = circumference)) 
   
@@ -84,7 +84,7 @@ if(run.simulte.lm.test){
   sims3$Tree_ID <- with(sims3, paste0(Tree,"_",ii))
   
   ggplot(data = sims3) + 
-    geom_line(aes(x = age, y = y.sim, group = Tree_ID), 
+    geom_line(aes(x = age, y = sim.y, group = Tree_ID), 
               color = "gray", alpha = 0.5) + 
     geom_point(aes(x = age, y = circumference)) 
   

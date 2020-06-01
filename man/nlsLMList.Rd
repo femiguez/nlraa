@@ -4,9 +4,18 @@
 \alias{nlsLMList}
 \title{Create a list of nls objects with the option of using nlsLM in addition to nls}
 \usage{
-nlsLMList(model, data, start, control, level, subset,
-  na.action = na.fail, algorithm = c("LM", "default", "port",
-  "plinear"), pool = TRUE, warn.nls = NA)
+nlsLMList(
+  model,
+  data,
+  start,
+  control,
+  level,
+  subset,
+  na.action = na.fail,
+  algorithm = c("LM", "default", "port", "plinear"),
+  pool = TRUE,
+  warn.nls = NA
+)
 }
 \arguments{
 \item{model}{either a nonlinear model formula, with the response on the left of a ~ operator and an expression involving parameters, covariates, and a grouping factor separated by the | operator on the right, or a selfStart function.}

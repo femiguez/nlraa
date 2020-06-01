@@ -11,6 +11,7 @@
 #' @param nsim number of simulations to perform
 #' @param resid.type type of residual to include (resample, normal or wild)
 #' @param value either \sQuote{matrix} or \sQuote{data.frame}
+#' @param ... additional arguments (none used at the moment)
 #' @return matrix or data.frame with responses
 #' @details 
 #' These are the options that control the parameter simulation level
@@ -42,7 +43,7 @@
 #' sims <- simulate_lm(fit, nsim = 100, value = "data.frame")
 #' 
 #' ggplot(data = sims) + 
-#'   geom_line(aes(x = age, y = y.sim, group = ii), 
+#'   geom_line(aes(x = age, y = sim.y, group = ii), 
 #'             color = "gray", alpha = 0.5) + 
 #'   geom_point(aes(x = age, y = circumference)) 
 #' }
@@ -71,6 +72,7 @@ simulate_lm <- function(object, psim = 1, nsim = 1,
   }
   
   if(value == "matrix"){
+    colnames(ans.mat) <- paste0("sim_",1:nsim)
     return(ans.mat)
   }else{
     dfr <- eval(getCall(object)$data)
@@ -79,7 +81,7 @@ simulate_lm <- function(object, psim = 1, nsim = 1,
     ## but it can be weird
     ans.dat <- data.frame(ii = as.factor(rep(1:nsim, each = nrow(dfr))),
                           dfr,
-                          y.sim = c(ans.mat), 
+                          sim.y = c(ans.mat), 
                           row.names = 1:c(nsim * length(fitted(object))))
     return(ans.dat)
   }

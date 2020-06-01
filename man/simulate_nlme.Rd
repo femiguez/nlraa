@@ -4,8 +4,13 @@
 \alias{simulate_nlme}
 \title{Simulate samples from a nonlinear mixed model from fixed effects}
 \usage{
-simulate_nlme(object, nsim = 1, psim = 1, value = c("matrix",
-  "data.frame"), ...)
+simulate_nlme(
+  object,
+  nsim = 1,
+  psim = 1,
+  value = c("matrix", "data.frame"),
+  ...
+)
 }
 \arguments{
 \item{object}{object of class \code{\link[nlme]{gnls}} or \code{\link[nlme]{nlme}}}

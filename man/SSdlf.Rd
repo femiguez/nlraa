@@ -29,7 +29,7 @@ dlf: vector of the same length as x (time) using the declining logistic function
 Self starter for declining logistic function with parameters asym, a2, xmid and scal
 }
 \details{
-Response function:  \deqn{y = (asym - a2) / (1 + exp((xmid - time)/scal))) + a2}.
+Response function:  \deqn{y = (asym - a2) / (1 + exp((xmid - time)/scal))) + a2}. 
 
 \itemize{
  \item asym: upper asymptote

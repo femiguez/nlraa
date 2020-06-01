@@ -11,14 +11,20 @@
 #' @note See Chapter 5 of Pinheiro and Bates. This returns potentially a very large 
 #' matrix of N x N, where N is the number of rows in the data.frame. 
 #' The function \code{\link[nlme]{getVarCov}} only works well for  
-#' \code{\link[nlme]{lme}} objects. When choosing type = \dQuote{marginal} it
-#' returns the variance-covariance of the responses, not for the errors.
+#' \code{\link[nlme]{lme}} objects. \cr
+#' The equivalence is more or less: \cr
+#' getVarCov type = \dQuote{random.effects} equivalent to var_cov type = \dQuote{random}. \cr
+#' getVarCov type = \dQuote{conditional} equivalent to var_cov type = \dQuote{residual}. \cr
+#' getVarCov type = \dQuote{marginal} equivalent to var_cov type = \dQuote{all}. \cr
+#' The difference is that getVarCov has an argument that specifies the individual 
+#' for which the matrix is being retrieved and var_cov returns the full matrix only.
 #' @return It returns a \code{\link[base]{matrix}} or a sparse matrix \code{\link[Matrix]{Matrix}}.
 #' @seealso \code{\link[nlme]{getVarCov}}
 #' @export
 #' @examples 
 #' \donttest{
 #' require(graphics)
+#' require(nlme)
 #' data(ChickWeight)
 #' ## First a linear model
 #' flm <- lm(weight ~ Time, data = ChickWeight)
@@ -133,11 +139,11 @@ var_cov_lme_ranef <- function(object, aug = FALSE, sparse = FALSE){
   if(!inherits(object, c("gls", "lme"))) 
     stop("Only for objects which inherit the 'gls' or 'lme' class")
   
-  if(!inherits(object, "nlme"))
+  if(inherits(object, "nlme"))
     stop("Have not figure out how to do this yet")
   
   ## Number of levels for the random effects
-  lreg <- length(unclass(object$modelStruct$reStruct))
+  lreg <- length(names(object$modelStruct$reStruct))
   
   ## If there is only one level and we do not augment
   if(lreg == 1L && aug == FALSE){

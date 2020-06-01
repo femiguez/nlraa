@@ -4,7 +4,8 @@
 \name{lfmc}
 \alias{lfmc}
 \title{Live fuel moisture content}
-\format{A data frame with 247 rows and 5 variables:
+\format{
+A data frame with 247 rows and 5 variables:
 \describe{
   \item{leaf.type}{ -factor- Species for which data was recorded ("Grass E", "Grass W", "M. spinosum", "S. bracteolactus")}
   \item{time}{ -integer- time in days 1-80}
@@ -12,7 +13,8 @@
   \item{site}{ -factor- either P ("East") or SR ("West")}
   \item{lfmc}{ -numeric- Live fuel moisture content (percent)}
   \item{group}{grouping for regression}
-}}
+}
+}
 \source{
 \url{https://doi.org/10.1002/ece3.5543}
 }

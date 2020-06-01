@@ -4,9 +4,18 @@
 \alias{nlsLMList.formula}
 \title{Formula method for nls 'LM' list method}
 \usage{
-\method{nlsLMList}{formula}(model, data, start = NULL, control, level,
-  subset, na.action = na.fail, algorithm = c("LM", "default", "port",
-  "plinear"), pool = TRUE, warn.nls = NA)
+\method{nlsLMList}{formula}(
+  model,
+  data,
+  start = NULL,
+  control,
+  level,
+  subset,
+  na.action = na.fail,
+  algorithm = c("LM", "default", "port", "plinear"),
+  pool = TRUE,
+  warn.nls = NA
+)
 }
 \arguments{
 \item{model}{see \code{\link{nlsList}}}

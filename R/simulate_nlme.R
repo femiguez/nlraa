@@ -58,12 +58,13 @@ simulate_nlme <- function(object,
   }
 
   if(value == "matrix"){
+    colnames(sim.mat) <- paste0("sim_",1:nsim)
     return(sim.mat)  
   }else{
     dat <- eval(object$call$data)
     adat <- data.frame(ii = as.factor(rep(1:nsim, each = nrow(dat))),
                       dat,
-                      y.sim = c(sim.mat),
+                      sim.y = c(sim.mat),
                       row.names = 1:c(nsim * nrow(dat)))   
     return(adat)
   }

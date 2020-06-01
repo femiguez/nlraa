@@ -4,7 +4,9 @@
 \name{nlraa.env}
 \alias{nlraa.env}
 \title{Environment to store options and data for nlraa}
-\format{An object of class \code{environment} of length 2.}
+\format{
+An object of class \code{environment} of length 2.
+}
 \usage{
 nlraa.env
 }

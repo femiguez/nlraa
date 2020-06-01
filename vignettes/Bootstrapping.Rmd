@@ -305,7 +305,7 @@ One approach we can use to assess the uncertainty in the response would be to sa
 sdat10 <- simulate_nlme(fmo, nsim = 100, psim = 1, level = 0, value = "data.frame")
 
 ggplot(data = sdat10) + 
-  geom_line(aes(x = age, y = y.sim, group = ii), color = "gray", alpha = 0.5) + 
+  geom_line(aes(x = age, y = sim.y, group = ii), color = "gray", alpha = 0.5) + 
   geom_point(aes(x = age, y = circumference)) + 
   ggtitle("psim = 1, level = 0") + 
   ylab("circumference")
@@ -322,7 +322,7 @@ sdat11$Tree_ID <- with(sdat11, paste0(Tree,"_",ii))
 
 ggplot(data = sdat11) + 
   facet_wrap(~ Tree) + 
-  geom_line(aes(x = age, y = y.sim, color = Tree, group = Tree_ID), 
+  geom_line(aes(x = age, y = sim.y, color = Tree, group = Tree_ID), 
             alpha = 0.5) + 
   geom_point(aes(x = age, y = circumference)) + 
   ggtitle("psim = 1, level = 1") + 
@@ -339,7 +339,7 @@ sdat21 <- simulate_nlme(fmo, nsim = 100, psim = 2, level = 1, value = "data.fram
 ## predictions at the level of a single observation
 ggplot(data = sdat21) + 
   facet_wrap(~ Tree) + 
-  geom_point(aes(x = age, y = y.sim, color = Tree), 
+  geom_point(aes(x = age, y = sim.y, color = Tree), 
             alpha = 0.5) + 
   geom_point(aes(x = age, y = circumference)) + 
   ggtitle("psim = 2, level = 1") + 

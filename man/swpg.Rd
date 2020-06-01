@@ -4,11 +4,13 @@
 \name{swpg}
 \alias{swpg}
 \title{Simulated data based on obseved data presented in Sinclair (1986) - Fig. 1A}
-\format{A data frame with 20 rows and 3 columns
+\format{
+A data frame with 20 rows and 3 columns
 \describe{
   \item{ftsw}{Fraction of Transpirable Soil Water (0-1)}
   \item{lfgr}{Relative Leaf Growth scaled from 0 to 1}
-}}
+}
+}
 \source{
 Simluated data (much cleaner than original) based on the above publication
 }
