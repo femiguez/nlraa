@@ -14,12 +14,12 @@ if(run.simulate.gnls.test){
   
   fitg <- gnls(circumference ~ SSlogis(age, Asym, xmid, scal), data = Orange, weights = varPower())
   
-  fitg.bt0 <- boot_nlme(fitg, fitted, psim = 0, parallel = "multicore", ncpus = 4)
+  system.time(fitg.bt0 <- boot_nlme(fitg, fitted, psim = 0, cores = 4))
   
   lwr0.q <- apply(t(fitg.bt0$t), 1, quantile, probs = 0.05, na.rm = TRUE)
   upr0.q <- apply(t(fitg.bt0$t), 1, quantile, probs = 0.95, na.rm = TRUE)
  
-  fitg.bt1 <- boot_nlme(fitg, fitted, psim = 1, parallel = "multicore", ncpus = 4)
+  system.time(fitg.bt1 <- boot_nlme(fitg, fitted, psim = 1, cores = 4))
   
   lwr1.q <- apply(t(fitg.bt1$t), 1, quantile, probs = 0.05, na.rm = TRUE)
   upr1.q <- apply(t(fitg.bt1$t), 1, quantile, probs = 0.95, na.rm = TRUE)
@@ -31,8 +31,8 @@ if(run.simulate.gnls.test){
     geom_ribbon(aes(x = Orange$age, ymin = lwr1.q, ymax = upr1.q), fill = "purple", alpha = 0.2)
   
   ## What about the model coefficients?
-  fitg.cfs.bt0 <- boot_nlme(fitg, psim = 0, parallel = "multicore", ncpus = 4) 
-  fitg.cfs.bt1 <- boot_nlme(fitg, psim = 1, parallel = "multicore", ncpus = 4) 
+  system.time(fitg.cfs.bt0 <- boot_nlme(fitg, psim = 0, cores = 4))
+  system.time(fitg.cfs.bt1 <- boot_nlme(fitg, psim = 1, cores = 4)) 
 
   summary(fitg.cfs.bt0)
   summary(fitg.cfs.bt1)
@@ -70,7 +70,7 @@ if(run.simulate.gnls.test){
   plot(augPred(fit.nm, level = 0:1))
   
   ## Let's look at intervals first
-  fit.nm.bt <- boot_nlme(fit.nm, parallel = "multicore", ncpus = 4)
+  system.time(fit.nm.bt <- boot_nlme(fit.nm, cores = 4))
 
   confint(fit.nm.bt)  
   intervals(fit.nm, which = "fixed")
@@ -78,14 +78,14 @@ if(run.simulate.gnls.test){
   ## Fitted values
   prdf <- function(x) predict(x, level = 0, newdata = data.frame(age = 50:1600)) 
   
-  fit.nm.bt.f0 <- boot_nlme(fit.nm, prdf, psim = 0, parallel = "multicore", ncpus = 4)
+  system.time(fit.nm.bt.f0 <- boot_nlme(fit.nm, prdf, psim = 0, cores = 4))
  
   lwr0.q <- apply(t(fit.nm.bt.f0$t), 1, quantile, probs = 0.05, na.rm = TRUE)
   upr0.q <- apply(t(fit.nm.bt.f0$t), 1, quantile, probs = 0.95, na.rm = TRUE)
  
   Orange$fttd <- predict(fit.nm, level = 0)
  
-  fit.nm.bt.f1 <- boot_nlme(fit.nm, prdf, psim = 1, parallel = "multicore", ncpus = 4)
+  system.time(fit.nm.bt.f1 <- boot_nlme(fit.nm, prdf, psim = 1, cores = 4))
   
   lwr1.q <- apply(t(fit.nm.bt.f1$t), 1, quantile, probs = 0.05, na.rm = TRUE)
   upr1.q <- apply(t(fit.nm.bt.f1$t), 1, quantile, probs = 0.95, na.rm = TRUE)
@@ -107,9 +107,9 @@ if(run.simulate.gnls.test){
                 weights = varPower())
   
   fitcw.vc <- var_cov(fitcw) 
-  image(fitcw.vc[,ncol(fitcw.vc):1])
-  fitcw.vc2 <- fitcw.vc[1:25,1:25]
-  image(fitcw.vc2[,ncol(fitcw.vc2):1])
+  image(fitcw.vc[,ncol(fitcw.vc):1], xaxt = "n", yaxt = "n")
+  fitcw.vc2 <- fitcw.vc[1:36,1:36]
+  image(log(fitcw.vc2[,ncol(fitcw.vc2):1]), xaxt = "n", yaxt = "n")
   ## In this case, this is much slower, because of the huge matrix involved
   fitcw.sim <- simulate_nlme(fitcw, nsim = 100, psim = 2, value = "data.frame")
  
@@ -123,9 +123,8 @@ if(run.simulate.gnls.test){
   ## similar in structure to the ones in the original dataset
   ggplot(data = fitcw.sim) + 
     facet_wrap(~ Chick) + 
-    geom_line(aes(x = Time, y = y.sim, color = Chick, group = Chick_ID)) + 
+    geom_line(aes(x = Time, y = sim.y, color = Chick, group = Chick_ID)) + 
     geom_point(aes(x = Time, y = weight)) +
     theme(legend.position = "none")
   
-
 }

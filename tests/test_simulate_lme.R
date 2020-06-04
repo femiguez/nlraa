@@ -93,7 +93,7 @@ if(run.test.simulate.lme){
   ggplot(data = sim.dat1, aes(x = age, y = circumference)) +
     facet_wrap(~Tree) + 
     geom_point(aes(y = sim.y), color = "gray", alpha = 0.3) + 
-    geom_point() 
+    geom_point() + theme_dark()
   
   ## psim = 3, level = 1, simulations at the observation level plus drawing from random effects
   sim.dat3 <- simulate_lme(fm1, nsim = 100, psim = 3, value = "data.frame")

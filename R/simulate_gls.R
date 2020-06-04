@@ -62,7 +62,12 @@ simulate_gls <- function(object, psim = 1, na.action = na.fail, naPattern = NULL
   ##
   ## method for predict() designed for objects inheriting from class gls
   ##
-  newdata <- nlme::getData(object)
+  args <- list(...)
+  if(!is.null(args$newdata)){
+    newdata <- args$newdata
+  }else{
+    newdata <- nlme::getData(object)  
+  } 
 
   form <- getCovariateFormula(object)
   mfArgs <- list(formula = form, data = newdata, na.action = na.action)
@@ -115,8 +120,14 @@ simulate_gls <- function(object, psim = 1, na.action = na.fail, naPattern = NULL
       rsds.std <- stats::rnorm(N, 0, 1)
       rsds <- rsds.std * attr(residuals(object), "std") ## This last term is 'sigma'
     }else{
-      var.cov.err <- var_cov(object)
-      rsds <- MASS::mvrnorm(mu = residuals(object), Sigma = var.cov.err)
+      ## This is one way of doing this, but might not be the best
+      var.cov.err <- var_cov(object, sparse = TRUE)
+      ## rsds <- MASS::mvrnorm(mu = residuals(object), Sigma = var.cov.err)
+      ## An alternative is to do a Cholesky decomposition first
+      ## Since var.cov.err is sparse using the Matrix package might be
+      ## Much better
+      chol.var.cov.err <- Matrix::chol(var.cov.err)
+      rsds <- chol.var.cov.err %*% rnorm(nrow(chol.var.cov.err))
     }
   }
   

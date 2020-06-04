@@ -151,11 +151,16 @@ simulate_gnls <- function(object, psim = 1, na.action = na.fail, naPattern = NUL
         ## This was added 2020-05-04
         ## This extracts the variance covariance of the error matrix
         ## This is potentially a huge matrix
-        var.cov.err <- var_cov(object)
+        var.cov.err <- var_cov(object, sparse = TRUE)
         ## This generates residuals considering the variance covariance of the error matrix
         ## It is computationally demanding
         ## I'm going to try using the mean of the errors for the mean (2020-05-26)
-        rsds <- MASS::mvrnorm(mu = residuals(object), Sigma = var.cov.err)
+        ## I'm thinking now (2020-06-03) that the Cholesky factorization is better
+        ## rsds <- MASS::mvrnorm(mu = residuals(object), Sigma = var.cov.err) - old, pre 2020-06-03
+        ## Update: The Cholesky method is 10x faster than the MASS::mvrnorm method
+        ## I have no idea if they produce similar simulations
+        chol.var.cov.err <- Matrix::chol(var.cov.err)
+        rsds <- Matrix::as.matrix(chol.var.cov.err %*% rnorm(nrow(chol.var.cov.err)))
       }
     }
     ##------ End FEM section ----------------------##

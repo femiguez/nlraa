@@ -68,7 +68,6 @@ simulate_lme <- function(object, nsim = 1, psim = 1,
   ## First example for the gnls case
   for(i in seq_len(nsim)){
     if(inherits(object, "gls")){
-      stop("not implemented yet")
       sim.mat[,i] <- as.vector(simulate_gls(object, psim = psim, ...))
     }
     if(inherits(object, "lme")){
@@ -112,8 +111,13 @@ simulate_lme_one <- function(object, psim = 1, level = Q, asList = FALSE, na.act
   if(!missing(level) && psim == 2 && level < Q)
     stop("psim = 2 whould only be used for the deepest level of the hierarchy")
   
-  ## Is this automatically evaluated?  
-  newdata <- object$data
+  ## Data
+  args <- list(...)
+  if(!is.null(args$newdata)){
+    newdata <- args$newdata
+  }else{
+    newdata <- nlme::getData(object)  
+  } 
     
   maxQ <- max(level)			# maximum level for predictions
   nlev <- length(level)
@@ -279,8 +283,16 @@ simulate_lme_one <- function(object, psim = 1, level = Q, asList = FALSE, na.act
     
   if(psim == 2 || psim == 3){
     fix <- MASS::mvrnorm(n = 1, mu = fixef(object), Sigma = vcov(object))
-    rsds.std <- stats::rnorm(N, 0, 1) ## These are standardized residuals 'pearson'?
-    rsds <- rsds.std * attr(object[["residuals"]], "std") ## This last term is 'sigma'
+    
+    if(is.null(object$modelStruct$corStruct)){
+      rsds.std <- stats::rnorm(N, 0, 1) ## These are standardized residuals 'pearson'?
+      rsds <- rsds.std * attr(object[["residuals"]], "std") ## This last term is 'sigma'
+    }else{
+      ## For details on this see simulate_gnls
+      var.cov.err <- var_cov(object, sparse = TRUE)
+      chol.var.cov.err <- Matrix::chol(var.cov.err)
+      rsds <- Matrix::as.matrix(chol.var.cov.err %*% rnorm(nrow(chol.var.cov.err)))
+    }
   }
  
   attr(lmeSt, "lmeFit") <- list(beta = fix, b = re) ## I edited this line "fix" instead of "fixef(object)"
