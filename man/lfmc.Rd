@@ -22,6 +22,9 @@ A data frame with 247 rows and 5 variables:
 lfmc
 }
 \description{
+Live fuel moisture content
+}
+\details{
 A dataset containing the leaf.type, time, plot, site and lfmc (live fuel mass concentration)
 }
 \keyword{datasets}

@@ -21,9 +21,11 @@ See above reference. (Currently available on ResearchGate).
 sm
 }
 \description{
-A dataset containing growth data for sorghum and maize in Greece.
+Sorghum and Maize growth in Greece
 }
 \details{
+A dataset containing growth data for sorghum and maize in Greece.
+
 Danalatos, N.G.,  S.V. Archontoulis, and K. Tsiboukas. 2009. 
 Comparative analysis of sorghum versus corn growing under optimum and under 
 water/nitrogen limited conditions in central Greece. In: From research to 

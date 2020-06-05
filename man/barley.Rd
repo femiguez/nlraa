@@ -3,7 +3,7 @@
 \docType{data}
 \name{barley}
 \alias{barley}
-\title{Data from a paper by Arild Vold on response of barley to nitrogen fertilizer}
+\title{Barley response to nitrogen fertilizer}
 \format{
 A data frame with 76 rows and 3 columns
 \describe{
