@@ -1,0 +1,184 @@
+---
+title: "Models and Functions for Mixed Models"
+author: "Fernando Miguez"
+date: "`r Sys.Date()`"
+fig_width: 6
+fig_height: 4
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{nlraa: Models and Functions for Mixed Models}
+  %\VignetteEngine{knitr::rmarkdown}
+  \usepackage[utf8]{inputenc}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(nlme)
+library(nlraa)
+library(ggplot2)
+library(knitr)
+```
+
+# Intro
+
+The puspose of this note is to make a connection between R functions and the mathematical notation of linear and (non)linear mixed models. One goal is to produce a table that maps R functions with notation for these models.
+
+This document is a work in progress.
+
+## Linear Model
+
+A linear model can be expressed as 
+
+$$
+y = X \beta + \epsilon
+$$
+
+Typically, we assume that the errors are normally distributed, independent and they have constant variance.
+
+$$
+\epsilon \sim N(0, \sigma^2)
+$$
+
+Note: The covariance of the errors $Cov(\mathbf{\epsilon})$ where $\mathbf{\epsilon}$ is an $n \times 1$ vector is $\sigma^2 \mathbf{I}_n$.
+
+In R we can fit the following model
+
+```{r lm-1}
+x <- rnorm(20)
+y <- 1 + 2 * x + rnorm(20, sd = 0.5)
+plot(x, y)
+fit <- lm(y ~ x)
+```
+
+In order to extract the estimate for $\beta$, this is $\hat{\beta}$, we can use the function *coef*. In order to extract the estiamte for $\sigma$ (again, strictly $\hat{\sigma}$), we can use the function *sigma*. In order to extract the covariance of $\hat{\beta}$, this is $Cov(\hat{\beta})$, we can use the function *vcov*.
+
+The covariance for $\hat{\beta}$ is defined as 
+
+$$
+Cov(\hat{\beta}) = \hat{\sigma}^2 (\mathbf{X'X})^{-1}
+$$
+
+Obtaining this matrix is important for simulation as it provides information on the variances for the parameters in the model as well as the covariances. 
+
+```{r lm-coef}
+## Print beta hat
+coef(fit)
+## Print sigma
+sigma(fit)
+## Print the covariance matrix of beta hat
+vcov(fit)
+```
+
+There are other functions in R which are also useful. The function *fitted* extracts the fitted values or $\hat{y} = \mathbf{X}\hat{\beta}$, *model.matrix* extracts $\mathbf{X}$ and *residuals* extracts $\hat{e}$ (or *resid*). 
+
+In addition, in the nlraa package I have the function 'var_cov' which extracts the complete variance of the residuals. In this case it is a simple diagonal matrix multiplied by $\hat{\sigma}^2$.
+
+```{r lm-var_cov}
+## Extract the variance covariance of the residuals (which is also of the response)
+lm.vc <- var_cov(fit)
+## Print just the first 5 observations
+round(lm.vc[1:5,1:5],2)
+## Visualize the matrix. This is a 20 x 20 matrix.
+## It is easier to visualize in the log-scale
+## Note: log(0) becomes -Inf, but not shown here
+image(log(lm.vc[,ncol(lm.vc):1]))
+```
+
+In the previous image, each orange square represents the estimate of the residual variance ($\sigma^2$) and there are 20 squares because there are 20 observations. 
+
+It might seem silly for a model such as this one to extract a matrix which is simlpy a diagonal identity matrix multiplied by the scalar $\hat{\sigma}^2$, but this will become more clear as we move into more complex models.
+
+So far,
+
+```{r lm-table, echo = FALSE}
+dat <- data.frame(r.function = "lm", beta = "coef", 
+                  cov.beta = "vcov", sigma = "sigma",
+                  X = "model.matrix", y.hat = "fitted",
+                  e = "residuals", cov.e = "var_cov")
+kable(dat)
+```
+
+## Generalized least squares (gls)
+
+Note: The models that can be fitted using *gls* should not be confused with the ones fitted using *glm*, which are generalized linear models.
+
+The function *gls* in the *nlme* package fits linear models, but in which the covariance matrix of the residuals (also called errors) is more flexible.
+
+The model is still
+
+$$
+y = X \beta + \epsilon
+$$
+
+But now the errors have a more flexible covariance structure.
+
+$$
+\epsilon \sim N(0, \Sigma)
+$$
+
+How do we extract $\Sigma$ from a fitted model?
+
+We will again use the function *var_cov* (there is a function in nlme called *getVarCov*, but there are many cases which it does not handle).
+
+For the next example I will use the ChickWeight dataset.
+
+```{r gls-chickweight}
+## ChickWeight example
+data(ChickWeight)
+ggplot(data = ChickWeight, aes(Time, weight)) + geom_point()
+```
+
+Clearly, the variance increases as the weight increases and it would be a good approach to consider this in the modeling process. The code below fits the variance of the residuals (or the response) as a function of the fitted values. We could choose and evaluate different variance functions and determine which one is better, but for the purpose of illustrating the connection between R functions and mathematical notation this is enough.
+
+```{r gls-chickweight-weights}
+## One possible model is
+fit.gls <- gls(weight ~ Time, data = ChickWeight,
+               weights = varPower())
+fit.gls.vc <- var_cov(fit.gls)
+## Note: the function getVarCov fails for this object
+## Visualize the first few observations
+fit.gls.vc[1:10,1:10]
+## Store for visualization
+## only the first 12 observations
+vc2 <- fit.gls.vc[1:12,1:12]
+round(vc2,0)
+## The variance increases as weight increases
+## Visualize the variance-covariance of the errors
+## This is only for the first 12 observations
+## It is easier to visualize in the log scale
+## Note: log(0) becomes -Inf, but not shown here
+image(log(vc2[,ncol(vc2):1]), 
+      main = "First 12 observations, Cov(resid)")
+## For all observations
+image(log(fit.gls.vc[,ncol(fit.gls.vc):1]), 
+      main = "All observations, Cov(resid)")
+```
+
+Since not only the variance is increasing, but also the data comes from different chick and is thus correlated, we could fit the following model.
+
+```{r gls-chickweight-weights-corr}
+## Adding the correlation
+fit.gls2 <- gls(weight ~ Time, data = ChickWeight,
+                weights = varPower(), 
+                correlation = corCAR1(form = ~ Time | Chick))
+## Extract the variance-covariance of the residuals
+## Note: getVarCov fails for this object
+fit.gls2.vc <- var_cov(fit.gls2)
+## Visualize the first few observations
+round(fit.gls2.vc[1:13,1:13],0)
+## Visualize the variance-covariance of the errors
+## On the log-scale
+## Reorder and select
+vc2.36 <- fit.gls2.vc[1:36,1:36]
+image(log(vc2.36[,ncol(vc2.36):1]),
+      main = "Covariance matrix of residuals \n for the first three Chicks (log-scale)")
+```
+
+Let's plot the data, by Chick. this shows that there is a high temporal correlation as we would expect. Chicks which have a higher weight (than others) at given time, tend to still be higher at a later time. 
+
+```{r ChickWeight-ggplot2-facet}
+ggplot(data = ChickWeight, aes(x = Time, y = weight)) + 
+  facet_wrap( ~ Chick) + 
+  geom_point()
+```
+
