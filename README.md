@@ -6,6 +6,8 @@
 downloads total](https://cranlogs.r-pkg.org/badges/grand-total/nlraa)](https://github.com/metacran/cranlogs.app)
 [![CRAN downloads](https://cranlogs.r-pkg.org/badges/nlraa)](https://cran.r-project.org/package=nlraa)
 
+[![Documentation](https://femiguez.github.io/nlraa-docs/index.html)](https://femiguez.github.io/nlraa-docs/index.html)
+
 This package supports the following publications:
 
 1. Archontoulis, S. V., and F. E. Miguez. 2015. Nonlinear Regression
