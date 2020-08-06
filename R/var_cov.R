@@ -47,7 +47,7 @@
 #'             correlation = corCAR1(form = ~ Time | Chick))
 #' v4 <- var_cov(fit4)
 #' ## Tip: you can visualize these matrices using
-#' image(v4[,ncol(v4):1])
+#' image(log(v4[,ncol(v4):1]))
 #' }
 
 var_cov <- function(object, type = c("residual","random","all"), aug = FALSE, sparse = FALSE){
@@ -78,7 +78,7 @@ var_cov <- function(object, type = c("residual","random","all"), aug = FALSE, sp
       ans <- var_cov_lme_ranef(object, aug = aug, sparse = sparse)  
     }
     if(type == "all"){
-      ans <- var_cov_lme_resid(object, sparse = sparse)  + var_cov_lme_ranef(object, aug = TRUE, sparse = sparse)  
+      ans <- var_cov_lme_resid(object, sparse = sparse) + var_cov_lme_ranef(object, aug = TRUE, sparse = sparse)  
     }
   }
 
@@ -133,29 +133,43 @@ var_cov_lme_resid <- function(object, sparse = FALSE){
   return(Lambda)
 }
 
-## I don't think this works for objects of nlme class
+## This works for objects of class gls, lme and nlme (1 level)
 var_cov_lme_ranef <- function(object, aug = FALSE, sparse = FALSE){
   
   if(!inherits(object, c("gls", "lme"))) 
     stop("Only for objects which inherit the 'gls' or 'lme' class")
-  
-  if(inherits(object, "nlme"))
-    stop("Have not figure out how to do this yet")
+
+  if(inherits(object, "nlme") && aug)
+    stop("Don't know how to augment nlme random effects.")
   
   ## Number of levels for the random effects
   lreg <- length(names(object$modelStruct$reStruct))
   
   ## If there is only one level and we do not augment
   if(lreg == 1L && aug == FALSE){
+    ## This should work for lme and nlme
+    ## But not for every object as reStruct[[1]] might not
+    ## be coercible to a matrix
       ans <- as.matrix(object$modelStruct$reStruct[[1]]) * sigma(object)^2    
   }else{
+    if(!inherits(object, "nlme")){
+      ## Does this work for 'lme' object with more than one group?
       V <- mgcv::extract.lme.cov(object) ## This is V + Z %*% Vr %*% t(Z)
       ## This is clearly potentially dangerous as it might return
       ## negative values, need to test it
-      ans <- V - var_cov_lme_resid(object)
+      ans <- V - var_cov_lme_resid(object)      
+    }else{
+      ans <- vector("list", lreg)
+      names(ans) <- names(object$modelStruct$reStruct)
+      for(i in 1:lreg){
+        tm <- as.matrix(object$modelStruct$reStruct[[i]]) * sigma(object)^2 
+        if(sparse) tm <- Matrix::Matrix(tm, sparse = TRUE)
+        ans[[i]] <- tm
+      }
+    }
   }
 
-  if(sparse) ans <- Matrix::Matrix(ans, sparse = TRUE)
+  if(sparse && !is.list(ans)) ans <- Matrix::Matrix(ans, sparse = TRUE)
   
   return(ans)
 }

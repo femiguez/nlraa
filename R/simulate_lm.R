@@ -5,7 +5,7 @@
 #' @name simulate_lm
 #' @description The function \code{\link[stats]{simulate}} does not consider the 
 #' uncertainty in the estimation of the model parameters. This function will attempt 
-#' to do this
+#' to do this.
 #' @param object object of class \code{\link[stats]{lm}}
 #' @param psim parameter simulation level (an integer, 0, 1, 3, 4).
 #' @param nsim number of simulations to perform

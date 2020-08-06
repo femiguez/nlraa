@@ -22,10 +22,10 @@
 #' 
 #' @title Simulate values from an object of class \code{\link[nlme]{lme}}
 #' @description Simulate values from an object of class lme. Unequal variances, 
-#' as modeled using the \sQuote{weights} option are supported, but the \sQuote{correlation}
-#' is not taken into account when sampling residuals (at the moment).
+#' as modeled using the \sQuote{weights} option are supported, and there is
+#' experimental code for considering the \sQuote{correlation} structure.
 #' @name simulate_lme
-#' @param object object of class \code{\link[nlme]{lme}}
+#' @param object object of class \code{\link[nlme]{lme}} or \code{\link[nlme]{gls}}
 #' @param nsim number of samples, default 1
 #' @param psim parameter simulation level, 0: for fitted values, 1: for simulation from 
 #' fixed parameters (assuming a fixed vcov matrix), 2: for simulation considering the 

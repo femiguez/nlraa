@@ -34,7 +34,8 @@
 #' @param ... additional arguments to be passed (possible to pass newdata this way)
 #' @details It uses function \code{\link[MASS]{mvrnorm}} to generate new values for the coefficients
 #' of the model using the Variance-Covariance matrix \code{\link{vcov}}
-#' @return This function should always return a vector with the same dimensions as the original data
+#' @return This function should return a vector with the same dimensions as 
+#' the original data, unless newdata is provided.
 
 simulate_nlme_one <- function(object, psim = 1, level = Q, asList = FALSE, na.action = na.fail,
            naPattern = NULL, ...){

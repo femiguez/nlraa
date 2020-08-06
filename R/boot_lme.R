@@ -2,7 +2,7 @@
 #' 
 #' @title Bootstraping for linear mixed models
 #' @name boot_lme
-#' @param object object of class \code{\link[nlme]{lme}} or \code{\link[nlme]{gnls}}
+#' @param object object of class \code{\link[nlme]{lme}} or \code{\link[nlme]{gls}}
 #' @param f function to be applied (and bootstrapped), default coef (gls) or fixef (lme)
 #' @param R number of bootstrap samples, default 999
 #' @param psim simulation level for vector of fixed parameters either for \code{\link{simulate_gls}} or \code{\link{simulate_lme}}

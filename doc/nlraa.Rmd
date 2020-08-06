@@ -63,6 +63,7 @@ One of the objectives of those publications was to introduce a large family of n
 19. SSlogis5 (five-parameter logistic)
 20. SStrlin (tri-linear function)
 21. SSexplin (expolinear)
+22. SShill-123 (Hill function with 1, 2, or 3 parameters)
 
 For the reference on the Beta growth function see Yin et al. 2003 (https://doi.org/10.1093/aob/mcg029) and Erratum: (https://doi.org/10.1093/aob/mcg091).
 For a reference on a use of the declining logistic see Oddi et al. (2019) (and vignette in this package). For the Ricker model see: (https://en.wikipedia.org/wiki/Ricker_model). For the protein profile in the canopy see Johnson et al. (2010) (https://doi.org/10.1093/aob/mcq183). 

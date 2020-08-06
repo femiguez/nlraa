@@ -23,7 +23,7 @@
 #' @title Create a list of nls objects with the option of using nlsLM in addition to nls
 #' @name nlsLMList
 #' @description This function is a copy of 'nlsList' from the 'nlme' package modified
-#' to use the 'nlsLM' function in addition to (optinally) 'nls'. By changing the algorithm argument it is possible
+#' to use the 'nlsLM' function in addition to (optionally) 'nls'. By changing the algorithm argument it is possible
 #' to use 'nls' as well
 #' @param model either a nonlinear model formula, with the response on the left of a ~ operator and an expression involving parameters, covariates, and a grouping factor separated by the | operator on the right, or a selfStart function. 
 #' @param data a data frame

@@ -7,7 +7,7 @@
 boot_lme(object, f = NULL, R = 999, psim = 1, cores = 1L, ...)
 }
 \arguments{
-\item{object}{object of class \code{\link[nlme]{lme}} or \code{\link[nlme]{gnls}}}
+\item{object}{object of class \code{\link[nlme]{lme}} or \code{\link[nlme]{gls}}}
 
 \item{f}{function to be applied (and bootstrapped), default coef (gls) or fixef (lme)}
 

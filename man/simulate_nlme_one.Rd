@@ -33,7 +33,8 @@ An important difference is that for this function multiple levels are not allowe
 \item{...}{additional arguments to be passed (possible to pass newdata this way)}
 }
 \value{
-This function should always return a vector with the same dimensions as the original data
+This function should return a vector with the same dimensions as 
+the original data, unless newdata is provided.
 }
 \description{
 This function is based on \code{\link[nlme]{predict.nlme}} function

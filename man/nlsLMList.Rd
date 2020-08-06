@@ -40,7 +40,7 @@ nlsLMList(
 }
 \description{
 This function is a copy of 'nlsList' from the 'nlme' package modified
-to use the 'nlsLM' function in addition to (optinally) 'nls'. By changing the algorithm argument it is possible
+to use the 'nlsLM' function in addition to (optionally) 'nls'. By changing the algorithm argument it is possible
 to use 'nls' as well
 }
 \details{

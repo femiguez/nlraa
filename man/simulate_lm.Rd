@@ -32,7 +32,7 @@ matrix or data.frame with responses
 \description{
 The function \code{\link[stats]{simulate}} does not consider the 
 uncertainty in the estimation of the model parameters. This function will attempt 
-to do this
+to do this.
 }
 \details{
 Simulate responses from a linear model \code{\link[stats]{lm}}

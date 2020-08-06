@@ -13,7 +13,7 @@ simulate_lme(
 )
 }
 \arguments{
-\item{object}{object of class \code{\link[nlme]{lme}}}
+\item{object}{object of class \code{\link[nlme]{lme}} or \code{\link[nlme]{gls}}}
 
 \item{nsim}{number of samples, default 1}
 
@@ -32,8 +32,8 @@ in the original data
 }
 \description{
 Simulate values from an object of class lme. Unequal variances, 
-as modeled using the \sQuote{weights} option are supported, but the \sQuote{correlation}
-is not taken into account when sampling residuals (at the moment).
+as modeled using the \sQuote{weights} option are supported, and there is
+experimental code for considering the \sQuote{correlation} structure.
 }
 \details{
 This function is based on \code{\link[nlme]{predict.lme}} function

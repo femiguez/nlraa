@@ -76,12 +76,15 @@ if(run.test.var.cov){
 
   fitnm1 <- nlme(fitnm0, random = pdDiag(Asym + lrc + c0 ~ 1))
   vnm1 <- var_cov(fitnm1)
+  vnm1.re <- var_cov(fitnm1, type = "random")
 
   fitnm2 <- update(fitnm1, weights = varPower())
   vnm2 <- var_cov(fitnm2)
+  vnm2.re <- var_cov(fitnm2, type = "random")
 
   fitnm3 <- update(fitnm2, correlation = corCAR1(form = ~ conc))
   vnm3 <- var_cov(fitnm3)
+  vnm3.re <- var_cov(fitnm3, type = "random")
 
   ## Test for whether my var_cov code agrees with getVarCov
   ChickWeight <- ChickWeight[order(ChickWeight$Chick),]
@@ -112,5 +115,14 @@ if(run.test.var.cov){
   vc2.2[1:9,1:9]
   
   vc2.3 <- vc2.2[1:50, 1:50]
-  image(vc2.3[,ncol(vc2.3):1])       
+  image(vc2.3[,ncol(vc2.3):1])
+  
+  ## For lme objects
+  ## It seems to work for a variety of requests
+  fm1 <- lme(distance ~ age, data = Orthodont) 
+  fm1.vc <- var_cov(fm1)
+  fm1.vc.re <- var_cov(fm1, type = "random")
+  fm1.vc.rea <- var_cov(fm1, type = "random", aug = TRUE)
+  image(fm1.vc.rea[,ncol(fm1.vc.rea):1])
+  
 }

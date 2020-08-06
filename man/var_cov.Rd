@@ -68,7 +68,7 @@ fit4 <- gls(weight ~ Time, data = ChickWeight,
             correlation = corCAR1(form = ~ Time | Chick))
 v4 <- var_cov(fit4)
 ## Tip: you can visualize these matrices using
-image(v4[,ncol(v4):1])
+image(log(v4[,ncol(v4):1]))
 }
 }
 \seealso{
