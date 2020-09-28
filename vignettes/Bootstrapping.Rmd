@@ -91,15 +91,23 @@ plot(profile(fit.lp, "xs"))
 
 Being able to see the whole profile for a parameter can be interesting in terms of understanding its behavior. For example, in this model, which has a 'break-point', we would not expect all the parameters to have identical shaped profiles and that is illustrated above for parameter 'xs'.
 
-In this case, bootstraping is an alternative to computing the confidence intervals and it can be used as a way to double-check the previous results, but it can also be used when profiling fails. A function which can perform bootstraping for nonlinear models is 'Boot' in the 'car' pacakge. 
+In this case, bootstraping is an alternative to computing the confidence intervals and it can be used as a way to double-check the previous results, but it can also be used when profiling fails. A couple of functions which can perform bootstraping for nonlinear models are 'boot_nls' in the 'nlraa' pacakge or the 'Boot' in the 'car' pacakge. 
 
-```{r barley-Boot}
-fit.lp.Bt <- Boot(fit.lp)
+```{r barley-boot-nls-0, echo = FALSE}
+fit.lp0 <- nls(yield ~ SSlinp(NF, a, b, xs), data = barley)
+fit.lp <- nls(yield ~ SSlinp(NF, a, b, xs), data = barley, start = coef(fit.lp0))
+```
+
+```{r barley-boot-nls}
+## psim = 3 just adds residuals and does not resample parameters
+fit.lp.Bt <- boot_nls(fit.lp, psim = 3)
+## Or you can use the Boot function in the car package
 ```
 
 In this case, this function uses the base 'boot' package under the hood and it returns an object of that class. This also allows for other options such as defining a function as a combination of model parameters, and the use of more than one core to speed up computation. In this case, since we are also interested in the asymptote, which is 'a + b * xs', we can obtain confidence intervals for this parameter by doing the following.
 
 ```{r barley-Boot-asymp}
+## I'm using Boot in the 'car' package here, but it is similar to 'boot_nls'
 fn <- function(x) coef(x)[1] + coef(x)[2] * coef(x)[3]
 fit.lp.Bt.asymp <- Boot(fit.lp, f = fn, labels = "asymptote")
 confint(fit.lp.Bt.asymp)
@@ -184,6 +192,7 @@ fit.lp.gnls2 <- gnls(yield ~ SSlinp(NF, a, b, xs), data = barley2)
 intervals(fit.lp.gnls2)
 
 ## Compare this to the bootstrapping approach
+## R = 200 is too low for bootstrap, this is for illustration only
 fit.lp.gnls2.bt <- boot_nlme(fit.lp.gnls2, R = 200)
 
 summary(fit.lp.gnls2.bt)

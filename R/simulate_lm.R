@@ -100,7 +100,7 @@ simulate_lm_one <- function(object, psim = 1,
     rsds <- sample(rsd0, size = n, replace = TRUE)      
   }
   if(resid.type == "normal"){
-    rsds <- stats::rnorm(n = n, mean = 0, sd = sigma(object))
+    rsds <- stats::rnorm(n = n, mean = 0, sd = stats::sigma(object))
   }
   if(resid.type == "wild"){
     rsds <- sample(c(-1, 1), size = n, replace = TRUE) * rsd0

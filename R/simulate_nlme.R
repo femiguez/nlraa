@@ -68,6 +68,5 @@ simulate_nlme <- function(object,
                       row.names = 1:c(nsim * nrow(dat)))   
     return(adat)
   }
-  
 }
 
