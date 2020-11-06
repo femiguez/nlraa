@@ -33,7 +33,7 @@
 #' }
 NULL
 
-ratioInit <- function(mCall, LHS, data){
+ratioInit <- function(mCall, LHS, data, ...){
   
   xy <- sortedXyData(mCall[["x"]], LHS, data)
   if(nrow(xy) < 4){

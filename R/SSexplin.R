@@ -33,7 +33,7 @@
 #' }
 NULL
 
-explinInit <- function(mCall, LHS, data){
+explinInit <- function(mCall, LHS, data, ...){
   
   xy <- sortedXyData(mCall[["t"]], LHS, data)
   if(nrow(xy) < 4){

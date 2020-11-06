@@ -45,7 +45,7 @@
 #' }
 NULL
 
-trlinInit <- function(mCall, LHS, data){
+trlinInit <- function(mCall, LHS, data, ...){
   
   xy <- sortedXyData(mCall[["x"]], LHS, data)
 

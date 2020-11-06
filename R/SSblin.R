@@ -38,7 +38,7 @@
 #' }
 NULL
 
-blinInit <- function(mCall, LHS, data){
+blinInit <- function(mCall, LHS, data, ...){
   
   xy <- sortedXyData(mCall[["x"]], LHS, data)
   if(nrow(xy) < 4){

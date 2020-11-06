@@ -26,7 +26,7 @@
 #' }
 NULL
 
-nrhInit <- function(mCall, LHS, data){
+nrhInit <- function(mCall, LHS, data, ...){
   
   xy <- sortedXyData(mCall[["x"]], LHS, data)
   if(nrow(xy) < 4){

@@ -27,7 +27,7 @@
 #' }
 NULL
 
-logis5Init <- function(mCall, LHS, data){
+logis5Init <- function(mCall, LHS, data, ...){
   
   xy <- sortedXyData(mCall[["x"]], LHS, data)
   if(nrow(xy) < 5){

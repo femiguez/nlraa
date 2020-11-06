@@ -35,7 +35,7 @@
 #' 
 NULL
 
-profdInit <- function(mCall, LHS, data){
+profdInit <- function(mCall, LHS, data, ...){
   
   xy <- sortedXyData(mCall[["x"]], LHS, data)
   if(nrow(xy) < 4){

@@ -29,7 +29,7 @@
 #' 
 NULL
 
-linpInit <- function(mCall, LHS, data){
+linpInit <- function(mCall, LHS, data, ...){
   
   xy <- sortedXyData(mCall[["x"]], LHS, data)
   if(nrow(xy) < 3){

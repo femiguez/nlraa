@@ -12,14 +12,25 @@
 #' @param eh high temperature de-activation energy (eV)
 #' @param th temperature at which enzyme is half active and half suppressed dut to high temperatures
 #' @param tref standardisation temperature in degrees centigrade. Temperature at which rates are not inactivated by either high or low temperatures. Typically, 25 degrees.
+#' @note I do not recommend using this function.
 #' @export
 #' @examples 
 #' \donttest{
-#' ## No examples for now
+#' require(ggplot2)
+#' require(minpack.lm)
+#' 
+#' temp <- 0:45
+#' rate <- sharp(temp, 1, 0.03, 1.44, 28, 19, 44) + rnorm(length(temp), 0, 0.05)
+#' dat <- data.frame(temp = temp, rate = rate)
+#' ## Fit model
+#' fit <- nlsLM(rate ~ SSsharp(temp, r_tref, e, el, tl, eh, th, tref = 20), data = dat)
+#' ## Visualize
+#' ggplot(data = dat, aes(temp, rate)) + geom_point() + geom_line(aes(y = fitted(fit)))
+#'
 #' }
 NULL
 
-sharpInit <- function(mCall, LHS, data){
+sharpInit <- function(mCall, LHS, data, ...){
   
   xy <- sortedXyData(mCall[["temp"]], LHS, data)
   if(nrow(xy) < 6){

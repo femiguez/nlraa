@@ -39,7 +39,7 @@
 #' }
 NULL
 
-bg4rpInit <- function(mCall, LHS, data){
+bg4rpInit <- function(mCall, LHS, data, ...){
   
   xy <- sortedXyData(mCall[["time"]], LHS, data)
   if(nrow(xy) < 4){

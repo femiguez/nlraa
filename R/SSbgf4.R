@@ -28,7 +28,7 @@
 #' }
 NULL
 
-bgf4Init <- function(mCall, LHS, data){
+bgf4Init <- function(mCall, LHS, data, ...){
 
   xy <- sortedXyData(mCall[["time"]], LHS, data)
   if(nrow(xy) < 5){

@@ -26,7 +26,7 @@
 #' }
 NULL
 
-quadpInit <- function(mCall, LHS, data){
+quadpInit <- function(mCall, LHS, data, ...){
   
   xy <- sortedXyData(mCall[["x"]], LHS, data)
   if(nrow(xy) < 4){

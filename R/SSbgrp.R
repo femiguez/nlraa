@@ -30,7 +30,7 @@
 #' }
 NULL
 
-bgrpInit <- function(mCall, LHS, data){
+bgrpInit <- function(mCall, LHS, data, ...){
   
   xy <- sortedXyData(mCall[["time"]], LHS, data)
   if(nrow(xy) < 3){

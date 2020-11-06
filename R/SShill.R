@@ -40,7 +40,7 @@
 NULL
 
 ## define hill1
-hill1Init <- function(mCall, LHS, data){
+hill1Init <- function(mCall, LHS, data, ...){
   
   xy <- sortedXyData(mCall[["x"]], LHS, data)
   if(nrow(xy) < 4){
@@ -95,7 +95,7 @@ hill1 <- function(x, Ka){
 SShill1 <- selfStart(hill1, initial = hill1Init, c("Ka"))
 
 ## define hill2
-hill2Init <- function(mCall, LHS, data){
+hill2Init <- function(mCall, LHS, data, ...){
   
   xy <- sortedXyData(mCall[["x"]], LHS, data)
   if(nrow(xy) < 4){
@@ -158,7 +158,7 @@ hill2 <- function(x, Ka, n){
 SShill2 <- selfStart(hill2, initial = hill2Init, c("Ka","n"))
 
 ## define hill3
-hill3Init <- function(mCall, LHS, data){
+hill3Init <- function(mCall, LHS, data, ...){
   
   xy <- sortedXyData(mCall[["x"]], LHS, data)
   if(nrow(xy) < 4){

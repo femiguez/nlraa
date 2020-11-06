@@ -35,8 +35,21 @@ Self starter for temperature response function
 \details{
 For details see Schoolfield, R. M., Sharpe, P. J. & Magnuson, C. E. Non-linear regression of biological temperature-dependent rate models based on absolute reaction-rate theory. Journal of Theoretical Biology 88, 719-731 (1981)
 }
+\note{
+I do not recommend using this function.
+}
 \examples{
 \donttest{
-## No examples for now
+require(ggplot2)
+require(minpack.lm)
+
+temp <- 0:45
+rate <- sharp(temp, 1, 0.03, 1.44, 28, 19, 44) + rnorm(length(temp), 0, 0.05)
+dat <- data.frame(temp = temp, rate = rate)
+## Fit model
+fit <- nlsLM(rate ~ SSsharp(temp, r_tref, e, el, tl, eh, th, tref = 20), data = dat)
+## Visualize
+ggplot(data = dat, aes(temp, rate)) + geom_point() + geom_line(aes(y = fitted(fit)))
+
 }
 }

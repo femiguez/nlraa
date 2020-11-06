@@ -31,7 +31,7 @@
 #' }
 NULL
 
-dlfInit <- function(mCall, LHS, data){
+dlfInit <- function(mCall, LHS, data, ...){
   
   xy <- sortedXyData(mCall[["time"]], LHS, data)
   if(nrow(xy) < 4){

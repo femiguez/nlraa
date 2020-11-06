@@ -25,7 +25,7 @@
 #' }
 NULL
 
-expfpInit <- function(mCall, LHS, data){
+expfpInit <- function(mCall, LHS, data, ...){
   
   xy <- sortedXyData(mCall[["x"]], LHS, data)
   if(nrow(xy) < 3){
