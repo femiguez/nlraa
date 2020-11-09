@@ -4,6 +4,7 @@
 #' @description Simulate values from an object of class nls.  
 #' @name simulate_nls
 #' @param object object of class \code{\link[stats]{nls}}
+#' @param nsim number of simulations to perform
 #' @param psim parameter simulation level, 0: for fitted values, 1: for simulation from 
 #' fixed parameters (assuming a fixed vcov matrix), 2: simulation from sampling
 #' both from the parameters and the residuals, 3: for simulation considering the 
@@ -11,8 +12,7 @@
 #' parameter estimates at their original value; this will result in simulations 
 #' similar to the observed values.
 #' @param resid.type either \dQuote{resample}, \dQuote{normal} or \dQuote{wild}.
-#' @param na.action default \sQuote{na.fail}. See \code{\link[nlme]{predict.gnls}}
-#' @param naPattern missing value pattern. See \code{\link[nlme]{predict.gnls}}
+#' @param value either \sQuote{matrix} or \sQuote{data.frame}
 #' @param ... additional arguments (it is possible to supply a newdata this way)
 #' @return It returns a vector with simulated values with length equal to the number of rows 
 #' in the original data

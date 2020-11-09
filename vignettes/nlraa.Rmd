@@ -1,5 +1,5 @@
 ---
-title: "Nonlinear Regression Agricultural Applications"
+title: "nlraa: An R package for Nonlinear Regression Applications in Agricultural Research"
 author: "Fernando Miguez"
 date: "`r Sys.Date()`"
 fig_width: 6

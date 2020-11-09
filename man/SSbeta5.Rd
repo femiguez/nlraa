@@ -19,6 +19,8 @@ SSbeta5(temp, mu, tb, a, tc, b)
 \item{a}{parameter describing the initial increasing phase}
 
 \item{tc}{critical (high) temperature at which no expasion occurs}
+
+\item{b}{parameter describing the decreasing phase}
 }
 \value{
 beta5: vector of the same length as x (temp) using the beta5 function

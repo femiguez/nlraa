@@ -6,7 +6,7 @@ fig_width: 6
 fig_height: 4
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Archontoulis and Miguez paper}
+  %\VignetteIndexEntry{Nonlinear Regression (Archontoulis and Miguez) paper}
   %\VignetteEngine{knitr::rmarkdown}
   \usepackage[utf8]{inputenc}
 ---

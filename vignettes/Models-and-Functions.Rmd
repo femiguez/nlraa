@@ -1,5 +1,5 @@
 ---
-title: "Models and Functions for Mixed Models"
+title: "nlraa: Models and Functions for Mixed Models"
 author: "Fernando Miguez"
 date: "`r Sys.Date()`"
 fig_width: 6

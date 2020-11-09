@@ -10,6 +10,7 @@
 #' @param tb base (low) temperature at which no expansion accurs
 #' @param a parameter describing the initial increasing phase
 #' @param tc critical (high) temperature at which no expasion occurs
+#' @param b parameter describing the decreasing phase
 #' @details The form of the equation is: \deqn{exp(mu) * (temp - tb)^a * (tc - temp)^b}.
 #' @export
 #' @examples 
@@ -38,7 +39,7 @@ beta5Init <- function(mCall, LHS, data, ...){
   
   ## If we guess values of 10 and 35 for tb and tc
   ## exclude zero values
-  xy <- subset(xy, y > 0)
+  xy <- xy[xy$y > 0, ]
   logy <- log(xy[,"y"])
   tb <- min(xy[,"x"])
   tc <- max(xy[,"x"])

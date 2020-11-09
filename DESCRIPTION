@@ -1,5 +1,5 @@
 Package: nlraa
-Version: 0.75
+Version: 0.76
 Authors@R: c(person("Fernando", "Miguez", email = "femiguez@iastate.edu", role = c("aut", "cre"), comment = c(ORCID = "0000-0002-4627-8329")),
              person("José", "Pinheiro", role = c("ctb","cph"), comment = "author of nlme::nlsList, nlme::predict.gnls, nlme::predict.nlme"),
              person("Douglas", "Bates", role = c("ctb","cph"), comment = "author of nlme::nlsList, nlme::predict.gnls, nlme::predict.nlme"),
@@ -34,4 +34,4 @@ Suggests:
 	rmarkdown,
 	segmented
 LazyData: true
-RoxygenNote: 7.1.0
+RoxygenNote: 7.1.1

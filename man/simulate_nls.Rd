@@ -16,6 +16,8 @@ simulate_nls(
 \arguments{
 \item{object}{object of class \code{\link[stats]{nls}}}
 
+\item{nsim}{number of simulations to perform}
+
 \item{psim}{parameter simulation level, 0: for fitted values, 1: for simulation from 
 fixed parameters (assuming a fixed vcov matrix), 2: simulation from sampling
 both from the parameters and the residuals, 3: for simulation considering the 
@@ -25,11 +27,9 @@ similar to the observed values.}
 
 \item{resid.type}{either \dQuote{resample}, \dQuote{normal} or \dQuote{wild}.}
 
+\item{value}{either \sQuote{matrix} or \sQuote{data.frame}}
+
 \item{...}{additional arguments (it is possible to supply a newdata this way)}
-
-\item{na.action}{default \sQuote{na.fail}. See \code{\link[nlme]{predict.gnls}}}
-
-\item{naPattern}{missing value pattern. See \code{\link[nlme]{predict.gnls}}}
 }
 \value{
 It returns a vector with simulated values with length equal to the number of rows 
