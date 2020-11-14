@@ -80,6 +80,23 @@ The main benefit of having these self starting functions is that they can be inc
 apropos("^SS")
 ```
 
+## Simulation and Bootstrap
+
+Some particularly useful functions which simplify generating simulations:
+
+1. simulate_lm
+2. simulate_nls
+3. simulate_lme
+4. simulate_nlme
+
+Other functions which can perform bootsrapping:
+
+1. boot_lm
+2. boot_nls
+3. boot_lme
+4. boot_nlme
+
+
 # Datasets
 
 These are the available datasets distributed with this package:
@@ -88,6 +105,7 @@ These are the available datasets distributed with this package:
 2. "lfmc"
 3. "swpg"
 4. "barley"
+5. "maizeleafext"
 
 ```{r sm}
 ## Sorghum and Maize dataset
@@ -122,6 +140,16 @@ ggplot(data = barley, aes(x = NF, y = yield, color = as.factor(year))) +
   geom_point() +
   xlab("Nitrogen fertilizer (g/m^2)") +
   ylab("Grain (g/m^2)")
+```
+
+```{r maizeleafext}
+## Response of barley to nitrogen fertilizer
+## There is a barley dataset also in package 'lattice'
+data(maizeleafext, package = "nlraa")
+ggplot(data = maizeleafext, aes(x = temp, y = rate)) +
+  geom_point() + geom_line() + 
+  xlab("Temperature (C)") +
+  ylab("Leaf Extension Rate (relative)")
 ```
 
 # What to do when convergence fails?
@@ -288,7 +316,7 @@ And additional models, such as:
 ## Nonlinear mixed models packages
 
 **saemix**, **nlmixr** and **brms** (Bayesian). I'm planning to review these pacakges in a
-next version of nlraa.
+future version of nlraa.
 
 ## Additional material on growth models
 

@@ -123,5 +123,18 @@ if(run.test.simulate.lme){
   image(fm1.vc.all[,ncol(fm1.vc.all):1], main = "all (random + residual) or marginal", 
         xaxt = "n", yaxt = "n")
   
+  ## Testing the 'newdata' argument
+  Orange.newdata <- expand.grid(Tree = unique(Orange$Tree),
+                                age = seq(100, 1600, 50))
   
+  sim.orange.newdata <- simulate_lme(fm1, nsim = 50, newdata = Orange.newdata)
+
+  Orange.newdata$prd <- apply(sim.orange.newdata, 1, quantile, probs = 0.5)
+  Orange.newdata$lwr <- apply(sim.orange.newdata, 1, quantile, probs = 0.05)
+  Orange.newdata$upr <- apply(sim.orange.newdata, 1, quantile, probs = 0.95)
+  
+  ggplot() + 
+    geom_point(data = Orange, aes(x = age, y = circumference, color = Tree)) + 
+    geom_line(data = Orange.newdata, aes(x = age, y = prd, color = Tree)) + 
+    geom_ribbon(data = Orange.newdata, aes(x = age, ymin = lwr, ymax = upr, fill = Tree), alpha = 0.1)
 }

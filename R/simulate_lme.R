@@ -56,15 +56,20 @@
 #' }
 
 simulate_lme <- function(object, nsim = 1, psim = 1,
-                         value = c("matrix", "data.frame"),...){
+                         value = c("matrix", "data.frame"), ...){
   
   ## Error checking
   if(!inherits(object, c("gls","lme"))) stop("object should be of class 'gls' or 'lme'")
   
   value <- match.arg(value)
   
-  sim.mat <- matrix(ncol = nsim, nrow = length(fitted(object)))
-  
+  if(is.null(list(...)$newdata)){
+    sim.mat <- matrix(ncol = nsim, nrow = length(fitted(object)))
+  }else{
+    sim.mat <- matrix(ncol = nsim, nrow = nrow(list(...)$newdata))  
+    if(value == "data.frame") stop("value = 'data.frame' is incompatible with 'newdata'.")
+  } 
+    
   ## First example for the gnls case
   for(i in seq_len(nsim)){
     if(inherits(object, "gls")){
@@ -76,7 +81,7 @@ simulate_lme <- function(object, nsim = 1, psim = 1,
   }
   
   if(value == "matrix"){
-    colnames(sim.mat) <- paste0("sim_",1:nsim)
+    colnames(sim.mat) <- paste0("sim_", 1:nsim)
     return(sim.mat)  
   }else{
     dat <- nlme::getData(object)

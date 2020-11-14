@@ -44,7 +44,12 @@ simulate_nls <- function(object,
   
   resid.type <- match.arg(resid.type)
   
-  sim.mat <- matrix(ncol = nsim, nrow = length(fitted(object)))
+  if(is.null(list(...)$newdata)){
+    sim.mat <- matrix(ncol = nsim, nrow = length(fitted(object)))
+  }else{
+    sim.mat <- matrix(ncol = nsim, nrow = nrow(list(...)$newdata))  
+    if(value == "data.frame") stop("value = 'data.frame' is incompatible with 'newdata'.")
+  } 
   
   for(i in seq_len(nsim)){
       sim.mat[,i] <- as.vector(simulate_nls_one(object, psim = psim, resid.type = resid.type, ...))
