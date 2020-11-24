@@ -1,4 +1,8 @@
 #' 
+#' This is the exponential-plateua function, where \sQuote{xs} is the break-point
+#' 
+#' \deqn{(x < xs) * a * exp(c * x) + (x >= xs) * (a * exp(c * xs))}
+#' 
 #' @title self start for an exponential-plateau function
 #' @name SSexpfp
 #' @rdname SSexpfp
@@ -8,7 +12,7 @@
 #' @param c represents the exponential rate
 #' @param xs represents the breakpoint at which the plateau starts
 #' @return a numeric vector of the same length as x containing parameter estimates for equation specified
-#' @details This function is described in Archontoulis and Miguez (2015) - (doi:10.2134/agronj2012.0506). 
+#' @details For more details see: Archontoulis and Miguez (2015) - (doi:10.2134/agronj2012.0506). 
 #' @export
 #' @examples 
 #' \donttest{

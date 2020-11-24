@@ -66,10 +66,10 @@
  
  #' Data on leaf extension rate as a response to meristem temperature
  #' in maize. The data are re-created liberally from 
- #' Walls, W.R., 1971. Role of temperature in the regulation of leaf extension in ila mays. Nature, 229: 46-47. 
+ #' Walls, W.R., 1971. Role of temperature in the regulation of leaf extension in Zea mays. Nature, 229: 46-47. 
  #' The data points are not the same as in the original paper. Some additional
  #' points were inserted to fill in the blanks and allow for reasonable
- #' parameter values
+ #' parameter estimates
  #' 
  #' @title Maize leaf extension rate as a response to temperature
  #' @format A data frame with 10 rows and 2 columns
@@ -77,7 +77,7 @@
  #'   \item{temp}{Meristem temperature (in Celsius).}
  #'   \item{rate}{Leaf extension rate (relative to 25 degrees).}
  #' }
- #' @source Walls, W.R., 1971. Role of temperature in the regulation of leaf extension in ila mays. Nature, 229: 46-47. 
+ #' @source Walls, W.R., 1971. Role of temperature in the regulation of leaf extension in Zea mays. Nature, 229: 46-47. 
  "maizeleafext"
  
  ## Import packages needed for nlraa to work correctly

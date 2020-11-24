@@ -1,4 +1,6 @@
 #' 
+#' This is the exponential function \deqn{y = a * exp(c * x)}
+#' 
 #' @title self start for an exponential function
 #' @name SSexpf
 #' @rdname SSexpf
@@ -7,7 +9,7 @@
 #' @param a represents the value at x = 0
 #' @param c represents the exponential rate
 #' @return a numeric vector of the same length as x containing parameter estimates for equation specified
-#' @details This function is described in Archontoulis and Miguez (2015) - (doi:10.2134/agronj2012.0506). 
+#' @details For more details see: Archontoulis and Miguez (2015) - (doi:10.2134/agronj2012.0506). 
 #' @export
 #' @examples 
 #' \donttest{
