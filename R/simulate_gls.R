@@ -23,7 +23,8 @@
 #' @title Simulate fitted values from an object of class \code{\link[nlme]{gls}}
 #' @description Simulate values from an object of class gls. Unequal variances, 
 #' as modeled using the \sQuote{weights} option are supported, and there is experimental
-#' code for dealing with the \sQuote{correlation} structure. 
+#' code for dealing with the \sQuote{correlation} structure. This generates just one simulation
+#' from these type of models. To generate multiple simulations use \code{\link{simulate_lme}}
 #' @name simulate_gls
 #' @param object object of class \code{\link[nlme]{gls}}
 #' @param psim parameter simulation level, 0: for fitted values, 1: for simulation from 
@@ -38,7 +39,7 @@
 #' @details It uses function \code{\link[MASS]{mvrnorm}} to generate new values for the coefficients
 #' of the model using the Variance-Covariance matrix \code{\link{vcov}}. This variance-covariance matrix 
 #' refers to the one for the parameters 'beta', not the one for the residuals.
-#' @seealso \code{\link[nlme]{predict.gls}}
+#' @seealso \code{\link[nlme]{predict.gls}} \code{\link{simulate_lme}}
 #' @export
 #' @examples 
 #' \donttest{

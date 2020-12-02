@@ -42,7 +42,7 @@
 #' From the documentation it seems that if use.u = TRUE, then the current values of the random effects are used.
 #' This would mean that it is equivalent to psim = 2 in this function. Then use.u = FALSE, would be equivalent 
 #' to psim = 3. re.form allows for specifying the formula of the random effects.
-#' @seealso \code{\link[nlme]{predict.lme}}
+#' @seealso \code{\link[nlme]{predict.lme}} and \sQuote{simulate.merMod} in the \sQuote{lme4} package.
 #' @export
 #' @examples 
 #' \donttest{
@@ -114,7 +114,7 @@ simulate_lme_one <- function(object, psim = 1, level = Q, asList = FALSE, na.act
   #                     predict = val))
   # }
   if(!missing(level) && psim == 2 && level < Q)
-    stop("psim = 2 whould only be used for the deepest level of the hierarchy")
+    stop("psim = 2 should only be used for the deepest level of the hierarchy")
   
   ## Data
   args <- list(...)

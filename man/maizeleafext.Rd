@@ -12,7 +12,7 @@ A data frame with 10 rows and 2 columns
 }
 }
 \source{
-Walls, W.R., 1971. Role of temperature in the regulation of leaf extension in ila mays. Nature, 229: 46-47.
+Walls, W.R., 1971. Role of temperature in the regulation of leaf extension in Zea mays. Nature, 229: 46-47.
 }
 \usage{
 maizeleafext
@@ -20,9 +20,9 @@ maizeleafext
 \description{
 Data on leaf extension rate as a response to meristem temperature
 in maize. The data are re-created liberally from 
-Walls, W.R., 1971. Role of temperature in the regulation of leaf extension in ila mays. Nature, 229: 46-47. 
+Walls, W.R., 1971. Role of temperature in the regulation of leaf extension in Zea mays. Nature, 229: 46-47. 
 The data points are not the same as in the original paper. Some additional
 points were inserted to fill in the blanks and allow for reasonable
-parameter values
+parameter estimates
 }
 \keyword{datasets}

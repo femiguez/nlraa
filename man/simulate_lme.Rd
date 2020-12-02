@@ -60,5 +60,5 @@ sims <- simulate_lme(fm1, nsim = 10)
 }
 }
 \seealso{
-\code{\link[nlme]{predict.lme}}
+\code{\link[nlme]{predict.lme}} and \sQuote{simulate.merMod} in the \sQuote{lme4} package.
 }

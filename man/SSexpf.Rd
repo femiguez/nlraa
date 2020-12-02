@@ -25,7 +25,9 @@ expf: vector of the same length as x using the profd function
 Self starter for a simple exponential function
 }
 \details{
-This function is described in Archontoulis and Miguez (2015) - (doi:10.2134/agronj2012.0506).
+This is the exponential function \deqn{y = a * exp(c * x)}
+
+For more details see: Archontoulis and Miguez (2015) - (doi:10.2134/agronj2012.0506).
 }
 \examples{
 \donttest{

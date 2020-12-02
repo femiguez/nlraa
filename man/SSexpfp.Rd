@@ -27,7 +27,11 @@ expfp: vector of the same length as x using the expfp function
 Self starter for an exponential-plateau function
 }
 \details{
-This function is described in Archontoulis and Miguez (2015) - (doi:10.2134/agronj2012.0506).
+This is the exponential-plateua function, where \sQuote{xs} is the break-point
+
+\deqn{(x < xs) * a * exp(c * x) + (x >= xs) * (a * exp(c * xs))}
+
+For more details see: Archontoulis and Miguez (2015) - (doi:10.2134/agronj2012.0506).
 }
 \examples{
 \donttest{

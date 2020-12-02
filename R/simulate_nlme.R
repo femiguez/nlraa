@@ -12,15 +12,14 @@
 #' model outputs.
 #' @return It returns a matrix with simulated values from the original object
 #' with number of rows equal to the number of rows of \code{\link{fitted}} and number
-#' of columns equal to the number of simulated samples (\sQuote{nsim}). In the case of 'data.frame'
+#' of columns equal to the number of simulated samples (\sQuote{nsim}). In the case of \sQuote{data.frame}
 #' it returns an augmented data.frame, which can potentially be a very large object, but which
 #' makes furhter plotting more convenient.  
 #' @export
 #' @examples 
 #' \donttest{
-#' require(car)
 #' require(nlme)
-#' data(barley)
+#' data(barley, package = "nlraa")
 #' barley2 <- subset(barley, year < 1974)
 #' fit.lp.gnls2 <- gnls(yield ~ SSlinp(NF, a, b, xs), data = barley2)
 #' barley2$year.f <- as.factor(barley2$year)

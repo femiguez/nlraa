@@ -27,7 +27,8 @@ in the original data
 \description{
 Simulate values from an object of class gls. Unequal variances, 
 as modeled using the \sQuote{weights} option are supported, and there is experimental
-code for dealing with the \sQuote{correlation} structure.
+code for dealing with the \sQuote{correlation} structure. This generates just one simulation
+from these type of models. To generate multiple simulations use \code{\link{simulate_lme}}
 }
 \details{
 This function is based on \code{\link[nlme]{predict.gls}} function
@@ -52,5 +53,5 @@ sim <- simulate_gls(fit.gls)
 }
 }
 \seealso{
-\code{\link[nlme]{predict.gls}}
+\code{\link[nlme]{predict.gls}} \code{\link{simulate_lme}}
 }
