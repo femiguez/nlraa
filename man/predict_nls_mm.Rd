@@ -5,29 +5,31 @@
 \alias{IC_tab}
 \title{Average predictions from several (non)linear models based on IC weights}
 \usage{
-predict_nls_mm(..., criteria = c("AIC", "BIC"), print.table = FALSE)
+predict_nls_mm(..., criteria = c("AIC", "AICc", "BIC"))
 
-IC_tab(...)
+IC_tab(..., criteria = c("AIC", "AICc", "BIC"), sort = TRUE)
 }
 \arguments{
 \item{...}{model fit objects fitted to the same data}
 
-\item{criteria}{either \sQuote{AIC} or \sQuote{BIC}}
+\item{criteria}{either \sQuote{AIC}, \sQuote{AICc} or \sQuote{BIC}.}
 
-\item{print.table}{wether to print the table with IC and weights}
+\item{sort}{whether to sort by weights (default to TRUE)}
 }
 \value{
 numeric vector of the same length as the fitted object.
 }
 \description{
-Computes weights based on AIC or BIC and it generates weighted predictions by
-the relative value of the AIC or BIC values
+Computes weights based on AIC, AICc, or BIC and it generates weighted predictions by
+the relative value of the IC values
 
 Information criteria table with weights
 }
 \note{
 all the nls or lm objects should be fitted to the same data. The weights are
 based on the inverse of the IC value.
+
+The delta and weights are calculated based on the \sQuote{criteria}
 }
 \examples{
 \donttest{
@@ -42,10 +44,10 @@ fm.LP <- nls(yield ~ SSlinp(NF, a, b, xs), data = barley)
 fm.BL <- nls(yield ~ SSblin(NF, a, b, xs, c), data = barley)
 
 ## Print the table with weights
-IC_tab(fm.L, fm.Q, fm.A, fm.LP, fm.BL)
+AIC_tab(fm.L, fm.Q, fm.A, fm.LP, fm.BL)
 
 ## Each model prediction is weighted by the inverse of their AIC values
-prd <- predict_nls_mm(fm.L, fm.Q, fm.A, fm.LP, fm.BL, print.table = TRUE)
+prd <- predict_nls_mm(fm.L, fm.Q, fm.A, fm.LP, fm.BL)
 
 ggplot(data = barley, aes(x = NF, y = yield)) + 
   geom_point() + 
@@ -56,4 +58,7 @@ ggplot(data = barley, aes(x = NF, y = yield)) +
   geom_line(aes(y = fitted(fm.BL), color = "Bi-linear")) + 
   geom_line(aes(y = prd, color = "Avg. Model"), size = 1.2)
 }
+}
+\seealso{
+\code{\link[bbmle]{ICtab}}
 }
