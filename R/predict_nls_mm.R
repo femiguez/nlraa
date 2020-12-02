@@ -6,9 +6,14 @@
 #' the relative value of the IC values
 #' @param ... nls or lm objects. 
 #' @param criteria either \sQuote{AIC}, \sQuote{AICc} or \sQuote{BIC}.
+#' @param interval either \sQuote{none}, \sQuote{confidence} or \sQuote{prediction}.
+#' @param level probability level for the interval
+#' @param nsim number of simulations to perform for intervals. Default 1000.
+#' @param newdata new data frame for predictions
 #' @return numeric vector of the same length as the fitted object.
 #' @note all the nls or lm objects should be fitted to the same data. The weights are
 #' based on the inverse of the IC value.
+#' @seealso \code{\link{predict}}
 #' @export
 #' @examples
 #' \donttest{
@@ -38,28 +43,36 @@
 #'   geom_line(aes(y = prd, color = "Avg. Model"), size = 1.2)
 #' }
 
-predict_nls_mm <- function(..., criteria = c("AIC", "AICc", "BIC")){
+predict_nls_mm <- function(..., criteria = c("AIC", "AICc", "BIC"), 
+                           interval = c("none", "confidence", "prediction"),
+                           level = 0.95, nsim = 1e3,
+                           newdata = NULL){
   
   ## all objects should be of class 'nls'
   ## 1. Create table of AIC based weights
   nls.objs <- list(...)
-  
   criteria <- match.arg(criteria)
-
+  interval <- match.arg(interval)
   nls.nms <- get_mnames(match.call())
   
   lobjs <- length(nls.objs)
-  
   wtab <- data.frame(model = character(lobjs), IC = NA)
   
-  lprd <- length(fitted(nls.objs[[1]]))
-  prd.mat <- matrix(nrow = lprd, ncol = lobjs)
+  nr <- stats::nobs(nls.objs[[1]])
+  if(!is.null(newdata)) nr <- nrow(newdata)
+  
+  if(interval == "none"){
+    prd.mat <- matrix(nrow = nr, ncol = lobjs)
+  }else{
+    prd.mat <- matrix(nrow = nr, ncol = lobjs)
+    prd.mat.lwr <- matrix(nrow = nr, ncol = lobjs)
+    prd.mat.upr <- matrix(nrow = nr, ncol = lobjs)
+  } 
   
   data.name <- as.character(nls.objs[[1]]$call$data)
   
   for(i in 1:lobjs){
     nls.obj <- nls.objs[[i]]
-    
     if(!inherits(nls.obj, c("nls","lm"))) stop("All objects should be of class 'nls' or 'lm'")
     if(data.name != as.character(nls.obj$call$data)) stop("All models should be fitted to the same data")
     
@@ -68,15 +81,51 @@ predict_nls_mm <- function(..., criteria = c("AIC", "AICc", "BIC")){
     if(criteria == "AIC") wtab$IC[i] <- stats::AIC(nls.obj)
     if(criteria == "AICc") wtab$IC[i] <- AICc_nls(nls.obj)
     if(criteria == "BIC") wtab$IC[i] <- stats::BIC(nls.obj)
+  }
   
-    ## Predictions
-    prd.mat[,i] <- predict(nls.obj)
+  ## Predictions
+  if(interval == "none"){
+    for(i in 1:lobjs){
+      nls.obj <- nls.objs[[i]]
+      prd.mat[,i] <- predict(nls.obj, newdata = newdata)
+    }
+  }
+  
+  if(interval == "confidence" || interval == "prediction"){
+    
+    psim <- ifelse(interval == "confidence", 1, 2)
+
+    lb <- (1 - level)/2
+    ub <- 1 - lb 
+    
+    for(i in 1:lobjs){
+      nls.obj <- nls.objs[[i]]
+      
+      if(inherits(nls.obj, "lm")) 
+        tmp.sim <- simulate_lm(nls.obj, psim = psim, nsim = nsim, newdata = newdata) 
+      
+      if(inherits(nls.obj, "nls")) 
+        tmp.sim <- simulate_nls(nls.obj, psim = psim, nsim = nsim, newdata = newdata)
+
+      prd.mat[,i] <- apply(tmp.sim, 1, quantile, probs = 0.5)
+      prd.mat.lwr[,i] <- apply(tmp.sim, 1, quantile, probs = lb)
+      prd.mat.upr[,i] <- apply(tmp.sim, 1, quantile, probs = ub)
+    }
   }
 
   wtab$dIC <- wtab$IC - min(wtab$IC)
   wtab$weight <- exp(-0.5 * wtab$dIC) / sum(exp(-0.5 * wtab$dIC))
-  prd <- rowSums(sweep(prd.mat, 2, wtab$weight, "*"))
-  return(prd)
+  
+  if(interval == "none"){
+    ans <- rowSums(sweep(prd.mat, 2, wtab$weight, "*"))
+  }else{ 
+    prd <- rowSums(sweep(prd.mat, 2, wtab$weight, "*"))
+    lwr <- rowSums(sweep(prd.mat.lwr, 2, wtab$weight, "*"))
+    upr <- rowSums(sweep(prd.mat.upr, 2, wtab$weight, "*"))
+    ans <- cbind(prd, lwr, upr)
+  }
+  
+  return(ans)
 }
 
 

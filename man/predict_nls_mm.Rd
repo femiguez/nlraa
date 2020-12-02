@@ -5,7 +5,14 @@
 \alias{IC_tab}
 \title{Average predictions from several (non)linear models based on IC weights}
 \usage{
-predict_nls_mm(..., criteria = c("AIC", "AICc", "BIC"))
+predict_nls_mm(
+  ...,
+  criteria = c("AIC", "AICc", "BIC"),
+  interval = c("none", "confidence", "prediction"),
+  level = 0.95,
+  nsim = 1000,
+  newdata = NULL
+)
 
 IC_tab(..., criteria = c("AIC", "AICc", "BIC"), sort = TRUE)
 }
@@ -13,6 +20,14 @@ IC_tab(..., criteria = c("AIC", "AICc", "BIC"), sort = TRUE)
 \item{...}{model fit objects fitted to the same data}
 
 \item{criteria}{either \sQuote{AIC}, \sQuote{AICc} or \sQuote{BIC}.}
+
+\item{interval}{either \sQuote{none}, \sQuote{confidence} or \sQuote{prediction}.}
+
+\item{level}{probability level for the interval}
+
+\item{nsim}{number of simulations to perform for intervals. Default 1000.}
+
+\item{newdata}{new data frame for predictions}
 
 \item{sort}{whether to sort by weights (default to TRUE)}
 }
@@ -60,5 +75,7 @@ ggplot(data = barley, aes(x = NF, y = yield)) +
 }
 }
 \seealso{
+\code{\link{predict}}
+
 \code{\link[bbmle]{ICtab}}
 }
