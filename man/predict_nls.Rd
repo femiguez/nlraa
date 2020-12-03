@@ -50,10 +50,10 @@ fm.LP <- nls(yield ~ SSlinp(NF, a, b, xs), data = barley)
 fm.BL <- nls(yield ~ SSblin(NF, a, b, xs, c), data = barley)
 
 ## Print the table with weights
-AIC_tab(fm.L, fm.Q, fm.A, fm.LP, fm.BL)
+IC_tab(fm.L, fm.Q, fm.A, fm.LP, fm.BL)
 
 ## Each model prediction is weighted according to their AIC values
-prd <- predict_nls_mm(fm.L, fm.Q, fm.A, fm.LP, fm.BL)
+prd <- predict_nls(fm.L, fm.Q, fm.A, fm.LP, fm.BL)
 
 ggplot(data = barley, aes(x = NF, y = yield)) + 
   geom_point() + 

@@ -43,7 +43,8 @@ data(barley, package = "nlraa")
 fit.nls <- nls(yield ~ SSlinp(NF, a, b, xs), data = barley)
 
 ## Bootstrap coefficients by default
-fit.nls.bt <- boot_nls(fit.nls)
+## Keeping R small for simplicity, increase R for a more realistic use
+fit.nls.bt <- boot_nls(fit.nls, R = 1e2)
 ## Compute confidence intervals
 confint(fit.nls.bt, type = "perc")
 ## Visualize

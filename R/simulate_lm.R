@@ -62,13 +62,28 @@ simulate_lm <- function(object, psim = 1, nsim = 1,
   
   value <- match.arg(value)
   resid.type <- match.arg(resid.type)
+
+  xargs <- list(...)
+  if(is.null(xargs$newdata)){
+    newdata <- NULL 
+  }else{
+    newdata <- xargs$newdata
+  } 
   
-  ans.mat <- matrix(nrow = length(fitted(object)), ncol = nsim)
+  nr <- ifelse(is.null(newdata), stats::nobs(object), nrow(newdata))
+  ans.mat <- matrix(nrow = nr, ncol = nsim)  
+  
+  if(!is.null(newdata) && value == "data.frame")
+    stop("'newdata' is not compatible with 'value = data.frame'")
+  
+  if(!is.null(newdata) && psim > 1)
+    stop("'newdata' is not compatible with 'psim > 1'")
   
   ## They say that replicate is faster than this,
   ## but not when storage is pre-allocated
   for(i in 1:nsim){
-    ans.mat[,i] <- simulate_lm_one(object, psim = psim, resid.type = resid.type)
+      ans.mat[,i] <- simulate_lm_one(object, psim = psim, resid.type = resid.type, 
+                                     newdata = newdata)  
   }
   
   if(value == "matrix"){
@@ -82,19 +97,27 @@ simulate_lm <- function(object, psim = 1, nsim = 1,
     ans.dat <- data.frame(ii = as.factor(rep(1:nsim, each = nrow(dfr))),
                           dfr,
                           sim.y = c(ans.mat), 
-                          row.names = 1:c(nsim * length(fitted(object))))
+                          row.names = 1:c(nsim * nr))
     return(ans.dat)
   }
 }
 
 simulate_lm_one <- function(object, psim = 1, 
-                            resid.type = c("resample","normal","wild")){
+                            resid.type = c("resample","normal","wild"), 
+                            newdata = NULL){
   
   resid.type <- match.arg(resid.type)
   
   X <- stats::model.matrix(object)
-  n <- length(fitted(object))
+  n <- stats::nobs(object)
   rsd0 <- stats::resid(object)
+  
+  if(!is.null(newdata)){
+    ## Check that names are correct
+    if(!identical(names(newdata), attr(object$terms, "term.labels")))
+      stop("names in 'newdata' do not correspond to 'term.labels'")
+    X <- stats::model.matrix(object, data = newdata)
+  }
   
   if(resid.type == "resample"){
     rsds <- sample(rsd0, size = n, replace = TRUE)      

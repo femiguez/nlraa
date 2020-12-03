@@ -23,7 +23,6 @@
 #' @export
 #' @examples 
 #' \donttest{
-#' require(nlme)
 #' data(barley, package = "nlraa")
 #' 
 #' fit <- nls(yield ~ SSlinp(NF, a, b, xs), data = barley)
@@ -45,7 +44,7 @@ simulate_nls <- function(object,
   resid.type <- match.arg(resid.type)
   
   if(is.null(list(...)$newdata)){
-    sim.mat <- matrix(ncol = nsim, nrow = length(fitted(object)))
+    sim.mat <- matrix(ncol = nsim, nrow = stats::nobs(object))
   }else{
     sim.mat <- matrix(ncol = nsim, nrow = nrow(list(...)$newdata))  
     if(value == "data.frame") stop("value = 'data.frame' is incompatible with 'newdata'.")
@@ -85,6 +84,7 @@ simulate_nls_one <- function(object,
   args <- list(...)
   if(!is.null(args$newdata)){
     ndata <- args$newdata
+    if(psim > 1) stop("'newdata' is not compatible with psim > 1")
   }else{
     ndata <- eval(object$data)      
   } 
@@ -173,7 +173,7 @@ simulate_nls_one <- function(object,
   if(psim == 2){
     prs <- MASS::mvrnorm(n = 1, mu = coef(object), Sigma = vcov(object))
     ## Simply add residuals
-    n <- length(fitted(object))
+    n <- stats::nobs(object)
     rsd0 <- stats::resid(object)
     if(resid.type == "resample"){
       rsds <- sample(rsd0, size = n, replace = TRUE)      
@@ -189,7 +189,7 @@ simulate_nls_one <- function(object,
   if(psim == 3){
     prs <- coef(object)
     ## Simply add residuals
-    n <- length(fitted(object))
+    n <- stats::nobs(object)
     rsd0 <- stats::resid(object)
     if(resid.type == "resample"){
       rsds <- sample(rsd0, size = n, replace = TRUE)      

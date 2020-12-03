@@ -47,7 +47,6 @@ refers to the one for the parameters 'beta', not the one for the residuals.
 }
 \examples{
 \donttest{
-require(nlme)
 data(barley, package = "nlraa")
 
 fit <- nls(yield ~ SSlinp(NF, a, b, xs), data = barley)
