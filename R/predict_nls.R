@@ -1,7 +1,7 @@
 #' 
 #' @title Average predictions from several (non)linear models based on IC weights
-#' @name predict_nls_mm
-#' @rdname predict_nls_mm
+#' @name predict_nls
+#' @rdname predict_nls
 #' @description Computes weights based on AIC, AICc, or BIC and it generates weighted predictions by
 #' the relative value of the IC values
 #' @param ... nls or lm objects. 
@@ -13,7 +13,7 @@
 #' @return numeric vector of the same length as the fitted object.
 #' @note all the nls or lm objects should be fitted to the same data. The weights are
 #' based on the inverse of the IC value.
-#' @seealso \code{\link{predict}}
+#' @seealso \code{\link{predict.lm}} \code{\link{predict.nls}}
 #' @export
 #' @examples
 #' \donttest{
@@ -30,7 +30,7 @@
 #' ## Print the table with weights
 #' AIC_tab(fm.L, fm.Q, fm.A, fm.LP, fm.BL)
 #' 
-#' ## Each model prediction is weighted by the inverse of their AIC values
+#' ## Each model prediction is weighted according to their AIC values
 #' prd <- predict_nls_mm(fm.L, fm.Q, fm.A, fm.LP, fm.BL)
 #' 
 #' ggplot(data = barley, aes(x = NF, y = yield)) + 
@@ -43,13 +43,12 @@
 #'   geom_line(aes(y = prd, color = "Avg. Model"), size = 1.2)
 #' }
 
-predict_nls_mm <- function(..., criteria = c("AIC", "AICc", "BIC"), 
+predict_nls <- function(..., criteria = c("AIC", "AICc", "BIC"), 
                            interval = c("none", "confidence", "prediction"),
                            level = 0.95, nsim = 1e3,
                            newdata = NULL){
   
-  ## all objects should be of class 'nls'
-  ## 1. Create table of AIC based weights
+  ## all objects should be of class 'nls' or 'lm'
   nls.objs <- list(...)
   criteria <- match.arg(criteria)
   interval <- match.arg(interval)
@@ -65,13 +64,14 @@ predict_nls_mm <- function(..., criteria = c("AIC", "AICc", "BIC"),
     prd.mat <- matrix(nrow = nr, ncol = lobjs)
   }else{
     prd.mat <- matrix(nrow = nr, ncol = lobjs)
+    prd.mat.se <- matrix(nrow = nr, ncol = lobjs)
     prd.mat.lwr <- matrix(nrow = nr, ncol = lobjs)
     prd.mat.upr <- matrix(nrow = nr, ncol = lobjs)
   } 
   
   data.name <- as.character(nls.objs[[1]]$call$data)
   
-  for(i in 1:lobjs){
+  for(i in seq_len(lobjs)){
     nls.obj <- nls.objs[[i]]
     if(!inherits(nls.obj, c("nls","lm"))) stop("All objects should be of class 'nls' or 'lm'")
     if(data.name != as.character(nls.obj$call$data)) stop("All models should be fitted to the same data")
@@ -85,7 +85,7 @@ predict_nls_mm <- function(..., criteria = c("AIC", "AICc", "BIC"),
   
   ## Predictions
   if(interval == "none"){
-    for(i in 1:lobjs){
+    for(i in seq_len(lobjs)){
       nls.obj <- nls.objs[[i]]
       prd.mat[,i] <- predict(nls.obj, newdata = newdata)
     }
@@ -98,7 +98,7 @@ predict_nls_mm <- function(..., criteria = c("AIC", "AICc", "BIC"),
     lb <- (1 - level)/2
     ub <- 1 - lb 
     
-    for(i in 1:lobjs){
+    for(i in seq_len(lobjs)){
       nls.obj <- nls.objs[[i]]
       
       if(inherits(nls.obj, "lm")) 
@@ -108,6 +108,7 @@ predict_nls_mm <- function(..., criteria = c("AIC", "AICc", "BIC"),
         tmp.sim <- simulate_nls(nls.obj, psim = psim, nsim = nsim, newdata = newdata)
 
       prd.mat[,i] <- apply(tmp.sim, 1, quantile, probs = 0.5)
+      prd.mat.se[,i] <- apply(tmp.sim, 1, sd)
       prd.mat.lwr[,i] <- apply(tmp.sim, 1, quantile, probs = lb)
       prd.mat.upr[,i] <- apply(tmp.sim, 1, quantile, probs = ub)
     }
@@ -120,16 +121,18 @@ predict_nls_mm <- function(..., criteria = c("AIC", "AICc", "BIC"),
     ans <- rowSums(sweep(prd.mat, 2, wtab$weight, "*"))
   }else{ 
     prd <- rowSums(sweep(prd.mat, 2, wtab$weight, "*"))
+    se <- rowSums(sweep(prd.mat.se, 2, wtab$weight, "*"))
     lwr <- rowSums(sweep(prd.mat.lwr, 2, wtab$weight, "*"))
     upr <- rowSums(sweep(prd.mat.upr, 2, wtab$weight, "*"))
-    ans <- cbind(prd, lwr, upr)
+    ans <- cbind(prd, se, lwr, upr)
   }
   
   return(ans)
 }
 
 
-#' @rdname predict_nls_mm
+#' @title Information Criteria Table
+#' @name IC_tab
 #' @description Information criteria table with weights
 #' @param ... model fit objects fitted to the same data
 #' @param criteria either \sQuote{AIC}, \sQuote{AICc} or \sQuote{BIC}.
@@ -141,18 +144,14 @@ predict_nls_mm <- function(..., criteria = c("AIC", "AICc", "BIC"),
 IC_tab <- function(..., criteria = c("AIC","AICc","BIC"), sort = TRUE){
   
   objs <- list(...)
-  
   criteria <- match.arg(criteria)
-  
   nms <- get_mnames(match.call())
-  
   lobjs <- length(objs)
   
   ictab <- data.frame(model = character(lobjs), df = NA, AIC = NA, AICc = NA, BIC = NA)  
-  
   data.name <- as.character(objs[[1]]$call$data)
   
-  for(i in 1:lobjs){
+  for(i in seq_len(lobjs)){
     obj <- objs[[i]]
     if(data.name != as.character(obj$call$data)) 
       stop("All models should be fitted to the same data")
