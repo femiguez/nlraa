@@ -1,5 +1,5 @@
 #'
-#' @title Summarize a matrix of simulations by their mean, sd, and quantiles
+#' @title Summarize a matrix of simulations by their mean (median), sd (mad), and quantiles
 #' @name summary_simulate
 #' @description Utility function to summarize the output from \sQuote{simulate} 
 #' functions in this package
@@ -9,7 +9,7 @@
 #' @param robust 	If FALSE (the default) the mean is used as the measure of central tendency 
 #' and the standard deviation as the measure of variability. 
 #' If TRUE, the median and the median absolute deviation (MAD) are applied instead. 
-#' @param ... additional arguments to be passed. (none at the moment)
+#' @param ... additional arguments to be passed. (none used at the moment)
 #' @export
 #' @examples 
 #' \donttest{
@@ -30,9 +30,7 @@ summary_simulate <- function(object, probs = c(0.025, 0.975), robust = FALSE, ..
   upr <- probs[2]
   lwr.lbl <- paste0("Q", lwr * 1e2)
   upr.lbl <- paste0("Q", upr * 1e2)
-  # ser <- ifelse(robust, "mad", "sd")
-  # est <- ifelse(robust, "median", "mean")
-  colnames(mat) <- c("est", "se", lwr.lbl, upr.lbl)
+  colnames(mat) <- c("Estimate", "Est.Error", lwr.lbl, upr.lbl)
   
   mat[,1] <- apply(object, 1, mean)
   mat[,2] <- apply(object, 1, stats::sd)

@@ -50,7 +50,9 @@ simulate_nlme_one <- function(object, psim = 1, level = Q, asList = FALSE, na.ac
   Q <- object$dims$Q
 
   if(!missing(level) && psim == 2 && level < Q)
-    stop("psim = 2 whould only be used for the deepest level of the hierarchy")
+    stop("psim = 2 should only be used for the deepest level of the hierarchy")
+  
+  if(level > Q) stop("level cannot be greater than Q")
     
   o.level <- level
   

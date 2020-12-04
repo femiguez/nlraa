@@ -1,12 +1,12 @@
 ---
-title: "Bootstrap and Simulation for Nonlinear Models"
+title: "Prediction, Bootstrap and Simulation for Nonlinear Models"
 author: "Fernando Miguez"
 date: "`r Sys.Date()`"
 fig_width: 7
 fig_height: 5
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Bootstrap and Simulation for Nonlinear Models}
+  %\VignetteIndexEntry{Prediction, Bootstrap and Simulation for Nonlinear Models}
   %\VignetteEngine{knitr::rmarkdown}
   \usepackage[utf8]{inputenc}
 ---
@@ -357,6 +357,59 @@ ggplot(data = sdat21) +
 ```
 
 The previous examples are simulations, but in order to generate confidence intervals or bands we would need to perform bootstrap, but it takes much longer, so I'm not including it in this vignette.
+
+# Prediction
+
+Using the previous simulation functions as a backbone it is possible to perform prediction. In this case, I'm also illustrating how to perform multimodel averaging.
+
+```{r Orange-predict-nlme}
+## All models should be fitted using Maximum Likelihood
+fm.L <- nlme(circumference ~ SSlogis(age, Asym, xmid, scal), 
+               random = pdDiag(Asym + xmid + scal ~ 1), 
+               method = "ML", data = Orange)
+fm.G <- nlme(circumference ~ SSgompertz(age, Asym, b2, b3), 
+               random = pdDiag(Asym + b2 + b3 ~ 1), 
+               method = "ML", data = Orange)
+fm.F <- nlme(circumference ~ SSfpl(age, A, B, xmid, scal), 
+               random = pdDiag(A + B + xmid + scal ~ 1), 
+               method = "ML", data = Orange)
+fm.B <- nlme(circumference ~ SSbg4rp(age, w.max, lt.e, ldtm, ldtb), 
+               random = pdDiag(w.max + lt.e + ldtm + ldtb ~ 1), 
+               method = "ML", data = Orange)
+## Let's compare the models
+print(IC_tab(fm.L, fm.G, fm.F, fm.B), digits = 2)
+```
+
+The function *predict_nlme* can take one or more models and perform model averaged prediciton.
+
+```{r Orange-predict-nlme-2}
+## Each model prediction is weighted according to their AIC values
+prd <- predict_nlme(fm.L, fm.G, fm.F, fm.B)
+
+ggplot(data = Orange, aes(x = age, y = circumference)) + 
+  geom_point() + 
+  geom_line(aes(y = predict(fm.L, level = 0), color = "Logistic")) +
+  geom_line(aes(y = predict(fm.G, level = 0), color = "Gompertz")) +
+  geom_line(aes(y = predict(fm.F, level = 0), color = "4P-Logistic")) +  
+  geom_line(aes(y = predict(fm.B, level = 0), color = "Beta")) +
+  geom_line(aes(y = prd, color = "Avg. Model"), size = 1.2)
+```
+
+And we can also compute and visualize confidence intervals.
+
+```{r Orange-predict-nlme-confint}
+prdc <- predict_nlme(fm.L, fm.G, fm.F, fm.B, interval = "confidence", level = 0.90)
+OrangeA <- cbind(Orange, prdc)
+
+ggplot(data = OrangeA, aes(x = age, y = circumference)) + 
+  geom_point() + 
+  geom_line(aes(y = predict(fm.L, level = 0), color = "Logistic")) +
+  geom_line(aes(y = predict(fm.G, level = 0), color = "Gompertz")) +
+  geom_line(aes(y = predict(fm.F, level = 0), color = "4P-Logistic")) +  
+  geom_line(aes(y = predict(fm.B, level = 0), color = "Beta")) +
+  geom_line(aes(y = prd, color = "Avg. Model"), size = 1.2) + 
+  geom_ribbon(aes(ymin = Q5, ymax = Q95), fill = "purple", alpha = 0.3)
+```
 
 # Appendix
 

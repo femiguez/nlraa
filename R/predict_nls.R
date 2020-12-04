@@ -7,7 +7,7 @@
 #' @param ... nls or lm objects. 
 #' @param criteria either \sQuote{AIC}, \sQuote{AICc} or \sQuote{BIC}.
 #' @param interval either \sQuote{none}, \sQuote{confidence} or \sQuote{prediction}.
-#' @param level probability level for the interval
+#' @param level probability level for the interval (default 0.95)
 #' @param nsim number of simulations to perform for intervals. Default 1000.
 #' @param newdata new data frame for predictions
 #' @return numeric vector of the same length as the fitted object.
@@ -79,7 +79,7 @@ predict_nls <- function(..., criteria = c("AIC", "AICc", "BIC"),
     wtab$model[i] <- nls.nms[i]
     
     if(criteria == "AIC") wtab$IC[i] <- stats::AIC(nls.obj)
-    if(criteria == "AICc") wtab$IC[i] <- AICc_nls(nls.obj)
+    if(criteria == "AICc") wtab$IC[i] <- AICc(nls.obj)
     if(criteria == "BIC") wtab$IC[i] <- stats::BIC(nls.obj)
   }
   
@@ -125,6 +125,9 @@ predict_nls <- function(..., criteria = c("AIC", "AICc", "BIC"),
     lwr <- rowSums(sweep(prd.mat.lwr, 2, wtab$weight, "*"))
     upr <- rowSums(sweep(prd.mat.upr, 2, wtab$weight, "*"))
     ans <- cbind(prd, se, lwr, upr)
+    colnames(ans) <- c("Estimate", "Est.Error", 
+                       paste0("Q", (1 - level)/2 * 100),
+                       paste0("Q", (1 - (1 - level)/2)*100))
   }
   
   return(ans)
@@ -159,7 +162,7 @@ IC_tab <- function(..., criteria = c("AIC","AICc","BIC"), sort = TRUE){
     ictab$model[i] <- nms[i]
     ictab$df[i] <- attr(stats::logLik(obj), "df")
     ictab$AIC[i] <- stats::AIC(obj)
-    ictab$AICc[i] <- AICc_nls(obj)
+    ictab$AICc[i] <- AICc(obj) ## This works for any object??
     ictab$BIC[i] <- stats::BIC(obj)
   }
   
@@ -183,9 +186,10 @@ IC_tab <- function(..., criteria = c("AIC","AICc","BIC"), sort = TRUE){
 }
 
 ## Internal function to calculate small sample "corrected" AIC
-AICc_nls <- function(x){
+AICc <- function(x){
   n <- stats::nobs(x)
-  k <- length(coef(x)) + 1 ## Plus one is for sigma
+  ## k <- length(coef(x)) + 1 ## Plus one is for sigma
+  k <- attr(logLik(x), "df")
   cf <- (2 * k * (k + 1))/(n - k - 1)
   ans <- stats::AIC(x) + cf
   return(ans)

@@ -20,7 +20,7 @@ predict_nls(
 
 \item{interval}{either \sQuote{none}, \sQuote{confidence} or \sQuote{prediction}.}
 
-\item{level}{probability level for the interval}
+\item{level}{probability level for the interval (default 0.95)}
 
 \item{nsim}{number of simulations to perform for intervals. Default 1000.}
 

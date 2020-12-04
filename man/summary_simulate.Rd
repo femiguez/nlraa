@@ -2,7 +2,7 @@
 % Please edit documentation in R/summary_simulate.R
 \name{summary_simulate}
 \alias{summary_simulate}
-\title{Summarize a matrix of simulations by their mean, sd, and quantiles}
+\title{Summarize a matrix of simulations by their mean (median), sd (mad), and quantiles}
 \usage{
 summary_simulate(object, probs = c(0.025, 0.975), robust = FALSE, ...)
 }
@@ -16,7 +16,7 @@ dataset and nsim are the number of simulations}
 and the standard deviation as the measure of variability. 
 If TRUE, the median and the median absolute deviation (MAD) are applied instead.}
 
-\item{...}{additional arguments to be passed. (none at the moment)}
+\item{...}{additional arguments to be passed. (none used at the moment)}
 }
 \description{
 Utility function to summarize the output from \sQuote{simulate} 

@@ -80,7 +80,12 @@ The main benefit of having these self starting functions is that they can be inc
 apropos("^SS")
 ```
 
-## Simulation and Bootstrap
+## Prediction, Simulation and Bootstrap
+
+Functions for prediction:
+
+1. predict_nls
+2. predict_nlme
 
 Some particularly useful functions which simplify generating simulations:
 
