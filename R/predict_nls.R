@@ -4,21 +4,23 @@
 #' @rdname predict_nls
 #' @description Computes weights based on AIC, AICc, or BIC and it generates weighted predictions by
 #' the relative value of the IC values
-#' @param ... nls or lm objects. 
+#' @param ... \sQuote{nls} or \sQuote{lm} objects (\sQuote{glm} and \sQuote{gam} objects inherit \sQuote{lm}). 
 #' @param criteria either \sQuote{AIC}, \sQuote{AICc} or \sQuote{BIC}.
 #' @param interval either \sQuote{none}, \sQuote{confidence} or \sQuote{prediction}.
 #' @param level probability level for the interval (default 0.95)
 #' @param nsim number of simulations to perform for intervals. Default 1000.
+#' @param resid.type either \sQuote{none}, \dQuote{resample}, \dQuote{normal} or \dQuote{wild}.
 #' @param newdata new data frame for predictions
 #' @return numeric vector of the same length as the fitted object.
 #' @note all the nls or lm objects should be fitted to the same data. The weights are
 #' based on the inverse of the IC value.
-#' @seealso \code{\link{predict.lm}} \code{\link{predict.nls}}
+#' @seealso \code{\link[stats]{predict.lm}}, \code{\link[stats]{predict.nls}}, \code{\link{simulate_nls}}, \code{\link{simulate_gam}}
 #' @export
 #' @examples
 #' \donttest{
 #' ## Example
 #' require(ggplot2)
+#' require(mgcv)
 #' data(barley, package = "nlraa")
 #' 
 #' fm.L <- lm(yield ~ NF, data = barley)
@@ -26,12 +28,13 @@
 #' fm.A <- nls(yield ~ SSasymp(NF, Asym, R0, lrc), data = barley)
 #' fm.LP <- nls(yield ~ SSlinp(NF, a, b, xs), data = barley)
 #' fm.BL <- nls(yield ~ SSblin(NF, a, b, xs, c), data = barley)
-#'
+#' fm.G <- gam(yield ~ NF + s(NF^2, k = 3), data = barley)
+#' 
 #' ## Print the table with weights
-#' IC_tab(fm.L, fm.Q, fm.A, fm.LP, fm.BL)
+#' IC_tab(fm.L, fm.Q, fm.A, fm.LP, fm.BL, fm.G)
 #' 
 #' ## Each model prediction is weighted according to their AIC values
-#' prd <- predict_nls(fm.L, fm.Q, fm.A, fm.LP, fm.BL)
+#' prd <- predict_nls(fm.L, fm.Q, fm.A, fm.LP, fm.BL, fm.G)
 #' 
 #' ggplot(data = barley, aes(x = NF, y = yield)) + 
 #'   geom_point() + 
@@ -40,18 +43,21 @@
 #'   geom_line(aes(y = fitted(fm.A), color = "Asymptotic")) +  
 #'   geom_line(aes(y = fitted(fm.LP), color = "Linear-plateau")) + 
 #'   geom_line(aes(y = fitted(fm.BL), color = "Bi-linear")) + 
+#'   geom_line(aes(y = fitted(fm.G), color = "GAM")) + 
 #'   geom_line(aes(y = prd, color = "Avg. Model"), size = 1.2)
 #' }
 
 predict_nls <- function(..., criteria = c("AIC", "AICc", "BIC"), 
-                           interval = c("none", "confidence", "prediction"),
-                           level = 0.95, nsim = 1e3,
-                           newdata = NULL){
+                        interval = c("none", "confidence", "prediction"),
+                        level = 0.95, nsim = 1e3,
+                        resid.type = c("none", "resample", "normal", "wild"),
+                        newdata = NULL){
   
-  ## all objects should be of class 'nls' or 'lm'
+  ## all objects should be of class 'nls' or inherit 'lm'
   nls.objs <- list(...)
   criteria <- match.arg(criteria)
   interval <- match.arg(interval)
+  resid.type <- match.arg(resid.type)
   nls.nms <- get_mnames(match.call())
   
   lobjs <- length(nls.objs)
@@ -87,7 +93,11 @@ predict_nls <- function(..., criteria = c("AIC", "AICc", "BIC"),
   if(interval == "none"){
     for(i in seq_len(lobjs)){
       nls.obj <- nls.objs[[i]]
-      prd.mat[,i] <- predict(nls.obj, newdata = newdata)
+      if(!is.null(newdata)){
+        prd.mat[,i] <- predict(nls.obj, newdata = newdata)  
+      }else{
+        prd.mat[,i] <- predict(nls.obj)  
+      }
     }
   }
   
@@ -101,11 +111,17 @@ predict_nls <- function(..., criteria = c("AIC", "AICc", "BIC"),
     for(i in seq_len(lobjs)){
       nls.obj <- nls.objs[[i]]
       
-      if(inherits(nls.obj, "lm")) 
-        tmp.sim <- simulate_lm(nls.obj, psim = psim, nsim = nsim, newdata = newdata) 
+      if(inherits(nls.obj, "lm") && !inherits(nls.obj, "glm")) 
+        tmp.sim <- simulate_lm(nls.obj, psim = psim, nsim = nsim, 
+                               resid.type = resid.type, newdata = newdata) 
+      
+      if(inherits(nls.obj, "glm")) 
+        tmp.sim <- simulate_gam(nls.obj, psim = psim, nsim = nsim, 
+                                resid.type = resid.type, newdata = newdata) 
       
       if(inherits(nls.obj, "nls")) 
-        tmp.sim <- simulate_nls(nls.obj, psim = psim, nsim = nsim, newdata = newdata)
+        tmp.sim <- simulate_nls(nls.obj, psim = psim, nsim = nsim, 
+                                resid.type = resid.type, newdata = newdata)
 
       prd.mat[,i] <- apply(tmp.sim, 1, quantile, probs = 0.5)
       prd.mat.se[,i] <- apply(tmp.sim, 1, sd)
@@ -201,3 +217,10 @@ get_mnames <- function(x){
         stop("model names must be distinct")
   mnames
 }
+
+
+#' @name predict_gam
+#' @rdname predict_nls
+#' @description predict function for objects of class \code{\link[mgcv]{gam}}
+#' @export
+predict_gam <- predict_nls

@@ -7,9 +7,9 @@
 #' uncertainty in the estimation of the model parameters. This function will attempt 
 #' to do this.
 #' @param object object of class \code{\link[stats]{lm}}
-#' @param psim parameter simulation level (an integer, 0, 1, 3, 4).
+#' @param psim parameter simulation level (an integer, 0, 1, 2, 3 or 4).
 #' @param nsim number of simulations to perform
-#' @param resid.type type of residual to include (resample, normal or wild)
+#' @param resid.type type of residual to include (none, resample, normal or wild)
 #' @param value either \sQuote{matrix} or \sQuote{data.frame}
 #' @param ... additional arguments (none used at the moment)
 #' @return matrix or data.frame with responses
@@ -26,6 +26,7 @@
 #' They are either resampled, simulated from a normal distribution or \sQuote{wild} where the
 #' Rademacher distribution is used (\url{https://en.wikipedia.org/wiki/Rademacher_distribution}).
 #' Resampled and normal both assume iid, but \sQuote{normal} makes the stronger assumption of normality.
+#' When psim = 2 and resid.type = none, \code{\link{simulate}} is used instead.
 #' \sQuote{wild} does not assume constant variance, but it assumes symmetry.
 #' @references See
 #' \dQuote{Inference Based on the Wild Bootstrap} James G. MacKinnon
@@ -51,14 +52,11 @@
 #' 
 
 simulate_lm <- function(object, psim = 1, nsim = 1, 
-                        resid.type = c("resample","normal","wild"),
+                        resid.type = c("none", "resample","normal","wild"),
                         value = c("matrix","data.frame"), ...){
 
   if(!inherits(object, "lm"))
-    stop("only for objects of class 'lm' ")
-  
-  if(!is.null(object$weights))
-    warning("weights will be ignored")
+    stop("only for objects which inherit class 'lm' ")
   
   value <- match.arg(value)
   resid.type <- match.arg(resid.type)
@@ -103,7 +101,7 @@ simulate_lm <- function(object, psim = 1, nsim = 1,
 }
 
 simulate_lm_one <- function(object, psim = 1, 
-                            resid.type = c("resample","normal","wild"), 
+                            resid.type = c("none", "resample","normal","wild"), 
                             newdata = NULL){
   
   resid.type <- match.arg(resid.type)
@@ -142,7 +140,11 @@ simulate_lm_one <- function(object, psim = 1,
   }
   
   ## Simulate from beta and add residuals
-  if(psim == 2){
+  if(psim == 2 && resid.type == "none"){
+    ans <- simulate(object, nsim = 1)[,1]
+  }
+    
+  if(psim == 2 && resid.type != "none"){
     betav <- MASS::mvrnorm(mu = coef(object), Sigma = vcov(object))  
     ans <- X %*% betav + rsds
   }
@@ -156,6 +158,7 @@ simulate_lm_one <- function(object, psim = 1,
   }
   
   ## What simulate.lm does is just simulate residuals (I think)
+  ## This does not work for objects of class 'glm' or 'gam'
   if(psim == 4){
     ans <- stats::fitted(object) + rsds 
   }

@@ -98,5 +98,43 @@ if(Sys.info()[["user"]] == "fernandomiguez"){
     xlab("NF (g/m2)") + ylab("Yield (g/m2)") + 
     ggtitle("Model fits, 90% uncertainty bands for confidence and prediction")
 
-}
+  ## Do GAMs work?
+  require(mgcv)
+  
+  fm.L <- lm(yield ~ NF, data = barley)
+  fm.Q <- lm(yield ~ NF + I(NF^2), data = barley)
+  fm.C <- lm(yield ~ NF + I(NF^2) + I(NF^3), data = barley)
+  fm.A <- nls(yield ~ SSasymp(NF, Asym, R0, lrc), data = barley)
+  fm.LP <- nls(yield ~ SSlinp(NF, a, b, xs), data = barley)
+  fm.G <- gam(yield ~ NF + s(NF, k = 3), data = barley)
+
+  fm.Gs <- simulate_lm(fm.G, nsim = 1e3)
+  fm.Gss <- summary_simulate(fm.Gs, probs = c(0.05, 0.95))
+  barleyAS <- cbind(barley, fm.Gss)
+  
+  ## The default predict method for GAMs does not produce intervals
+  ## But we can generate them
+  fm.Gp <- predict(fm.G, se.fit = TRUE)
+  qnt <- qt(0.05, 72)
+  fm.Gpd <- data.frame(prd = fm.Gp$fit, 
+                       lwr = fm.Gp$fit + qnt * fm.Gp$se.fit,
+                       upr = fm.Gp$fit - qnt * fm.Gp$se.fit)
+  ## These intervals are almost exactly the same as the ones
+  ## obtained through simulation
+  
+  print(IC_tab(fm.L, fm.Q, fm.C, fm.A, fm.LP, fm.G), digits = 2)
+  
+  fm.prd <- predict_nls(fm.L, fm.Q, fm.C, fm.A, fm.LP, fm.G)
+  
+  ggplot(data = barleyAS, aes(x = NF, y = yield)) + 
+    geom_point() + 
+    geom_line(aes(y = fitted(fm.G), color = "gam")) + 
+    geom_line(aes(y = fitted(fm.C), color = "cubic")) + 
+    geom_line(aes(y = Estimate, color = "simulate_lm")) + 
+    geom_line(aes(y = fm.prd, color = "Avg. Model")) + 
+    geom_ribbon(aes(ymin = Q5, ymax = Q95), fill = "purple", alpha = 0.3) +
+    ggtitle("90% bands based on simulation")
+##    geom_ribbon(aes(ymin = fm.Gpd$lwr, ymax = fm.Gpd$upr), fill = "purple", alpha = 0.3) + 
+    
+  }
 

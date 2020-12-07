@@ -2,6 +2,7 @@
 % Please edit documentation in R/predict_nls.R
 \name{predict_nls}
 \alias{predict_nls}
+\alias{predict_gam}
 \title{Average predictions from several (non)linear models based on IC weights}
 \usage{
 predict_nls(
@@ -10,11 +11,22 @@ predict_nls(
   interval = c("none", "confidence", "prediction"),
   level = 0.95,
   nsim = 1000,
+  resid.type = c("none", "resample", "normal", "wild"),
+  newdata = NULL
+)
+
+predict_gam(
+  ...,
+  criteria = c("AIC", "AICc", "BIC"),
+  interval = c("none", "confidence", "prediction"),
+  level = 0.95,
+  nsim = 1000,
+  resid.type = c("none", "resample", "normal", "wild"),
   newdata = NULL
 )
 }
 \arguments{
-\item{...}{nls or lm objects.}
+\item{...}{\sQuote{nls} or \sQuote{lm} objects (\sQuote{glm} and \sQuote{gam} objects inherit \sQuote{lm}).}
 
 \item{criteria}{either \sQuote{AIC}, \sQuote{AICc} or \sQuote{BIC}.}
 
@@ -24,6 +36,8 @@ predict_nls(
 
 \item{nsim}{number of simulations to perform for intervals. Default 1000.}
 
+\item{resid.type}{either \sQuote{none}, \dQuote{resample}, \dQuote{normal} or \dQuote{wild}.}
+
 \item{newdata}{new data frame for predictions}
 }
 \value{
@@ -32,6 +46,8 @@ numeric vector of the same length as the fitted object.
 \description{
 Computes weights based on AIC, AICc, or BIC and it generates weighted predictions by
 the relative value of the IC values
+
+predict function for objects of class \code{\link[mgcv]{gam}}
 }
 \note{
 all the nls or lm objects should be fitted to the same data. The weights are
@@ -41,6 +57,7 @@ based on the inverse of the IC value.
 \donttest{
 ## Example
 require(ggplot2)
+require(mgcv)
 data(barley, package = "nlraa")
 
 fm.L <- lm(yield ~ NF, data = barley)
@@ -48,12 +65,13 @@ fm.Q <- lm(yield ~ NF + I(NF^2), data = barley)
 fm.A <- nls(yield ~ SSasymp(NF, Asym, R0, lrc), data = barley)
 fm.LP <- nls(yield ~ SSlinp(NF, a, b, xs), data = barley)
 fm.BL <- nls(yield ~ SSblin(NF, a, b, xs, c), data = barley)
+fm.G <- gam(yield ~ NF + s(NF^2, k = 3), data = barley)
 
 ## Print the table with weights
-IC_tab(fm.L, fm.Q, fm.A, fm.LP, fm.BL)
+IC_tab(fm.L, fm.Q, fm.A, fm.LP, fm.BL, fm.G)
 
 ## Each model prediction is weighted according to their AIC values
-prd <- predict_nls(fm.L, fm.Q, fm.A, fm.LP, fm.BL)
+prd <- predict_nls(fm.L, fm.Q, fm.A, fm.LP, fm.BL, fm.G)
 
 ggplot(data = barley, aes(x = NF, y = yield)) + 
   geom_point() + 
@@ -62,9 +80,10 @@ ggplot(data = barley, aes(x = NF, y = yield)) +
   geom_line(aes(y = fitted(fm.A), color = "Asymptotic")) +  
   geom_line(aes(y = fitted(fm.LP), color = "Linear-plateau")) + 
   geom_line(aes(y = fitted(fm.BL), color = "Bi-linear")) + 
+  geom_line(aes(y = fitted(fm.G), color = "GAM")) + 
   geom_line(aes(y = prd, color = "Avg. Model"), size = 1.2)
 }
 }
 \seealso{
-\code{\link{predict.lm}} \code{\link{predict.nls}}
+\code{\link[stats]{predict.lm}}, \code{\link[stats]{predict.nls}}, \code{\link{simulate_nls}}, \code{\link{simulate_gam}}
 }
