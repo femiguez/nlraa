@@ -35,8 +35,8 @@ nrhInit <- function(mCall, LHS, data, ...){
   asym <- max(xy[,"y"])
   xy1 <- xy[1:floor(nrow(xy)/2),]
   lm.cfs <- coef(stats::lm(xy1[,"y"] ~ xy1[,"x"]))
-  phi <- lm.cfs[1]
-  rd <- lm.cfs[2]
+  phi <- lm.cfs[2]
+  rd <- lm.cfs[1]
   theta <- 0.8
   
   objfun <- function(cfs){

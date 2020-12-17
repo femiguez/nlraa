@@ -136,5 +136,54 @@ if(Sys.info()[["user"]] == "fernandomiguez"){
     geom_ribbon(aes(ymin = pQ2.5, ymax = pQ97.5, color = "prediction"), fill = "purple", alpha = 0.2) + 
     ggtitle("Beta growth with increasing variance is the best model")
   
+  ## Looking at data barley
+  data(barley)
+  fgb0 <- gam(yield ~ s(NF, k = 5), data = barley)
+  
+  fgb0p <- predict_gam(fgb0, interval = "conf")
+  barleyA <- cbind(barley, fgb0p)
+
+  prd <- predict(fgb0, se = TRUE)
+  barleyG <- barley
+  barleyG$fit <- prd$fit
+  barleyG$lwr <- prd$fit - 1.96 * prd$se.fit
+  barleyG$upr <- prd$fit + 1.96 * prd$se.fit
+  
+  barleyAG <- merge(barleyA, barleyG)
+  
+  ## It is hard to see, but they are identical
+  ggplot(data = barleyAG, aes(x = NF, y = yield)) + 
+    geom_point() + 
+    geom_line(aes(y = fit)) + 
+    geom_line(aes(y = Estimate), linetype = 2) + 
+    geom_ribbon(aes(ymin = Q2.5, ymax = Q97.5), fill = "purple", alpha = 0.2) + 
+    geom_ribbon(aes(ymin = lwr, ymax = upr), fill = "yellow", alpha = 0.1)
+  
+  ## What if we include a random effect of year?
+  barley$year.f <- as.factor(barley$year)
+  
+  fgb1 <- gam(yield ~ s(NF, k = 5) + s(year.f, bs = "re"), data = barley)    
+
+  fgb1p <- predict_gam(fgb1, interval = "conf")
+  barleyA <- cbind(barley, fgb1p)
+
+  prd <- predict(fgb1, se = TRUE)
+  barleyG <- barley
+  barleyG$fit <- prd$fit
+  barleyG$lwr <- prd$fit - 1.96 * prd$se.fit
+  barleyG$upr <- prd$fit + 1.96 * prd$se.fit
+  
+  barleyAG <- merge(barleyA, barleyG)
+  
+  ## It is hard to see, but they are identical
+  ggplot(data = barleyAG, aes(x = NF, y = yield)) + 
+    facet_wrap(~year.f) + 
+    geom_point() + 
+    geom_line(aes(y = fit)) + 
+    geom_line(aes(y = Estimate), linetype = 2) + 
+    geom_ribbon(aes(ymin = Q2.5, ymax = Q97.5), fill = "blue", alpha = 0.3) + 
+    geom_ribbon(aes(ymin = lwr, ymax = upr), fill = "white", alpha = 0.3)
+  
+  
 }
 

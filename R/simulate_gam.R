@@ -79,7 +79,7 @@ simulate_gam <- function(object, nsim = 1, psim = 1,
   ## but not when storage is pre-allocated
   for(i in 1:nsim){
     ans.mat[,i] <- simulate_gam_one(object, psim = psim, resid.type = resid.type, 
-                                   newdata = newdata)  
+                                   newdata = newdata, ...)  
   }
   
   if(value == "matrix"){
@@ -100,7 +100,7 @@ simulate_gam <- function(object, nsim = 1, psim = 1,
 
 simulate_gam_one <- function(object, psim = 1, 
                              resid.type = c("none", "resample", "normal", "wild"),
-                             newdata = NULL){
+                             newdata = NULL,...){
   
   resid.type <- match.arg(resid.type)
   
