@@ -48,7 +48,6 @@ simulate_nlme <- function(object,
     sim.mat <- matrix(ncol = nsim, nrow = length(fitted(object)))
   }else{
     sim.mat <- matrix(ncol = nsim, nrow = nrow(list(...)$newdata))  
-    if(value == "data.frame") stop("value = 'data.frame' is incompatible with 'newdata'.")
   } 
   
   ## First example for the gnls case
@@ -65,7 +64,11 @@ simulate_nlme <- function(object,
     colnames(sim.mat) <- paste0("sim_",1:nsim)
     return(sim.mat)  
   }else{
-    dat <- eval(object$call$data)
+    if(is.null(list(...)$newdata)){
+      dat <- eval(object$call$data)
+    }else{
+      dat <- list(...)$newdata
+    } 
     adat <- data.frame(ii = as.factor(rep(1:nsim, each = nrow(dat))),
                       dat,
                       sim.y = c(sim.mat),

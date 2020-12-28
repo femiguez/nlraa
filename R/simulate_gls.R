@@ -122,7 +122,7 @@ simulate_gls <- function(object, psim = 1, na.action = na.fail, naPattern = NULL
       rsds <- rsds.std * attr(residuals(object), "std") ## This last term is 'sigma'
     }else{
       ## This is one way of doing this, but might not be the best
-      var.cov.err <- var_cov(object, sparse = TRUE)
+      var.cov.err <- var_cov(object, sparse = TRUE, data = newdata)
       ## rsds <- MASS::mvrnorm(mu = residuals(object), Sigma = var.cov.err)
       ## An alternative is to do a Cholesky decomposition first
       ## Since var.cov.err is sparse using the Matrix package might be

@@ -20,7 +20,7 @@
 #' These are the options that control the parameter simulation level
 #' \describe{
 #'   \item{psim = 0}{returns the fitted values}
-#'   \item{psim = 1}{simulates a beta vector (mean response)}
+#'   \item{psim = 1}{simulates from a beta vector (mean response)}
 #'   \item{psim = 2}{simulates observations according to the residual type (similar to observed data)}
 #'   \item{psim = 3}{simulates a beta vector, considers uncertainty in the variance covariance matrix of beta and adds residuals (prediction)}
 #'  }
@@ -29,14 +29,16 @@
 #' Rademacher distribution is used (\url{https://en.wikipedia.org/wiki/Rademacher_distribution}).
 #' Resampled and normal both assume iid, but \sQuote{normal} makes the stronger assumption of normality.
 #' \sQuote{wild} does not assume constant variance, but it assumes symmetry.
-#' @seealso \code{\link{predict}}, \code{\link{simulate}} and \code{\link{simulate_lm}}.
+#' @seealso \code{\link{predict}}, \code{\link[mgcv]{predict.gam}}, \code{\link{simulate}} and \code{\link{simulate_lm}}.
 #' @references Generalized Additive Models. An Introduction with R. Second Edition. (2017) Simon N. Wood. CRC Press. 
+#' @note The purpose of this function is to make it compatible with other functions in this
+#' package. It has some limitations compared to the functions in the \sQuote{see also} section.
 #' @export
 #' @examples
 #' \donttest{
 #' require(ggplot2)
 #' require(mgcv)
-#' ## These count data is from GAM book by Simon Wood (pg. 132) - see reference
+#' ## These count data are from GAM book by Simon Wood (pg. 132) - see reference
 #' y <- c(12, 14, 33, 50, 67, 74, 123, 141, 165, 204, 253, 246, 240)
 #' t <- 1:13
 #' dat <- data.frame(y = y, t = t)
@@ -65,6 +67,12 @@ simulate_gam <- function(object, nsim = 1, psim = 1,
   }else{
     newdata <- xargs$newdata
   } 
+  
+  if(is.null(xargs$exclude)){
+    exclude <- NULL 
+  }else{
+    exclude <- xargs$exclude
+  } 
 
   if(!is.null(newdata) && psim > 1)
     stop("'newdata' is not compatible with 'psim > 1'")
@@ -79,7 +87,7 @@ simulate_gam <- function(object, nsim = 1, psim = 1,
   ## but not when storage is pre-allocated
   for(i in 1:nsim){
     ans.mat[,i] <- simulate_gam_one(object, psim = psim, resid.type = resid.type, 
-                                   newdata = newdata, ...)  
+                                   newdata = newdata, exclude = exclude)  
   }
   
   if(value == "matrix"){
@@ -100,22 +108,24 @@ simulate_gam <- function(object, nsim = 1, psim = 1,
 
 simulate_gam_one <- function(object, psim = 1, 
                              resid.type = c("none", "resample", "normal", "wild"),
-                             newdata = NULL,...){
+                             newdata = NULL, exclude = NULL){
   
   resid.type <- match.arg(resid.type)
   
-  X <- stats::model.matrix(object)
   n <- stats::nobs(object)
   
   if(!is.null(newdata)){
-    ## Check that names are correct
+    ## See section 7.2.6 in Wood's GAM book. pg. 339
+    ## Check that names are correct, Is this needed?
     if(!identical(names(newdata), attr(object$terms, "term.labels")))
       stop("names in 'newdata' do not correspond to 'term.labels'")
-    X <- stats::model.matrix(object, data = newdata)
+    X <- predict(object, newdata = newdata, type = "lpmatrix", exclude = exclude)
+  }else{
+    X <- predict(object, type = "lpmatrix", exclude = exclude)
   }
-
+  
   if(resid.type == "resample"){
-    rsd0 <- residuals(object, type = "scaled.pearson") ## Are these  ~ N(0, 1) ?
+    rsd0 <- residuals(object, type = "scaled.pearson") ## Are these ~ N(0, 1)?
     rsd.sd <- sqrt(object$family$variance(fitted(object)))
     rsds <- sample(rsd0, size = n, replace = TRUE) * rsd.sd     
   }

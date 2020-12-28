@@ -220,7 +220,7 @@ simulate_nlme_one <- function(object, psim = 1, level = Q, asList = FALSE, na.ac
         ## Much, much more computationally demanding than when 
         ## residuals are not correlated, which should be the case
         ## for most NLME models
-        var.cov.err <- var_cov(object, sparse = TRUE)
+        var.cov.err <- var_cov(object, sparse = TRUE, data = newdata)
         chol.var.cov.err <- Matrix::chol(var.cov.err)
         rsds <- Matrix::as.matrix(chol.var.cov.err %*% rnorm(nrow(chol.var.cov.err)))
       }

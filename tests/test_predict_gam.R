@@ -1,5 +1,6 @@
 ## Testing predict_gam
 require(nlraa)
+library(mgcv)
 require(minpack.lm)
 require(ggplot2)
 

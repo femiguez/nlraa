@@ -294,7 +294,7 @@ simulate_lme_one <- function(object, psim = 1, level = Q, asList = FALSE, na.act
       rsds <- rsds.std * attr(object[["residuals"]], "std") ## This last term is 'sigma'
     }else{
       ## For details on this see simulate_gnls
-      var.cov.err <- var_cov(object, sparse = TRUE)
+      var.cov.err <- var_cov(object, sparse = TRUE, data = newdata)
       chol.var.cov.err <- Matrix::chol(var.cov.err)
       rsds <- Matrix::as.matrix(chol.var.cov.err %*% rnorm(nrow(chol.var.cov.err)))
     }

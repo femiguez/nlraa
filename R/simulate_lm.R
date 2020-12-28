@@ -139,7 +139,7 @@ simulate_lm_one <- function(object, psim = 1,
     ans <- X %*% betav
   }
   
-  ## Simulate from beta and add residuals
+  ## This is the 'default' simulate method, which also seems to work for 'glm' objects
   if(psim == 2 && resid.type == "none"){
     ans <- simulate(object, nsim = 1)[,1]
   }
@@ -160,6 +160,7 @@ simulate_lm_one <- function(object, psim = 1,
   ## What simulate.lm does is just simulate residuals (I think)
   ## This does not work for objects of class 'glm' or 'gam'
   if(psim == 4){
+    if(inherits(object, "glm")) stop("'glm' object are not supported with this option")
     ans <- stats::fitted(object) + rsds 
   }
   

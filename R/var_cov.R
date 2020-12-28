@@ -8,6 +8,7 @@
 #' for the variance-covariance of the random effects or \dQuote{all} for the sum of both.
 #' @param aug whether to augment the matrix of the random effects to the dimensions of the data
 #' @param sparse whether to return a sparse matrix (default is FALSE)
+#' @param data optional passing of \sQuote{data}, probably needed when using this function inside other functions.
 #' @note See Chapter 5 of Pinheiro and Bates. This returns potentially a very large 
 #' matrix of N x N, where N is the number of rows in the data.frame. 
 #' The function \code{\link[nlme]{getVarCov}} only works well for  
@@ -50,7 +51,7 @@
 #' image(log(v4[,ncol(v4):1]))
 #' }
 
-var_cov <- function(object, type = c("residual","random","all"), aug = FALSE, sparse = FALSE){
+var_cov <- function(object, type = c("residual","random","all"), aug = FALSE, sparse = FALSE, data = NULL){
   
   type <- match.arg(type)
   
@@ -72,20 +73,20 @@ var_cov <- function(object, type = c("residual","random","all"), aug = FALSE, sp
   
   if(inherits(object, c("gls","lme"))){
     if(type == "residual"){
-      ans <- var_cov_lme_resid(object, sparse = sparse)  
+      ans <- var_cov_lme_resid(object, sparse = sparse, data = data)  
     }
     if(type == "random"){
-      ans <- var_cov_lme_ranef(object, aug = aug, sparse = sparse)  
+      ans <- var_cov_lme_ranef(object, aug = aug, sparse = sparse, data = data)  
     }
     if(type == "all"){
-      ans <- var_cov_lme_resid(object, sparse = sparse) + var_cov_lme_ranef(object, aug = TRUE, sparse = sparse)  
+      ans <- var_cov_lme_resid(object, sparse = sparse, data = data) + var_cov_lme_ranef(object, aug = TRUE, sparse = sparse, data = data)  
     }
   }
 
   return(ans)
 }
 
-var_cov_lme_resid <- function(object, sparse = FALSE){
+var_cov_lme_resid <- function(object, sparse = FALSE, data = data){
   
   if(!inherits(object, c("gls", "lme"))) 
     stop("Only for objects which inherit the 'gls' or 'lme' class")
@@ -116,7 +117,14 @@ var_cov_lme_resid <- function(object, sparse = FALSE){
         ## I need to extract the groups in the original order in which they appear
         ## in the dataset
         ## Is unique guranteed to return the levels in the order in which they appear?
-        ogrpo <- unique(nlme::getData(object)[[grp.nm]])
+        ## This is needed because of an evaulation issue when this function is nested
+        ## within other functions
+        if(is.null(data)){
+          gdat <- nlme::getData(object)
+        }else{
+          gdat <- data
+        } 
+        ogrpo <- unique(gdat[[grp.nm]])
         ## This reorders the list in the order in which they appear in the dataset
         corrMat <- corrMat[ogrpo]
       }
@@ -134,7 +142,7 @@ var_cov_lme_resid <- function(object, sparse = FALSE){
 }
 
 ## This works for objects of class gls, lme and nlme (1 level)
-var_cov_lme_ranef <- function(object, aug = FALSE, sparse = FALSE){
+var_cov_lme_ranef <- function(object, aug = FALSE, sparse = FALSE, data = NULL){
   
   if(!inherits(object, c("gls", "lme"))) 
     stop("Only for objects which inherit the 'gls' or 'lme' class")
@@ -154,10 +162,10 @@ var_cov_lme_ranef <- function(object, aug = FALSE, sparse = FALSE){
   }else{
     if(!inherits(object, "nlme")){
       ## Does this work for 'lme' object with more than one group?
-      V <- mgcv::extract.lme.cov(object) ## This is V + Z %*% Vr %*% t(Z)
+      V <- mgcv::extract.lme.cov(object, data = data) ## This is V + Z %*% Vr %*% t(Z)
       ## This is clearly potentially dangerous as it might return
       ## negative values, need to test it
-      ans <- V - var_cov_lme_resid(object)      
+      ans <- V - var_cov_lme_resid(object, data = data)      
     }else{
       ans <- vector("list", lreg)
       names(ans) <- names(object$modelStruct$reStruct)

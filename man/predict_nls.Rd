@@ -50,8 +50,10 @@ the relative value of the IC values
 predict function for objects of class \code{\link[mgcv]{gam}}
 }
 \note{
-all the nls or lm objects should be fitted to the same data. The weights are
-based on the inverse of the IC value.
+all the \code{\link[stats]{nls}} or \code{\link[stats]{lm}} 
+objects should be fitted to the same data. Weights are
+based on the chosen IC value (exp(-0.5 * IC)). 
+For models of class \code{\link[mgcv]{gam}} there is very limited support.
 }
 \examples{
 \donttest{
@@ -85,5 +87,5 @@ ggplot(data = barley, aes(x = NF, y = yield)) +
 }
 }
 \seealso{
-\code{\link[stats]{predict.lm}}, \code{\link[stats]{predict.nls}}, \code{\link{simulate_nls}}, \code{\link{simulate_gam}}
+\code{\link[stats]{predict.lm}}, \code{\link[stats]{predict.nls}}, \code{\link[mgcv]{predict.gam}}, \code{\link{simulate_nls}}, \code{\link{simulate_gam}}
 }

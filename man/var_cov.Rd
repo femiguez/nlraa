@@ -8,7 +8,8 @@ var_cov(
   object,
   type = c("residual", "random", "all"),
   aug = FALSE,
-  sparse = FALSE
+  sparse = FALSE,
+  data = NULL
 )
 }
 \arguments{
@@ -20,6 +21,8 @@ for the variance-covariance of the random effects or \dQuote{all} for the sum of
 \item{aug}{whether to augment the matrix of the random effects to the dimensions of the data}
 
 \item{sparse}{whether to return a sparse matrix (default is FALSE)}
+
+\item{data}{optional passing of \sQuote{data}, probably needed when using this function inside other functions.}
 }
 \value{
 It returns a \code{\link[base]{matrix}} or a sparse matrix \code{\link[Matrix]{Matrix}}.

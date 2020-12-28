@@ -39,10 +39,19 @@ x <- seq(0, 2000, 100)
 y <- nrh(x, 35, 0.04, 0.83, 2) + rnorm(length(x), 0, 0.5)
 dat <- data.frame(x = x, y = y)
 fit <- nls(y ~ SSnrh(x, asym, phi, theta, rd), data = dat)
-## plot
+## Visualize observed and simulated
 ggplot(data = dat, aes(x = x, y = y)) + 
   geom_point() + 
   geom_line(aes(y = fitted(fit)))
+## Testing predict function
+prd <- predict_nls(fit, interval = "confidence")
+datA <- cbind(dat, prd)
+## Plotting
+ggplot(data = datA, aes(x = x, y = y)) + 
+  geom_point() + 
+  geom_line(aes(y = fitted(fit))) + 
+  geom_ribbon(aes(ymin = Q2.5, ymax = Q97.5), 
+  fill = "purple", alpha = 0.3)
 }
 x <- seq(0, 2000)
 y <- nrh(x, 30, 0.04, 0.85, 2)

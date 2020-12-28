@@ -43,7 +43,7 @@ uncertainty in the parameter estimates.
 These are the options that control the parameter simulation level
 \describe{
   \item{psim = 0}{returns the fitted values}
-  \item{psim = 1}{simulates a beta vector (mean response)}
+  \item{psim = 1}{simulates from a beta vector (mean response)}
   \item{psim = 2}{simulates observations according to the residual type (similar to observed data)}
   \item{psim = 3}{simulates a beta vector, considers uncertainty in the variance covariance matrix of beta and adds residuals (prediction)}
  }
@@ -55,12 +55,15 @@ Resampled and normal both assume iid, but \sQuote{normal} makes the stronger ass
 }
 \note{
 psim = 3 is not implemented at the moment.
+
+The purpose of this function is to make it compatible with other functions in this
+package. It has some limitations compared to the functions in the \sQuote{see also} section.
 }
 \examples{
 \donttest{
 require(ggplot2)
 require(mgcv)
-## These count data is from GAM book by Simon Wood (pg. 132) - see reference
+## These count data are from GAM book by Simon Wood (pg. 132) - see reference
 y <- c(12, 14, 33, 50, 67, 74, 123, 141, 165, 204, 253, 246, 240)
 t <- 1:13
 dat <- data.frame(y = y, t = t)
@@ -78,5 +81,5 @@ ggplot(data = sims) +
 Generalized Additive Models. An Introduction with R. Second Edition. (2017) Simon N. Wood. CRC Press.
 }
 \seealso{
-\code{\link{predict}}, \code{\link{simulate}} and \code{\link{simulate_lm}}.
+\code{\link{predict}}, \code{\link[mgcv]{predict.gam}}, \code{\link{simulate}} and \code{\link{simulate_lm}}.
 }

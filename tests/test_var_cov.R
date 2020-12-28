@@ -119,10 +119,24 @@ if(run.test.var.cov){
   
   ## For lme objects
   ## It seems to work for a variety of requests
-  fm1 <- lme(distance ~ age, data = Orthodont) 
+  fm1 <- lme(distance ~ age, data = Orthodont)
+  ## The default for 'var_cov' is 'residual'
   fm1.vc <- var_cov(fm1)
-  fm1.vc.re <- var_cov(fm1, type = "random")
+  fm1.vc[1:4, 1:4]
+  getVarCov(fm1, type = "conditional") ## conditional on the random effects
+  ## This is *just* the G matrix or Var(u), for the model y = XB + Zu + e
+  
+  ## for the random effects
+  (fm1.vc.re <- var_cov(fm1, type = "random"))
+  getVarCov(fm1) ## default is random effects
+  
+  ## var_cov can 'augment' the matrix returning  Z G Z'
+  ## This is a large matrix
   fm1.vc.rea <- var_cov(fm1, type = "random", aug = TRUE)
   image(fm1.vc.rea[,ncol(fm1.vc.rea):1])
   
+  ## Compare the results from 'marginal' and 'all'
+  (fm1.gt.vcm.re <- getVarCov(fm1, type = "marginal"))
+  var_cov(fm1, type = "all")[1:4,1:4]
+
 }

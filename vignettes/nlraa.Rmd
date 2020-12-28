@@ -295,6 +295,7 @@ for 'nls' objects.
 
 ## **HydroMe** package
 
+Note: As of 2020-12-8 it has been removed from CRAN.
 This package has functions for fitting water retention curves. It
 uses the 'minpack.lm' package which has a different implementation of the 
 minimization algorithm (Levenberg-Marquardt).
