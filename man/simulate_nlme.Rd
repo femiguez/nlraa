@@ -9,6 +9,7 @@ simulate_nlme(
   nsim = 1,
   psim = 1,
   value = c("matrix", "data.frame"),
+  data = NULL,
   ...
 )
 }
@@ -20,6 +21,8 @@ simulate_nlme(
 \item{psim}{simulation level for vector of fixed parameters for \code{\link{simulate_nlme_one}}}
 
 \item{value}{whether to return a matrix (default) or an augmented data frame}
+
+\item{data}{the data argument is needed when using this function inside user defined functions.}
 
 \item{...}{additional arguments to be passed to either \code{\link{simulate_gnls}} or \code{\link{simulate_nlme_one}}}
 }

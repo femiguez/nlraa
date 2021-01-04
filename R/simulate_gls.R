@@ -33,6 +33,7 @@
 #' will appear similar to the observed values
 #' @param na.action default \sQuote{na.fail}. See \code{\link[nlme]{predict.gls}}
 #' @param naPattern missing value pattern. See \code{\link[nlme]{predict.gls}}
+#' @param data the data argument is needed when using this function inside user defined functions.
 #' @param ... additional arguments (it is possible to supply a newdata this way)
 #' @return It returns a vector with simulated values with length equal to the number of rows 
 #' in the original data
@@ -56,7 +57,7 @@
 #' sim <- simulate_gls(fit.gls)
 #' }
 
-simulate_gls <- function(object, psim = 1, na.action = na.fail, naPattern = NULL, ...){
+simulate_gls <- function(object, psim = 1, na.action = na.fail, naPattern = NULL, data = NULL, ...){
 
   if(!inherits(object, "gls")) stop("This function is only for 'gls' objects")
   
@@ -67,7 +68,13 @@ simulate_gls <- function(object, psim = 1, na.action = na.fail, naPattern = NULL
   if(!is.null(args$newdata)){
     newdata <- args$newdata
   }else{
-    newdata <- nlme::getData(object)  
+    if(is.null(data)){
+      newdata <- try(nlme::getData(object), silent = TRUE)
+      if(inherits(newdata, "try-error") || is.null(newdata)) 
+        stop("'data' argument is required. It is likely you are using simulate_gls inside another function")
+    }else{
+      newdata <- data
+    } 
   } 
 
   form <- getCovariateFormula(object)
@@ -135,7 +142,7 @@ simulate_gls <- function(object, psim = 1, na.action = na.fail, naPattern = NULL
   val <- c(X[, names(cf), drop = FALSE] %*% cf)
   
   ## If psim == 2, we add residuals
-  if(psim == 2) val <- val + rsds
+  if(psim == 2) val <- as.vector(val + rsds)
   
   lab <- "Predicted values"
   if (!is.null(aux <- attr(object, "units")$y)) {

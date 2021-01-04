@@ -4,7 +4,7 @@ require(nlme)
 require(nlraa)
 require(ggplot2)
 
-run.sim.boot.lfmc <- FALSE
+run.sim.boot.lfmc <- Sys.info()[["user"]] == "fernandomiguez" && FALSE
 
 if(run.sim.boot.lfmc){
   
@@ -38,7 +38,7 @@ if(run.sim.boot.lfmc){
 
   ggplot(data = sim10, aes(x = time, y = lfmc)) + 
     facet_wrap(~ leaf.type) + 
-    geom_line(aes(x = time, y = y.sim, group = ii, color = leaf.type)) + 
+    geom_line(aes(x = time, y = sim.y, group = ii, color = leaf.type)) + 
     geom_point()
 
   ## This is at the level of each 'group' 
@@ -49,7 +49,7 @@ if(run.sim.boot.lfmc){
   ## This is interesting because it shows why we need bootstrapping, right?                   
   ggplot(data = sim11, aes(x = time, y = lfmc)) + 
     facet_wrap(~ leaf.type) + 
-    geom_line(aes(x = time, y = y.sim, group = ID, color = leaf.type)) + 
+    geom_line(aes(x = time, y = sim.y, group = ID, color = leaf.type)) + 
     geom_point()
 
   ## This is at the level of observation 
@@ -58,13 +58,13 @@ if(run.sim.boot.lfmc){
   
   ggplot(data = sim21, aes(x = time, y = lfmc)) + 
     facet_wrap(~ leaf.type) + 
-    geom_point(aes(x = time, y = y.sim, color = leaf.type)) + 
+    geom_point(aes(x = time, y = sim.y, color = leaf.type)) + 
     geom_point()
   
   ## Bootstrapping section
-  ## This takes forever and most of the time it does not converge...
   prd_fun <- function(x) predict(x, level = 0)
-  bprd <- boot_nlme(fm2, prd_fun)
+  ## This takes about 111 seconds
+  system.time(bprd <- boot_nlme(fm2, prd_fun, cores = 4))
   
   lfmcG$lwr.q <- apply(t(bprd$t), 1, quantile, probs = 0.05, na.rm = TRUE)
   lfmcG$upr.q <- apply(t(bprd$t), 1, quantile, probs = 0.95, na.rm = TRUE)

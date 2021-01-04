@@ -9,6 +9,7 @@ simulate_lme(
   nsim = 1,
   psim = 1,
   value = c("matrix", "data.frame"),
+  data = NULL,
   ...
 )
 }
@@ -23,6 +24,8 @@ uncertainty in the residual standard error (sigma), this returns data which
 will appear similar to the observed values. 3: in addition samples a new set of random effects.}
 
 \item{value}{whether to return a matrix (default) or an augmented data frame}
+
+\item{data}{the data argument is needed when using this function inside user defined functions.}
 
 \item{...}{additional arguments (it is possible to supply a newdata this way)}
 }

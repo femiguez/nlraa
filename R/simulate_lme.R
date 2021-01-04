@@ -32,6 +32,7 @@
 #' uncertainty in the residual standard error (sigma), this returns data which
 #' will appear similar to the observed values. 3: in addition samples a new set of random effects.
 #' @param value whether to return a matrix (default) or an augmented data frame
+#' @param data the data argument is needed when using this function inside user defined functions.
 #' @param ... additional arguments (it is possible to supply a newdata this way)
 #' @return It returns a vector with simulated values with length equal to the number of rows 
 #' in the original data
@@ -56,7 +57,8 @@
 #' }
 
 simulate_lme <- function(object, nsim = 1, psim = 1,
-                         value = c("matrix", "data.frame"), ...){
+                         value = c("matrix", "data.frame"), 
+                         data = NULL, ...){
   
   ## Error checking
   if(!inherits(object, c("gls","lme"))) stop("object should be of class 'gls' or 'lme'")
@@ -67,16 +69,15 @@ simulate_lme <- function(object, nsim = 1, psim = 1,
     sim.mat <- matrix(ncol = nsim, nrow = length(fitted(object)))
   }else{
     sim.mat <- matrix(ncol = nsim, nrow = nrow(list(...)$newdata))  
-    if(value == "data.frame") stop("value = 'data.frame' is incompatible with 'newdata'.")
   } 
     
   ## First example for the gnls case
   for(i in seq_len(nsim)){
     if(inherits(object, "gls")){
-      sim.mat[,i] <- as.vector(simulate_gls(object, psim = psim, ...))
+      sim.mat[,i] <- as.vector(simulate_gls(object, psim = psim, data = data, ...))
     }
     if(inherits(object, "lme")){
-      sim.mat[,i] <- as.vector(simulate_lme_one(object, psim = psim, ...))
+      sim.mat[,i] <- as.vector(simulate_lme_one(object, psim = psim, data = data, ...))
     }
   }
   
@@ -84,7 +85,17 @@ simulate_lme <- function(object, nsim = 1, psim = 1,
     colnames(sim.mat) <- paste0("sim_", 1:nsim)
     return(sim.mat)  
   }else{
-    dat <- nlme::getData(object)
+    if(is.null(data)){
+      dat <- try(nlme::getData(object), silent = TRUE)
+      if(inherits(dat, "try-error") || is.null(dat)) 
+        stop("'data' argument is required. It is likely you are using simulate_lme inside another function")
+    }else{
+      if(is.null(list(...)$newdata)){
+        dat <- data  
+      }else{
+        dat <- list(...)$newdata
+      }
+    } 
     ## I don't understand why I need to do this
     ## This code is not needed for simulate_nlme
     ndat <- NULL 
@@ -99,7 +110,7 @@ simulate_lme <- function(object, nsim = 1, psim = 1,
 }
 
 ## May be should document this
-simulate_lme_one <- function(object, psim = 1, level = Q, asList = FALSE, na.action = na.fail, ...){
+simulate_lme_one <- function(object, psim = 1, level = Q, asList = FALSE, na.action = na.fail, data = NULL, ...){
     ##
     ## method for predict() designed for objects inheriting from class lme
     ##
@@ -121,7 +132,13 @@ simulate_lme_one <- function(object, psim = 1, level = Q, asList = FALSE, na.act
   if(!is.null(args$newdata)){
     newdata <- args$newdata
   }else{
-    newdata <- nlme::getData(object)  
+    if(is.null(data)){
+      newdata <- try(nlme::getData(object), silent = TRUE)
+      if(inherits(newdata, "try-error") || is.null(newdata)) 
+        stop("'data' argument is required. It is likely you are using simulate_lme_one inside another function")
+    }else{
+      newdata <- data
+    }  
   } 
     
   maxQ <- max(level)			# maximum level for predictions

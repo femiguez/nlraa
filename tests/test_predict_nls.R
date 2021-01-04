@@ -3,7 +3,9 @@ require(nlraa)
 require(car)
 require(ggplot2)
 
-if(Sys.info()[["user"]] == "fernandomiguez"){
+run.predict.nls <- Sys.info()[["user"]] == "fernandomiguez" && FALSE
+
+if(run.predict.nls){
  
   data(barley, package = "nlraa")
   
@@ -134,7 +136,6 @@ if(Sys.info()[["user"]] == "fernandomiguez"){
     geom_line(aes(y = fm.prd, color = "Avg. Model")) + 
     geom_ribbon(aes(ymin = Q5, ymax = Q95), fill = "purple", alpha = 0.3) +
     ggtitle("90% bands based on simulation")
-##    geom_ribbon(aes(ymin = fm.Gpd$lwr, ymax = fm.Gpd$upr), fill = "purple", alpha = 0.3) + 
-    
-  }
+
+}
 

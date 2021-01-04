@@ -3,7 +3,7 @@ require(nlme)
 require(nlraa)
 require(ggplot2)
 
-run.simulate.gls.test <- FALSE
+run.simulate.gls.test <- Sys.info()[["user"]] == "fernandomiguez"
 
 if(run.simulate.gls.test){
   
@@ -66,4 +66,34 @@ if(run.simulate.gls.test){
               alpha = 0.3) + 
     geom_point()
   
+  ## Testing scoping issues
+  ## Script from bug report
+  simulation_summary_fixed <- function(duration_per_period = 6L) {
+
+    treatment <- as.factor(c(0,1))
+    time <- 1:20
+    cluster <- as.factor(c("a", "b", "c"))
+    SWdesign <- expand.grid(treatment = treatment, time = time, cluster = cluster)
+    SWdesign$id <- with(SWdesign, paste0(cluster, "_", treatment))
+    SWdesign$outcome <- with(SWdesign, as.numeric(treatment) + 
+                               (1 + as.numeric(treatment)) * time + 
+                               scale(as.numeric(cluster)) * 0.5 + 
+                               rnorm(nrow(SWdesign)))
+    
+    cor_init <- corAR1(form= ~ time|id )
+    cor_init <- Initialize(cor_init, data = SWdesign )
+    
+    SWdesign$outcome <- rnorm( nrow(SWdesign) )
+    
+    local.gls <- gls( outcome ~ treatment*time, correlation=cor_init, data=SWdesign, method="ML") 
+    local.lme <- lme( outcome ~ treatment*time, random = ~ 1 | cluster, 
+                      data=SWdesign, method="ML") 
+
+    ans1 <- simulate_lme(local.lme, psim=2, data = SWdesign)
+    ans2 <- simulate_gls(local.gls, psim=2, data = SWdesign)
+  }
+  
+  ## If this runs without errors it means the above works
+  simulation_summary_fixed()
+
 }

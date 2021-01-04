@@ -4,7 +4,7 @@ require(nlraa)
 require(ggplot2)
 require(car)
 
-run.simulate.gnls.test <- FALSE
+run.simulate.gnls.test <- Sys.info()[["user"]] == "fernandomiguez" && FALSE
 
 if(run.simulate.gnls.test){
   
@@ -126,5 +126,4 @@ if(run.simulate.gnls.test){
     geom_line(aes(x = Time, y = sim.y, color = Chick, group = Chick_ID)) + 
     geom_point(aes(x = Time, y = weight)) +
     theme(legend.position = "none")
-  
 }

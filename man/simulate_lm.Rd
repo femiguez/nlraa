@@ -10,6 +10,7 @@ simulate_lm(
   nsim = 1,
   resid.type = c("none", "resample", "normal", "wild"),
   value = c("matrix", "data.frame"),
+  data = NULL,
   ...
 )
 }
@@ -23,6 +24,9 @@ simulate_lm(
 \item{resid.type}{type of residual to include (none, resample, normal or wild)}
 
 \item{value}{either \sQuote{matrix} or \sQuote{data.frame}}
+
+\item{data}{the data argument might be needed when using this function inside user defined functions.
+At least it is expected to be safer.}
 
 \item{...}{additional arguments (none used at the moment)}
 }

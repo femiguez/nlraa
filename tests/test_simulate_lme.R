@@ -3,7 +3,7 @@ require(nlme)
 require(nlraa)
 require(ggplot2)
 
-run.test.simulate.lme <- FALSE
+run.test.simulate.lme <- Sys.info()[["user"]] == "fernandomiguez"
 
 if(run.test.simulate.lme){
   ## This first section is just to see if it works

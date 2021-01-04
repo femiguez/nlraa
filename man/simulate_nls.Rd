@@ -10,6 +10,7 @@ simulate_nls(
   psim = 1,
   resid.type = c("none", "resample", "normal", "wild"),
   value = c("matrix", "data.frame"),
+  data = NULL,
   ...
 )
 }
@@ -28,6 +29,8 @@ similar to the observed values.}
 \item{resid.type}{either \sQuote{none}, \dQuote{resample}, \dQuote{normal} or \dQuote{wild}.}
 
 \item{value}{either \sQuote{matrix} or \sQuote{data.frame}}
+
+\item{data}{the data argument is needed when using this function inside user defined functions.}
 
 \item{...}{additional arguments (it is possible to supply a newdata this way)}
 }

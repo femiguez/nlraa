@@ -184,6 +184,14 @@ if(Sys.info()[["user"]] == "fernandomiguez"){
     geom_ribbon(aes(ymin = Q2.5, ymax = Q97.5), fill = "blue", alpha = 0.3) + 
     geom_ribbon(aes(ymin = lwr, ymax = upr), fill = "white", alpha = 0.3)
   
-  
+  f1 <- function(){
+    dat <- data.frame(x = rnorm(10), y = rnorm(10))
+    fm00 <- mgcv::gam(y ~ x, data = dat)
+    ans <- simulate_gam(fm00)
+    ans
+  }
+  ## For GAM objects it works regardless because I use 'predict.gam' under the hood and method = "lpmatrix"
+  res1 <- f1()
+
 }
 

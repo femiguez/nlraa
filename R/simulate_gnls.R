@@ -32,6 +32,7 @@
 #' will appear similar to the observed values
 #' @param na.action default \sQuote{na.fail}. See \code{\link[nlme]{predict.gnls}}
 #' @param naPattern missing value pattern. See \code{\link[nlme]{predict.gnls}}
+#' @param data the data argument is needed when using this function inside user defined functions.
 #' @param ... additional arguments (it is possible to supply a newdata this way)
 #' @return It returns a vector with simulated values with length equal to the number of rows 
 #' in the original data
@@ -50,7 +51,8 @@
 #' sim <- simulate_gnls(fit.gnls)
 #' }
 
-simulate_gnls <- function(object, psim = 1, na.action = na.fail, naPattern = NULL, ...){
+simulate_gnls <- function(object, psim = 1, na.action = na.fail, naPattern = NULL, 
+                          data = NULL, ...){
     ##
     ## method for predict() designed for objects inheriting from class gnls
     ##
@@ -64,7 +66,13 @@ simulate_gnls <- function(object, psim = 1, na.action = na.fail, naPattern = NUL
     if(!is.null(args$newdata)){
       ndata <- args$newdata
     }else{
-      ndata <- nlme::getData(object)      
+      if(is.null(data)){
+        ndata <- try(nlme::getData(object), silent = TRUE)
+        if(inherits(ndata, "try-error") || is.null(ndata)) 
+          stop("'data' argument is required. It is likely you are using simulate_gnls inside another function")
+      }else{
+        ndata <- data
+      } 
     } 
     
     mfArgs <- list(formula =
@@ -151,7 +159,7 @@ simulate_gnls <- function(object, psim = 1, na.action = na.fail, naPattern = NUL
         ## This was added 2020-05-04
         ## This extracts the variance covariance of the error matrix
         ## This is potentially a huge matrix
-        var.cov.err <- var_cov(object, sparse = TRUE)
+        var.cov.err <- var_cov(object, sparse = TRUE, data = ndata)
         ## This generates residuals considering the variance covariance of the error matrix
         ## It is computationally demanding
         ## I'm going to try using the mean of the errors for the mean (2020-05-26)
@@ -178,7 +186,7 @@ simulate_gnls <- function(object, psim = 1, na.action = na.fail, naPattern = NUL
     
     ## ------------ FEM 04-14-2020 ---------------- ##
     ## If the simulation level is 2 we also add residuals
-    if(psim == 2) val <- val + rsds
+    if(psim == 2) val <- as.vector(val + rsds)
     ## --------------------------------------------##
       
     names(val) <- row.names(ndata)

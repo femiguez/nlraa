@@ -3,7 +3,8 @@ require(nlme)
 require(nlraa)
 require(car)
 
-run.boot.test <- FALSE
+## I only run this on my computer and occasionally
+run.boot.test <- Sys.info()[["user"]] == "fernandomiguez" && FALSE
 
 data(barley, package = "nlraa")
 set.seed(101)
@@ -18,14 +19,16 @@ if(run.boot.test){
 
   ## Does bootstrap as implemented in car underestimates confidence intervals?  
   fit.nls.bt <- Boot(fit.nls)
-  ## It is not possible to parallelize the previous code
+  ## It is not possible to parallelize the previous code, why?
   
   fit.gnls <- gnls(yield ~ SSlinp(NF, a, b, xs), data = barley)
   
   intervals(fit.gnls)
   
+  ## This takes: 9.3 seconds
   system.time(fit.gnls.bt <- boot_nlme(fit.gnls, R = 999, cores = 4))
   
+  ## This takes also <10 seconds 
   fit.gnls.bt2 <- boot_nlme(fit.gnls, R = 999, psim = 0, cores = 4)
   
   ## Compare confidence intervals
@@ -48,7 +51,7 @@ if(run.boot.test){
   intervals(fit.lp.gnls2)
 
   ## Compare this to the bootstrapping approach
-  ## This take about ~10 seconds (Windows)
+  ## This take about ~13 seconds
   system.time(fit.lp.gnls2.bt <- boot_nlme(fit.lp.gnls2, R = 2000, cores = 4))
 
   summary(fit.lp.gnls2.bt) ## Bias is low, which is good
@@ -101,7 +104,7 @@ if(run.boot.test){
   ## Bootstrap for the asymptote
   fna <- function(x) fixef(x)[1] + fixef(x)[2] * fixef(x)[3]
 
-  ## This takes much longer... 237 seconds on my laptop
+  ## This takes much longer... 215-237 seconds on my laptop
   system.time(fit.bar.nlme.bt <- boot_nlme(fit.bar.nlme, f = fna, R = 2000, cores = 4))
 
   confint(fit.bar.nlme.bt, type = "perc")
@@ -134,7 +137,7 @@ if(run.boot.test){
   ## This is very slow... 17 seconds for 10 attempts
   ## system.time(fm1.bt <- boot_nlme(fm1, R = 10, cores = 4))
   ## What about the second model?
-  ## This one takes about a minute (Mac and Windows?)
+  ## This one takes about 39 sec (Mac and Windows?)
   system.time(fm2.bt <- boot_nlme(fm2, R = 1000, cores = 4))
   
   summary(fm2.bt)

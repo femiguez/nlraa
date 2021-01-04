@@ -4,7 +4,7 @@ require(nlraa)
 ## Tip: the image function can be used to visualize these matrices
 ## image(x[,ncol(x):1])
 
-run.test.var.cov <- FALSE
+run.test.var.cov <- Sys.info()[["user"]] == "fernandomiguez"
 
 if(run.test.var.cov){
 

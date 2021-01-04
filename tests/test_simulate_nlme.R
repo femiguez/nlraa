@@ -4,7 +4,7 @@ require(nlraa)
 require(ggplot2)
 require(car)
 
-run.test.simulate.nlme <- FALSE
+run.test.simulate.nlme <- Sys.info()[["user"]] == "fernandomiguez" && FALSE
 
 if(run.test.simulate.nlme){
 
@@ -34,17 +34,17 @@ if(run.test.simulate.nlme){
 
   ggplot(data = sim00, aes(x = age, y = circumference)) + 
     geom_point() + 
-    geom_line(aes(y = y.sim, group = ii)) + 
+    geom_line(aes(y = sim.y, group = ii)) + 
     ggtitle("psim = 0, level = 0")
 
   ggplot(data = sim01) + 
     geom_point(aes(x = age, y = circumference, color = Tree)) + 
-    geom_line(aes(y = y.sim, x = age, color = Tree)) + 
+    geom_line(aes(y = sim.y, x = age, color = Tree)) + 
     theme(legend.position = "none") + 
     ggtitle("psim = 0, level = 1")
     
   ggplot(data = sim10) + 
-    geom_line(aes(y = y.sim, x = age, group = ii), color = "gray", alpha = 0.4) + 
+    geom_line(aes(y = sim.y, x = age, group = ii), color = "gray", alpha = 0.4) + 
     geom_point(aes(x = age, y = circumference)) + 
     theme(legend.position = "none") + 
     ggtitle("psim = 1, level = 0")
@@ -53,7 +53,7 @@ if(run.test.simulate.nlme){
   
   ggplot(data = sim11) + 
     facet_wrap(~ Tree) + 
-    geom_line(aes(y = y.sim, x = age, color = Tree, group = Tree_ID), alpha = 0.4) + 
+    geom_line(aes(y = sim.y, x = age, color = Tree, group = Tree_ID), alpha = 0.4) + 
     geom_point(aes(x = age, y = circumference)) + 
     theme(legend.position = "none") + 
     ggtitle("psim = 1, level = 1")
@@ -75,10 +75,9 @@ if(run.test.simulate.nlme){
   
   ggplot(data = fmsm.s, aes(x = Time, y = weight)) + 
     facet_grid(Variety  ~ Year) + 
-    geom_line(aes(x = Time, y = y.sim, group = ID, color = Variety), alpha = 0.5) + 
+    geom_line(aes(x = Time, y = sim.y, group = ID, color = Variety), alpha = 0.5) + 
     geom_point() 
 
-  
   ## Test with CO2 example
   data(CO2)
   
@@ -95,11 +94,11 @@ if(run.test.simulate.nlme){
   
   ggplot(data = fmcm2.s, aes(x = conc, y = uptake)) + 
     facet_grid(Type ~ Treatment) + 
-    geom_line(aes(x = conc, y = y.sim, group = ID, color = Treatment), alpha = 0.5) + 
+    geom_line(aes(x = conc, y = sim.y, group = ID, color = Treatment), alpha = 0.5) + 
     geom_point() 
   
   ## What about bootstrap?
-  system.time(fmcm2.bt <- boot_nlme(fmcm2, parallel = "multicore", ncups = 4)) ## 35 seconds on my laptop MacBook Pro
+  system.time(fmcm2.bt <- boot_nlme(fmcm2, cores = 4)) ## 35 seconds on my laptop MacBook Pro
   
   hist(fmcm2.bt, 2) 
 
@@ -116,7 +115,7 @@ if(run.test.simulate.nlme){
   
   prd_fun <- function(x) predict(x, level = 0)
   
-  fmcm4.bt2 <- boot_nlme(fmcm4, prd_fun, parallel = "multicore", ncpus = 4)
+  fmcm4.bt2 <- boot_nlme(fmcm4, prd_fun, cores = 4)
   
   CO2$lwr <- apply(t(fmcm4.bt2$t), 1, quantile, probs = 0.05, na.rm = TRUE)
   CO2$upr <- apply(t(fmcm4.bt2$t), 1, quantile, probs = 0.95, na.rm = TRUE)
@@ -143,16 +142,78 @@ if(run.test.simulate.nlme){
   
   ggplot(data = fmcm4.s, aes(x = conc, y = uptake)) + 
     facet_grid( Type ~ Treatment) + 
-    geom_line(aes(x = conc, y = y.sim, group = ID, color = Treatment), alpha = 0.5) + 
+    geom_line(aes(x = conc, y = sim.y, group = ID, color = Treatment), alpha = 0.5) + 
     geom_point() 
   
-  ## GAMS
-  ## library(mgcv)
-  ## This actually does not provide the same level of fit
-  # fit <- gam(uptake ~ Type*Treatment + conc + s(conc, k = 4), data = CO2)
+  ## GAMS don't quite get it right
+  library(mgcv)
+  CO2$id <- as.factor(with(CO2, paste0(Type, "_", Treatment)))
+  fit.gam <- gam(uptake ~ Type*Treatment + s(conc, k = 3, by = id), data = CO2)
   # 
-  # ggplot(data = CO2, aes(x = conc, y = uptake)) + 
-  #   facet_grid( Type ~ Treatment) + 
-  #   geom_line(aes(y = fitted(fit))) + 
-  #   geom_point()
+  ggplot(data = CO2, aes(x = conc, y = uptake)) + 
+     facet_grid( Type ~ Treatment) + 
+     geom_line(aes(y = fitted(fit.gam))) + 
+     geom_point()
+  
+  ## Compared to gnls model
+  fit.lis <- nlsLMList(uptake ~ SSnrh(conc, asym, phi, theta, rd), data = CO2)
+  
+  plot(fit.lis)
+  
+  fmco2 <- nlme(fit.lis, random = pdDiag(asym + phi + rd ~ 1))
+  
+  fmco2.2 <- update(fmco2, fixed = asym + phi + theta + rd ~ Type,
+                    start = c(fixef(fmco2)[1], 0, 
+                              fixef(fmco2)[2], 0, 
+                              fixef(fmco2)[3], 0,
+                              fixef(fmco2)[4], 0))
+
+  fmco2.3 <- update(fmco2, fixed = asym + phi + theta + rd ~ Type + Treatment,
+                    start = c(fixef(fmco2.2)[1:2], 0, 
+                              fixef(fmco2.2)[3:4], 0, 
+                              fixef(fmco2.2)[5:6], 0,
+                              fixef(fmco2.2)[7:8], 0))
+  
+  ## Turns out this model has too many parameters and they are not stable
+  ## for this reason the predictions are all over the place
+  fmco2.4 <- update(fmco2, fixed = asym + phi + theta + rd ~ Type + Treatment + Type:Treatment,
+                    start = c(fixef(fmco2.3)[1:3], 0, 
+                              fixef(fmco2.3)[4:6], 0, 
+                              fixef(fmco2.3)[7:9], 0,
+                              fixef(fmco2.3)[10:12], 0))
+  
+  prd <- predict_nlme(fmco2.4, interval = "conf", level = 0.9)
+  CO2A <- cbind(CO2, prd)
+  
+  CO2AS <- subset(CO2A, Type == "Quebec")
+  ggplot(data = CO2AS, aes(x = conc, y = uptake)) + 
+    facet_grid( Type ~ Treatment) + 
+    geom_line(aes(y = Estimate)) +
+    geom_ribbon(aes(ymin = Q5, ymax = Q95), fill = "purple", alpha = 0.3) + 
+    geom_point()
+  
+  ## A simpler model is better
+  fmco2.5 <- update(fmco2.4, fixed = list(asym + phi ~ Type + Treatment + Type:Treatment,
+                                        theta + rd ~ 1),
+                    start = c(fixef(fmco2.3)[1:3], 0, 
+                              fixef(fmco2.3)[4:6], 0, 
+                              fixef(fmco2.3)[7],
+                              fixef(fmco2.3)[10]))
+  
+  prd <- predict_nlme(fmco2.5, interval = "conf", level = 0.9)
+  CO2A <- cbind(CO2, prd)
+  
+  ggplot(data = CO2A, aes(x = conc, y = uptake)) + 
+    facet_grid( Type ~ Treatment) + 
+    geom_line(aes(y = Estimate)) +
+    geom_ribbon(aes(ymin = Q5, ymax = Q95), fill = "purple", alpha = 0.3) + 
+    geom_point()
+  
+  fit.gnls <- gnls(uptake ~ SSnrh(conc, asym, phi, theta, rd), data = CO2,
+                   params = list(asym + phi ~ Type*Treatment, theta + rd ~ 1),
+                   start = c(35.35, 0, 0, 0, 0.1577, 0, 0, 0, 0.955, 2.35))
+
+  ## This shows that a 'good' nls model is better than a 'GAM' but 'gams'
+  ## are much, much more flexible
+  IC_tab(fit.gnls, fit.gam)
 }

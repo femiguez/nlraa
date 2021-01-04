@@ -4,7 +4,14 @@
 \alias{simulate_gnls}
 \title{Simulate fitted values from an object of class \code{\link[nlme]{gnls}}}
 \usage{
-simulate_gnls(object, psim = 1, na.action = na.fail, naPattern = NULL, ...)
+simulate_gnls(
+  object,
+  psim = 1,
+  na.action = na.fail,
+  naPattern = NULL,
+  data = NULL,
+  ...
+)
 }
 \arguments{
 \item{object}{object of class \code{\link[nlme]{gnls}}}
@@ -17,6 +24,8 @@ will appear similar to the observed values}
 \item{na.action}{default \sQuote{na.fail}. See \code{\link[nlme]{predict.gnls}}}
 
 \item{naPattern}{missing value pattern. See \code{\link[nlme]{predict.gnls}}}
+
+\item{data}{the data argument is needed when using this function inside user defined functions.}
 
 \item{...}{additional arguments (it is possible to supply a newdata this way)}
 }

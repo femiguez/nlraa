@@ -11,6 +11,7 @@ simulate_nlme_one(
   asList = FALSE,
   na.action = na.fail,
   naPattern = NULL,
+  data = NULL,
   ...
 )
 }
@@ -29,6 +30,8 @@ An important difference is that for this function multiple levels are not allowe
 \item{na.action}{missing value action. See \code{\link[nlme]{predict.nlme}}}
 
 \item{naPattern}{missing value pattern. See \code{\link[nlme]{predict.nlme}}}
+
+\item{data}{the data argument is needed when using this function inside user defined functions.}
 
 \item{...}{additional arguments to be passed (possible to pass newdata this way)}
 }

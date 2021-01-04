@@ -13,6 +13,7 @@
 #' similar to the observed values.
 #' @param resid.type either \sQuote{none}, \dQuote{resample}, \dQuote{normal} or \dQuote{wild}.
 #' @param value either \sQuote{matrix} or \sQuote{data.frame}
+#' @param data the data argument is needed when using this function inside user defined functions.
 #' @param ... additional arguments (it is possible to supply a newdata this way)
 #' @return It returns a vector with simulated values with length equal to the number of rows 
 #' in the original data
@@ -39,7 +40,8 @@ simulate_nls <- function(object,
                          nsim = 1, 
                          psim = 1, 
                          resid.type = c("none", "resample", "normal", "wild"),
-                         value = c("matrix", "data.frame"),...){
+                         value = c("matrix", "data.frame"), 
+                         data = NULL, ...){
   
   ## Error checking
   if(!inherits(object, "nls")) stop("object should be of class 'nls' ")
@@ -54,18 +56,23 @@ simulate_nls <- function(object,
     sim.mat <- matrix(ncol = nsim, nrow = stats::nobs(object))
   }else{
     sim.mat <- matrix(ncol = nsim, nrow = nrow(list(...)$newdata))  
-    if(value == "data.frame") stop("value = 'data.frame' is incompatible with 'newdata'.")
   } 
   
   for(i in seq_len(nsim)){
-      sim.mat[,i] <- as.vector(simulate_nls_one(object, psim = psim, resid.type = resid.type, ...))
+      sim.mat[,i] <- as.vector(simulate_nls_one(object, psim = psim, resid.type = resid.type, data = data, ...))
   }
   
   if(value == "matrix"){
     colnames(sim.mat) <- paste0("sim_",1:nsim)
     return(sim.mat)  
   }else{
-    dat <- eval(object$call$data)
+    xargs <- list(...)
+    if(is.null(xargs$newdata)){
+      dat <- eval(object$call$data)
+      if(is.null(dat)) stop("'data' argument should be supplied")      
+    }else{
+      dat <- xargs$newdata
+    }
     adat <- data.frame(ii = as.factor(rep(1:nsim, each = nrow(dat))),
                        dat,
                        sim.y = c(sim.mat),
@@ -77,7 +84,8 @@ simulate_nls <- function(object,
 simulate_nls_one <- function(object, 
                              psim = 1, 
                              resid.type = c("none", "resample","normal","wild"),
-                             na.action = na.fail, naPattern = NULL, ...){
+                             na.action = na.fail, naPattern = NULL, 
+                             data = NULL, ...){
   ##
   ## method for predict() designed for objects inheriting from class gnls
   ##
@@ -94,7 +102,13 @@ simulate_nls_one <- function(object,
     ndata <- args$newdata
     if(psim > 1) stop("'newdata' is not compatible with psim > 1")
   }else{
-    ndata <- eval(object$data)      
+    if(is.null(data)){
+      ndata <- eval(object$data)      
+      if(is.null(ndata)) 
+        stop("'data' argument is required. It is likely you are using simulate_nls inside another function")
+    }else{
+      ndata <- data
+    } 
   } 
   
   mfArgs <- list(formula =

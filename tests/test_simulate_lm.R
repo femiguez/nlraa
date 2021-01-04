@@ -2,7 +2,7 @@
 require(ggplot2)
 require(nlraa)
 
-run.simulte.lm.test <- FALSE
+run.simulte.lm.test <- Sys.info()[["user"]] == "fernandomiguez"
 
 if(run.simulte.lm.test){
   
@@ -47,9 +47,9 @@ if(run.simulte.lm.test){
   ## This level is very similar to the 'prediction' below
   sims4 <- simulate_lm(fit1, psim = 3, nsim = 100, value = "data.frame")
   
-  sims4a <- aggregate(y.sim ~ age, data = sims4, FUN = quantile,
+  sims4a <- aggregate(sim.y ~ age, data = sims4, FUN = quantile,
                       probs = 0.05)
-  sims4b <- aggregate(y.sim ~ age, data = sims4, FUN = quantile,
+  sims4b <- aggregate(sim.y ~ age, data = sims4, FUN = quantile,
                       probs = 0.95)
   sims4c <- merge(sims4a, sims4b, by = "age")
   
@@ -87,5 +87,24 @@ if(run.simulte.lm.test){
     geom_line(aes(x = age, y = sim.y, group = Tree_ID), 
               color = "gray", alpha = 0.5) + 
     geom_point(aes(x = age, y = circumference)) 
+  
+  ## Testing scoping issues
+  ## This version does not work
+  # f1 <- function(){
+  #   dat <- data.frame(x = rnorm(10), y = rnorm(10))
+  #   fm00 <- lm(y ~ x, data = dat)
+  #   ans <- simulate_lm(fm00)
+  #   ans
+  # }
+  
+  f1 <- function(){
+    dat <- data.frame(x = rnorm(10), y = rnorm(10))
+    fm00 <- lm(y ~ x, data = dat)
+    ans <- simulate_lm(fm00, data = dat)
+    ans
+  }
+  ## Well, this seems to work because 'eval' is not inside a function
+  ## such as 'getData'???
+  res1 <- f1()
   
 }

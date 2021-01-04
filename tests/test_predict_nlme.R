@@ -4,8 +4,9 @@ require(nlme)
 require(nlraa)
 
 ## I do not want to run this on CRAN servers
+run.predict.nlme <- Sys.info()[["user"]] == "fernandomiguez" && FALSE
 
-if(Sys.info()[["user"]] == "fernandomiguez"){
+if(run.predict.nlme){
   
   data(Orange)
   
@@ -124,7 +125,7 @@ if(Sys.info()[["user"]] == "fernandomiguez"){
     geom_ribbon(aes(ymin = Q5, ymax = Q95), fill = "purple", alpha = 0.3) + 
     ggtitle("90% Prediction bands for each plot ")
   
-  ## Example with Theop
+  ## Example with ChickWeight
   data(ChickWeight)
   
   fmc.L <- nlme(weight ~ SSlogis(Time, Asym, xmid, scal), 

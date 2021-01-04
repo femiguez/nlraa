@@ -1,6 +1,6 @@
 ## Running other tests to see if the code actually works
 
-test.other.examples <- FALSE
+test.other.examples <- Sys.info()[["user"]] == "fernandomiguez"
 
 if(test.other.examples){
 

@@ -11,6 +11,8 @@
 #' @param nsim number of simulations to perform
 #' @param resid.type type of residual to include (none, resample, normal or wild)
 #' @param value either \sQuote{matrix} or \sQuote{data.frame}
+#' @param data the data argument might be needed when using this function inside user defined functions.
+#' At least it is expected to be safer.
 #' @param ... additional arguments (none used at the moment)
 #' @return matrix or data.frame with responses
 #' @details 
@@ -53,7 +55,8 @@
 
 simulate_lm <- function(object, psim = 1, nsim = 1, 
                         resid.type = c("none", "resample","normal","wild"),
-                        value = c("matrix","data.frame"), ...){
+                        value = c("matrix","data.frame"), 
+                        data = NULL, ...){
 
   if(!inherits(object, "lm"))
     stop("only for objects which inherit class 'lm' ")
@@ -62,20 +65,26 @@ simulate_lm <- function(object, psim = 1, nsim = 1,
   resid.type <- match.arg(resid.type)
 
   xargs <- list(...)
-  if(is.null(xargs$newdata)){
-    newdata <- NULL 
+
+  if(!is.null(xargs$newdata) && psim > 1)
+    stop("'newdata' is not compatible with 'psim > 1'")  
+  
+  if(is.null(xargs$newdata) && is.null(data)){
+    newdata <- try(eval(getCall(object)$data), silent = TRUE)
+    if(is.null(newdata)) stop("data not found. If you are using simulate_lm inside another function, please pass the data")
   }else{
-    newdata <- xargs$newdata
-  } 
+    if(!is.null(xargs$newdata) && !is.null(data))
+      stop("either supply 'data' or 'newdata'")
+    
+    if(!is.null(data)){
+      newdata <- data
+    }else{
+      newdata <- xargs$newdata
+    }    
+  }
   
   nr <- ifelse(is.null(newdata), stats::nobs(object), nrow(newdata))
   ans.mat <- matrix(nrow = nr, ncol = nsim)  
-  
-  if(!is.null(newdata) && value == "data.frame")
-    stop("'newdata' is not compatible with 'value = data.frame'")
-  
-  if(!is.null(newdata) && psim > 1)
-    stop("'newdata' is not compatible with 'psim > 1'")
   
   ## They say that replicate is faster than this,
   ## but not when storage is pre-allocated
@@ -88,8 +97,12 @@ simulate_lm <- function(object, psim = 1, nsim = 1,
     colnames(ans.mat) <- paste0("sim_",1:nsim)
     return(ans.mat)
   }else{
-    dfr <- eval(getCall(object)$data)
-    if(is.null(dfr)) stop("data argument should be supplied")
+    if(is.null(xargs$newdata)){
+      dfr <- eval(getCall(object)$data)
+      if(is.null(dfr)) stop("'data' argument should be supplied")      
+    }else{
+      dfr <- newdata
+    }
     ## I think this is guaranteed to exist
     ## but it can be weird
     ans.dat <- data.frame(ii = as.factor(rep(1:nsim, each = nrow(dfr))),
@@ -106,18 +119,13 @@ simulate_lm_one <- function(object, psim = 1,
   
   resid.type <- match.arg(resid.type)
   
-  X <- stats::model.matrix(object)
+  X <- stats::model.matrix(object, data = newdata)
   n <- stats::nobs(object)
   rsd0 <- stats::resid(object)
   
-  if(!is.null(newdata)){
-    ## Check that names are correct
-    if(!identical(names(newdata), attr(object$terms, "term.labels")))
-      stop("names in 'newdata' do not correspond to 'term.labels'")
-    X <- stats::model.matrix(object, data = newdata)
-  }
+  if(is.null(newdata)) stop("'newdata' is needed for this function")
   
-  if(resid.type == "resample"){
+  if(resid.type %in% c("none", "resample")){
     rsds <- sample(rsd0, size = n, replace = TRUE)      
   }
   if(resid.type == "normal"){

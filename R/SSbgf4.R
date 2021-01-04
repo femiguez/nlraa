@@ -54,9 +54,9 @@ bgf4Init <- function(mCall, LHS, data, ...){
 #' 
 bgf4 <- function(time, w.max, t.e, t.m, t.b){
 
-  if(t.m > t.e) stop("t.m should be smaller than t.e")
-  if(t.b > t.m) stop("t.b should be smaller than t.m")
-  if(t.b > t.e) stop("t.b should be smaller than t.e")
+  if(any(t.m > t.e)) stop("t.m should be smaller than t.e") 
+  if(any(t.b > t.m)) stop("t.b should be smaller than t.m")
+  if(any(t.b > t.e)) stop("t.b should be smaller than t.e")
   
   .expre1 <- (t.e - t.b)/(t.e - t.m)
   .expre11 <- (time - t.b)
