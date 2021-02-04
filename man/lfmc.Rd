@@ -16,7 +16,7 @@ A data frame with 247 rows and 5 variables:
 }
 }
 \source{
-\url{https://doi.org/10.1002/ece3.5543}
+\doi{10.1002/ece3.5543}
 }
 \usage{
 lfmc

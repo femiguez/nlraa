@@ -30,7 +30,7 @@ Self starter for an exponential-linear growth equation
 J. GOUDRIAAN, J. L. MONTEITH, A Mathematical Function for Crop Growth Based 
 on Light Interception and Leaf Area Expansion, Annals of Botany, Volume 66, 
 Issue 6, December 1990, Pages 695–701,
- \url{https://doi.org/10.1093/oxfordjournals.aob.a088084}
+ \doi{10.1093/oxfordjournals.aob.a088084}
  
 The equation is: \deqn{ (cm/rm) * log(1 + exp(rm * (t - tb)))}
 

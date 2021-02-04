@@ -329,7 +329,8 @@ future version of nlraa.
 1. A unified approach to the Richards-model family for use in growth analyses:
 Why we need only two model forms. \doi{10.1016/j.jtbi.2010.09.008}. Might incorporate this function in the package in the future.
 
-2. The use of Gompertz models in growth analyses, and new Gompertz-model approach: An addition to the Unified-Richards family. (https://doi.org/10.1371/journal.pone.0178691).
+2. The use of Gompertz models in growth analyses, and new Gompertz-model approach: An addition to the Unified-Richards family. (At the moment the DOI does not work.)
+<!-- (https://doi.org/10.1371/journal.pone.0178691). -->
 
 3. Choosing the right sigmoid growth function using the unified-models approach. \doi{10.1111/ibi.12592}.
 

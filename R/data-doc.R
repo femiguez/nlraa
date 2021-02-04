@@ -12,7 +12,7 @@
 #'   \item{lfmc}{ -numeric- Live fuel moisture content (percent)}
 #'   \item{group}{grouping for regression}
 #' }
-#' @source \url{https://doi.org/10.1002/ece3.5543}
+#' @source \doi{10.1002/ece3.5543}
 "lfmc"
 
 #' Sorghum and Maize growth in Greece
