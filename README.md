@@ -12,6 +12,8 @@ downloads total](https://cranlogs.r-pkg.org/badges/grand-total/nlraa)](https://g
 
 [Nonlinear Models (video) - part II](https://www.youtube.com/watch?v=6ujBQxKYlwY)
 
+[Nonlinear Models (video) - part III](https://www.youtube.com/watch?v=cDm9UhwGSXo)
+
 This package supports the following publications:
 
 1. Archontoulis, S. V., and F. E. Miguez. 2015. Nonlinear Regression
