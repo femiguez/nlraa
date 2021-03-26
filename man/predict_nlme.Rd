@@ -37,7 +37,7 @@ Computes weights based on AIC, AICc, or BIC and it generates weighted prediction
 the relative value of the IC values
 }
 \note{
-all the nls or lm objects should be fitted to the same data. The weights are
+all the objects should be fitted to the same data. The weights are
 based on the inverse of the IC value.
 }
 \examples{
@@ -77,5 +77,5 @@ ggplot(data = Orange, aes(x = age, y = circumference)) +
 }
 }
 \seealso{
-\code{\link{predict.lme}} \code{\link{predict.gnls}}
+\code{\link{predict.nlme}} \code{\link{predict.lme}} \code{\link{predict.gnls}}
 }
