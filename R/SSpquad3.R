@@ -13,11 +13,12 @@
 #' @examples 
 #' \donttest{
 #' require(ggplot2)
+#' require(minpack.lm)
 #' set.seed(123)
 #' x <- 1:30
-#' y <- pquad3(x, 5, 1.7, -0.04) + rnorm(30, 0, 0.6)
+#' y <- pquad3(x, 20.5, 0.36, -0.012) + rnorm(30, 0, 0.3)
 #' dat <- data.frame(x = x, y = y)
-#' fit <- nls(y ~ SSpquad3(x, a, b, c, xs), data = dat)
+#' fit <- nlsLM(y ~ SSpquad3(x, a, b, c), data = dat)
 #' ## plot
 #' ggplot(data = dat, aes(x = x, y = y)) + 
 #'   geom_point() + 
@@ -32,7 +33,8 @@ pquad3Init <- function(mCall, LHS, data, ...){
     stop("Too few distinct input values to fit a plateau-quadratic-3.")
   }
   ## Guess for a, b and c is to fit a quadratic linear regression to all the data
-  fit <- lm(xy[,"y"] ~ xy[,"x"] + I(xy[,"x"]^2))
+  half.xy <- xy[floor(nrow(xy)/2):nrow(xy),]
+  fit <- lm(half.xy[,"y"] ~ half.xy[,"x"] + I(half.xy[,"x"]^2))
   a <- coef(fit)[1]
   b <- coef(fit)[2]
   c <- coef(fit)[3]

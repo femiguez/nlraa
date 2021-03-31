@@ -17,7 +17,7 @@
 #' x <- 1:30
 #' y <- quadp3(x, 5, 1.7, -0.04) + rnorm(30, 0, 0.6)
 #' dat <- data.frame(x = x, y = y)
-#' fit <- nls(y ~ SSquadp3(x, a, b, c, xs), data = dat)
+#' fit <- nls(y ~ SSquadp3(x, a, b, c), data = dat)
 #' ## plot
 #' ggplot(data = dat, aes(x = x, y = y)) + 
 #'   geom_point() + 

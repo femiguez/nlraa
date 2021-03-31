@@ -32,11 +32,12 @@ Reference for nonlinear regression Archontoulis and Miguez (2015) - (doi:10.2134
 \examples{
 \donttest{
 require(ggplot2)
+require(minpack.lm)
 set.seed(123)
 x <- 1:30
-y <- pquad3(x, 5, 1.7, -0.04) + rnorm(30, 0, 0.6)
+y <- pquad3(x, 20.5, 0.36, -0.012) + rnorm(30, 0, 0.3)
 dat <- data.frame(x = x, y = y)
-fit <- nls(y ~ SSpquad3(x, a, b, c, xs), data = dat)
+fit <- nlsLM(y ~ SSpquad3(x, a, b, c), data = dat)
 ## plot
 ggplot(data = dat, aes(x = x, y = y)) + 
   geom_point() + 
