@@ -53,9 +53,9 @@ For objects of class \sQuote{gls}, \sQuote{gnls}, \sQuote{lme} or \sQuote{nlme} 
 are additional metrics such as:
 
 
- https://en.wikipedia.org/wiki/Coefficient_of_determination \cr
- https://en.wikipedia.org/wiki/Nash%E2%80%93Sutcliffe_model_efficiency_coefficient \cr
- https://en.wikipedia.org/wiki/Concordance_correlation_coefficient
+ \url{https://en.wikipedia.org/wiki/Coefficient_of_determination} \cr
+ \url{https://en.wikipedia.org/wiki/Nash-Sutcliffe_model_efficiency_coefficient} \cr
+ \url{https://en.wikipedia.org/wiki/Concordance_correlation_coefficient}
 }
 \examples{
 \donttest{
@@ -77,8 +77,6 @@ data(barley, package = "nlraa")
 fit2 <- lme(yield ~ NF + I(NF^2), random = ~ 1 | year, data = barley)
 ias2 <- IA_tab(object = fit2)
 ias2$IA_tab
-## The warning is becase no null model was provided
-## This means the model is compared to an intercept-only model
 ## Nonlinear Mixed Model
 barleyG <- groupedData(yield ~ NF | year, data = barley)
 fit3L <- nlsLMList(yield ~ SSquadp3(NF, a, b, c), data = barleyG)

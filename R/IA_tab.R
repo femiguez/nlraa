@@ -18,9 +18,9 @@
 #' are additional metrics such as:
 #' 
 #'
-#'  https://en.wikipedia.org/wiki/Coefficient_of_determination \cr
-#'  https://en.wikipedia.org/wiki/Nash%E2%80%93Sutcliffe_model_efficiency_coefficient \cr
-#'  https://en.wikipedia.org/wiki/Concordance_correlation_coefficient
+#'  \url{https://en.wikipedia.org/wiki/Coefficient_of_determination} \cr
+#'  \url{https://en.wikipedia.org/wiki/Nash-Sutcliffe_model_efficiency_coefficient} \cr
+#'  \url{https://en.wikipedia.org/wiki/Concordance_correlation_coefficient}
 #'  
 #' @title Indexes of Agreement Table
 #' @name IA_tab
@@ -53,8 +53,6 @@
 #' fit2 <- lme(yield ~ NF + I(NF^2), random = ~ 1 | year, data = barley)
 #' ias2 <- IA_tab(object = fit2)
 #' ias2$IA_tab
-#' ## The warning is becase no null model was provided
-#' ## This means the model is compared to an intercept-only model
 #' ## Nonlinear Mixed Model
 #' barleyG <- groupedData(yield ~ NF | year, data = barley)
 #' fit3L <- nlsLMList(yield ~ SSquadp3(NF, a, b, c), data = barleyG)
@@ -202,15 +200,15 @@ plot.IA_tab <- function(x, y, ..., type = c("OvsS", "RvsS")){
 #' Recommended reading: \cr
 #' Nakagawa and Schielzeth Methods in Ecology and Evolution (doi: 10.1111/j.2041-210x.2012.00261.x) \cr
 #' 
-#' https://stats.idre.ucla.edu/other/mult-pkg/faq/general/faq-what-are-pseudo-r-squareds/ \cr
+#' \url{https://stats.idre.ucla.edu/other/mult-pkg/faq/general/faq-what-are-pseudo-r-squareds/} \cr
 #' 
 #' Spiess, AN., Neumeyer, N. An evaluation of R2 as an inadequate measure for nonlinear models in 
 #' pharmacological and biochemical research: a Monte Carlo approach. BMC Pharmacol 10, 6 (2010). 
-#' https://doi.org/10.1186/1471-2210-10-6 \cr
+#' \url{https://doi.org/10.1186/1471-2210-10-6} \cr
 #' 
-#' https://stat.ethz.ch/pipermail/r-sig-mixed-models/2010q1/003363.html \cr
+#' \url{https://stat.ethz.ch/pipermail/r-sig-mixed-models/2010q1/003363.html} \cr
 #' 
-#' https://stats.stackexchange.com/questions/111150/calculating-r2-in-mixed-models-using-nakagawa-schielzeths-2013-r2glmm-me/225334#225334 \cr
+#' \url{https://stats.stackexchange.com/questions/111150/calculating-r2-in-mixed-models-using-nakagawa-schielzeths-2013-r2glmm-me/225334#225334} \cr
 #' 
 #' 
 #' 
@@ -223,6 +221,7 @@ plot.IA_tab <- function(x, y, ..., type = c("OvsS", "RvsS")){
 #' @param ... additional arguments (none use at the moment).
 #' @note The references here strongly discourage the use of R-squared in anything
 #' but linear models.
+#' @seealso \code{\link{IA_tab}}
 #' @return it returns a list with the following structure: \cr
 #' for an object of class \sQuote{lm}, \sQuote{nls}, \sQuote{gls} or \sQuote{gnls}, \cr
 #' R2: R-squared \cr
@@ -233,6 +232,18 @@ plot.IA_tab <- function(x, y, ..., type = c("OvsS", "RvsS")){
 #' R2.conditional: conditional R2 which includes both the fixed and random effects \cr
 #' var.random: the variance contribution of the random effects
 #' @export 
+#' @examples 
+#' \donttest{
+#' require(nlme)
+#' data(barley, package = "nlraa")
+#' fit2 <- lme(yield ~ NF + I(NF^2), random = ~ 1 | year, data = barley)
+#' R2M(fit2)
+#' ## Nonlinear Mixed Model
+#' barleyG <- groupedData(yield ~ NF | year, data = barley)
+#' fit3L <- nlsLMList(yield ~ SSquadp3(NF, a, b, c), data = barleyG)
+#' fit3 <- nlme(fit3L, random = pdDiag(a + b ~ 1))
+#' R2M(fit3)
+#' }
 
 R2M <- function(x, ...){
   UseMethod("R2M")
