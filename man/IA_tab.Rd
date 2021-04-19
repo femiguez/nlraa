@@ -51,18 +51,11 @@ ConCorr: concordance correlation  \cr
 
 For objects of class \sQuote{gls}, \sQuote{gnls}, \sQuote{lme} or \sQuote{nlme} there
 are additional metrics such as:
-Pseudo_R2: See reference by Nakagawa and Schielzeth
-Normalized_Pseudo_R2: See reference by Nakagawa and Schielzeth
-NS_R2_marginal: See reference by Nakagawa and Schielzeth
-NS_R2_conditional: See reference by Nakagawa and Schielzeth
 
 
  https://en.wikipedia.org/wiki/Coefficient_of_determination \cr
  https://en.wikipedia.org/wiki/Nash%E2%80%93Sutcliffe_model_efficiency_coefficient \cr
  https://en.wikipedia.org/wiki/Concordance_correlation_coefficient
-}
-\note{
-Not sure that all the formulas are correct for Mixed Models yet.
 }
 \examples{
 \donttest{
@@ -101,11 +94,13 @@ ggplot(data = barleyGA, aes(x = NF, y = yield)) +
    geom_line(aes(y = Estimate)) + 
    geom_ribbon(aes(ymin = Q2.5, ymax = Q97.5), 
                fill = "purple", alpha = 0.2)
-}
+## R2M for model 2
+R2M(fit2)
+## R2M for model 3
+R2M(fit3)
 
 }
-\references{
-Nakagawa and Schielzeth Methods in Ecology and Evolution (doi: 10.1111/j.2041-210x.2012.00261.x)
+
 }
 \seealso{
 \code{\link{IC_tab}}

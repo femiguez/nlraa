@@ -16,10 +16,6 @@
 #' 
 #' For objects of class \sQuote{gls}, \sQuote{gnls}, \sQuote{lme} or \sQuote{nlme} there
 #' are additional metrics such as:
-#' Pseudo_R2: See reference by Nakagawa and Schielzeth
-#' Normalized_Pseudo_R2: See reference by Nakagawa and Schielzeth
-#' NS_R2_marginal: See reference by Nakagawa and Schielzeth
-#' NS_R2_conditional: See reference by Nakagawa and Schielzeth
 #' 
 #'
 #'  https://en.wikipedia.org/wiki/Coefficient_of_determination \cr
@@ -36,8 +32,6 @@
 #' @param null.object optional object which represents the \sQuote{null} model. It is an intercept-only model
 #' by default.
 #' @seealso \code{\link{IC_tab}}
-#' @references Nakagawa and Schielzeth Methods in Ecology and Evolution (doi: 10.1111/j.2041-210x.2012.00261.x)
-#' @note Not sure that all the formulas are correct for Mixed Models yet.
 #' @export
 #' @examples 
 #' \donttest{
@@ -76,6 +70,11 @@
 #'    geom_line(aes(y = Estimate)) + 
 #'    geom_ribbon(aes(ymin = Q2.5, ymax = Q97.5), 
 #'                fill = "purple", alpha = 0.2)
+#' ## R2M for model 2
+#' R2M(fit2)
+#' ## R2M for model 3
+#' R2M(fit3)
+#' 
 #' }
 #' 
 
@@ -110,32 +109,12 @@ IA_tab <- function(obs, sim, object, null.object){
   corr <- cor(obs, sim)
   R2.1 <- cor(obs, sim)^2
   ## Two different types of R-squared
-  if(inherits(object, c("nls", "lm"))){
-    R2.2 <- 1 - deviance(object)/deviance(lm(obs ~ 1))
+  if(inherits(object, c("nls", "lm", "gls", "gnls"))){
+    R2.2 <- nlraa::R2M(object)
   }
   
-  if(inherits(object, c("gls", "gnls", "lme", "nlme"))){
-    if(missing(null.object)){
-      warning("No null model was provided. Assuming an intercept only model.")
-      ll.nm <- logLik(lm(obs ~ 1))[[1]]
-    }else{
-      ll.nm <- logLik(null.object)[[1]]
-    }
-    ## Pseudo-R-squared for mixed models?
-    Pseudo_R2 <- 1 - exp((2/nobs(object)) * (ll.nm - logLik(object)[[1]]))
-    Normalized_Pseudo_R2 <- Pseudo_R2 / (1 - exp(ll.nm) ^ (2 / nobs(object)))
-    ## This is an atempt at computing the Nakagawa - Schielzeth R-squared
-    ## doi: 10.1111/j.2041-210x.2012.00261.x
-    NS.R2m.num <- var(fitted(object))
-    NS.R2m.random <- 0
-    if(inherits(object, c("lme", "nlme")))
-      NS.R2m.random <- sum(diag(nlraa::var_cov(object, type = "random")))
-    NS.R2m.den <- NS.R2m.num + NS.R2m.random + sigma(object)^2
-    NS.R2.marginal <- NS.R2m.num / NS.R2m.den
-    ## Conditional
-    NS.R2c.num <- NS.R2m.num + NS.R2m.random
-    NS.R2c.den <- NS.R2c.num + sigma(object)^2
-    NS.R2.conditional <- NS.R2c.num / NS.R2c.den
+  if(inherits(object, c("lme", "nlme"))){
+    R2 <- nlraa::R2M(object)
   }
   ## Nash-Sutclife Model Efficiency
   ## https://en.wikipedia.org/wiki/Nash%E2%80%93Sutcliffe_model_efficiency_coefficient
@@ -156,12 +135,12 @@ IA_tab <- function(obs, sim, object, null.object){
   MSE <- RSS / length(obs)
   RMSE <- sqrt(MSE)
   
-  if(missing(object) || inherits(object, c("lm", "nls"))){
+  if(missing(object) || inherits(object, c("lm", "nls", "gls", "gnls"))){
     ia_tab <- data.frame(bias = bias, 
                          intercept = intercept,
                          slope = slope,
                          RSS = RSS, MSE = MSE, RMSE = RMSE,
-                         R2.1 = R2.1, R2.2 = R2.2, 
+                         R2.1 = R2.1, R2.2 = R2.2$R2, 
                          ME = mod.eff, NME = mod.eff, Corr = corr,
                          ConCorr = concor)
   }else{
@@ -170,10 +149,8 @@ IA_tab <- function(obs, sim, object, null.object){
                          slope = slope,
                          RSS = RSS, MSE = MSE, RMSE = RMSE,
                          R2 = R2.1, 
-                         Pseudo_R2 = Pseudo_R2,
-                         Normalized_Pseudo_R2 = Normalized_Pseudo_R2,
-                         NS_R2_marginal = NS.R2.marginal,
-                         NS_R2_conditional = NS.R2.conditional,
+                         R2.marginal = R2$R2.marginal,
+                         R2.conditional = R2$R2.conditional,
                          ME = mod.eff, NME = mod.eff, Corr = corr,
                          ConCorr = concor)
   }
@@ -215,4 +192,115 @@ plot.IA_tab <- function(x, y, ..., type = c("OvsS", "RvsS")){
 
   gp1
 }
+
+#' I have read some papers about computing an R-squared for (non)linear (mixed) models
+#' and I am not sure that it makes sense at all. However, here they are and
+#' the method is general enough that it extends to nonlinear mixed models. What do
+#' these numbers mean and why would you want to compute them are good questions to 
+#' ponder... \cr
+#' 
+#' Recommended reading: \cr
+#' Nakagawa and Schielzeth Methods in Ecology and Evolution (doi: 10.1111/j.2041-210x.2012.00261.x) \cr
+#' 
+#' https://stats.idre.ucla.edu/other/mult-pkg/faq/general/faq-what-are-pseudo-r-squareds/ \cr
+#' 
+#' Spiess, AN., Neumeyer, N. An evaluation of R2 as an inadequate measure for nonlinear models in 
+#' pharmacological and biochemical research: a Monte Carlo approach. BMC Pharmacol 10, 6 (2010). 
+#' https://doi.org/10.1186/1471-2210-10-6 \cr
+#' 
+#' https://stat.ethz.ch/pipermail/r-sig-mixed-models/2010q1/003363.html \cr
+#' 
+#' https://stats.stackexchange.com/questions/111150/calculating-r2-in-mixed-models-using-nakagawa-schielzeths-2013-r2glmm-me/225334#225334 \cr
+#' 
+#' 
+#' 
+#' @title R-squared for nonlinear mixed models
+#' @name R2M
+#' @rdname R2M
+#' @description R-squared \sQuote{modified} for nonlinear (mixed) models
+#' @param x object of class \sQuote{lm}, \sQuote{nls}, \sQuote{gls}, \sQuote{gnls}, 
+#' \sQuote{lme} or \sQuote{nlme} .
+#' @param ... additional arguments (none use at the moment).
+#' @note The references here strongly discourage the use of R-squared in anything
+#' but linear models.
+#' @return it returns a list with the following structure: \cr
+#' for an object of class \sQuote{lm}, \sQuote{nls}, \sQuote{gls} or \sQuote{gnls}, \cr
+#' R2: R-squared \cr
+#' var.comp: variance components with var.fixed and var.resid \cr
+#' var.perc: variance components percents (should add up to 100) \cr
+#' for an object of class \sQuote{lme} or \sQuote{nlme} in addition it also returns: \cr
+#' R2.marginal: marginal R2 which only includes the fixed effects \cr
+#' R2.conditional: conditional R2 which includes both the fixed and random effects \cr
+#' var.random: the variance contribution of the random effects
+#' @export 
+
+R2M <- function(x, ...){
+  UseMethod("R2M")
+}
+
+#' @rdname R2M
+#' @export
+R2M.nls <- function(x, ...){
+  
+  var.fixed <- stats::var(fitted(x))
+  var.resid <- stats::var(residuals(x))
+  
+  var.comp <- c(var.fixed = var.fixed, var.resid = var.resid)
+  var.perc <- round((var.comp / sum(var.comp)) * 100, 1)
+  
+  ans <- list(R2 = var.fixed / (var.fixed + var.resid), 
+              var.comp = var.comp,
+              var.perc = var.perc)
+  ans
+}
+
+#' @rdname R2M
+#' @export
+R2M.lm <- R2M.nls
+
+#' @rdname R2M
+#' @export
+R2M.gls <- R2M.nls
+
+#' @rdname R2M
+#' @export
+R2M.gnls <- R2M.nls
+
+#' @rdname R2M
+#' @export
+R2M.lme <- function(x, ...){
+  
+  ## Marginal
+  Q <- x$dims$Q
+
+  prd0 <- predict(x, level = 0) ## This only includes the fixed effects
+  prdQ <- predict(x, level = Q) ## This is fixed effects plus random effects
+  ## Computing fixed, random and residual
+  var.fixed <- stats::var(prd0)
+  var.random <- stats::var(prd0 - prdQ)
+  var.resid <- stats::var(residuals(x))
+
+  var.comp <- c(var.fixed = var.fixed,
+                var.random = var.random, 
+                var.resid = var.resid)
+  
+  var.perc <- round((var.comp / sum(var.comp)) * 100, 1)  
+  
+  R2.marginal <- var.fixed / (var.fixed + var.random + var.resid)
+  R2.conditional <- (var.fixed + var.random) / (var.fixed + var.random + var.resid)
+  
+  ans <- list(R2.marginal = R2.marginal,
+              R2.conditional = R2.conditional,
+              var.comp = var.comp,
+              var.perc = var.perc)
+  ans  
+  
+}
+
+#' @rdname R2M
+#' @export
+R2M.nlme <- R2M.lme
+
+
+
 

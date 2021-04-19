@@ -14,6 +14,12 @@ downloads total](https://cranlogs.r-pkg.org/badges/grand-total/nlraa)](https://g
 
 [Nonlinear Models (video) - part III](https://www.youtube.com/watch?v=cDm9UhwGSXo)
 
+To install
+
+> library(remotes) \
+> remotes::install_github("femiguez/nlraa") \
+> library(nlraa)
+
 This package supports the following publications:
 
 1. Archontoulis, S. V., and F. E. Miguez. 2015. Nonlinear Regression
@@ -32,6 +38,35 @@ This package supports the following publications:
    for ecological data: Using temporal dynamics of vegetation moisture
    as an example. Ecology and Evolution. \
    https://doi.org/10.1002/ece3.5543
+
+Recent publications which cite this package:
+
+1. The Effects of Agronomic Management and 40 Years of Variety Release on 
+Soybean Seed Fill and Yield Components. Kathryn Graf. 2018. MS thesis. 
+Purdue University.
+
+2. Interactive effect of glyphosate-based herbicides and organic soil layer 
+thickness on growth and reproduction of the tropical earthworm 
+Pontoscolex corethrurus (Müller, 1857). Garcia-Perez et al. (2020).
+https://doi.org/10.1016/j.apsoil.2020.103648
+
+3. Abendroth, L.J., Miguez, F.E., Castellano, M.J., Carter, P.R., Messina, 
+C.D., Dixon, P.M. and Hatfield, J.L. (2021), Lengthening of maize maturity 
+time is not a widespread climate change adaptation strategy in the US Midwest. 
+Glob Change Biol. https://doi.org/10.1111/gcb.15565
+
+4. Rotating maize reduces the risk and rate of nitrate leaching. 
+Heather Randolph Pasley, Nichols Virginia, Michael J Castellano, Matthew J Helmers, 
+Mitchell E Baum, Eileen J Kladivko and Sotirios Archontoulis. 2021. Environmental
+Research Letters. https://doi.org/10.1088/1748-9326/abef8f
+
+5. Short-term effects of integrated tillage systems and cover crop on
+agronomic response and soil health in North Central Iowa. Alex Cleveringa. 2020.
+MS Thesis. Iowa State University.
+
+6. Cuando la variabilidad varía: Heterocedasticidad y funciones de varianza. 
+Oddi, F. J., Miguez, F. E., Benedetti, G. G., & Garibaldi, L. A. (2020). 
+Ecología Austral; 30; 438-453.
 
 Other publications where we have used nonlinear mixed models:
 
@@ -69,8 +104,4 @@ Ideas for future versions:
 * Include more data and analysis code from the above examples
 * Include more SS functions
 
-To install
 
-> library(remotes) \
-> remotes::install_github("femiguez/nlraa") \
-> library(nlraa)
