@@ -51,7 +51,7 @@ predict function for objects of class \code{\link[nlme]{lme}}
 }
 \note{
 all the objects should be fitted to the same data. The weights are
-based on the inverse of the IC value.
+based on the IC value.
 }
 \examples{
 \donttest{
