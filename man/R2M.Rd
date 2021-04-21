@@ -52,13 +52,13 @@ these numbers mean and why would you want to compute them are good questions to
 ponder... \cr
 
 Recommended reading: \cr
-Nakagawa and Schielzeth Methods in Ecology and Evolution (doi:10.1111/j.2041-210x.2012.00261.x) \cr
+Nakagawa and Schielzeth Methods in Ecology and Evolution \doi{10.1111/j.2041-210x.2012.00261.x} \cr
 
 \url{https://stats.idre.ucla.edu/other/mult-pkg/faq/general/faq-what-are-pseudo-r-squareds/} \cr
 
 Spiess, AN., Neumeyer, N. An evaluation of R2 as an inadequate measure for nonlinear models in 
 pharmacological and biochemical research: a Monte Carlo approach. BMC Pharmacol 10, 6 (2010). 
-\url{https://doi.org/10.1186/1471-2210-10-6} \cr
+\doi{10.1186/1471-2210-10-6} \cr
 
 \url{https://stat.ethz.ch/pipermail/r-sig-mixed-models/2010q1/003363.html} \cr
 
