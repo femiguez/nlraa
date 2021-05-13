@@ -196,7 +196,11 @@ simulate_nls_one <- function(object,
     prs <- MASS::mvrnorm(n = 1, mu = coef(object), Sigma = vcov(object))
     ## Simply add residuals
     n <- stats::nobs(object)
-    rsd0 <- stats::resid(object)
+    ## Change made May 6 2021. Many resources scale the residuals before re-sampling
+    ## I always knew this, but it seemed like a vey minor issue
+    ## Before this date the residuals were not scaled
+    ## See, for example, MASS Venables and Ripley page 225-226
+    rsd0 <- scale(stats::resid(object), scale = FALSE)
     if(resid.type == "resample"){
       rsds <- sample(rsd0, size = n, replace = TRUE)      
     }

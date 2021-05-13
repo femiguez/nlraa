@@ -91,7 +91,7 @@ plot(profile(fit.lp, "xs"))
 
 Being able to see the whole profile for a parameter can be interesting in terms of understanding its behavior. For example, in this model, which has a 'break-point', we would not expect all the parameters to have identical shaped profiles and that is illustrated above for parameter 'xs'.
 
-In this case, bootstraping is an alternative to computing the confidence intervals and it can be used as a way to double-check the previous results, but it can also be used when profiling fails. A couple of functions which can perform bootstraping for nonlinear models are 'boot_nls' in the 'nlraa' pacakge or the 'Boot' in the 'car' pacakge. 
+In this case, bootstraping is an alternative to computing the confidence intervals and it can be used as a way to double-check the previous results, but it can also be used when profiling fails. A couple of functions which can perform bootstraping for nonlinear models are 'boot_nls' in the 'nlraa' pacakge or the 'Boot' in the 'car' package. 
 
 ```{r barley-boot-nls-0, echo = FALSE}
 fit.lp0 <- nls(yield ~ SSlinp(NF, a, b, xs), data = barley)

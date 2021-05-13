@@ -65,6 +65,9 @@ simulate_gnls <- function(object, psim = 1, na.action = na.fail, naPattern = NUL
     args <- list(...)
     if(!is.null(args$newdata)){
       ndata <- args$newdata
+      if(length(unique(attr(residuals(object), "std"))) > 1 && psim == 2)
+        stop("At this point newdata is not compatible with observation-level simulation",
+             call. = FALSE)
     }else{
       if(is.null(data)){
         ndata <- try(nlme::getData(object), silent = TRUE)

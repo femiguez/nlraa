@@ -227,3 +227,115 @@ get_mnames <- function(x){
 #' @description predict function for objects of class \code{\link[mgcv]{gam}}
 #' @export
 predict_gam <- predict_nls
+
+#' The method used in this function is described in Battes and Watts (2007)
+#' Nonlinear Regression Analysis and Its Applications (see pages 58-59). It is 
+#' known as the Delta method.
+#' 
+#' This method is approximate and it works better when the distribution of the 
+#' parameter estimates are normally distributed. This assumption can be evaluated
+#' by using bootstrap.
+#' 
+#' 
+#' @title Prediction Bands for Nonlinear Regression
+#' @name predict2_nls
+#' @param object object of class \sQuote{nls}
+#' @param newdata data frame with values for the predictor
+#' @param interval either \sQuote{none}, \sQuote{confidence} or \sQuote{prediction}
+#' @param level probability level (default is 0.95)
+#' @return a data frame with Estimate, Est.Error, lower interval bound and upper 
+#' interval bound. For example, if the level = 0.95, 
+#' the lower bound would be named Q2.5 and the upper bound would be name Q97.5
+#' @export
+#' @seealso \code{\link{predict.nls}} and \code{\link{predict_nls}}
+#' @examples 
+#' \donttest{
+#' require(ggplot2)
+#' require(nlme)
+#' data(Soybean)
+#' SoyF <- subset(Soybean, Variety == "F" & Year == 1988)
+#' fm1 <- nls(weight ~ SSlogis(Time, Asym, xmid, scal), data = SoyF)
+#' ## The SSlogis also supplies analytical derivatives
+#' ## therefore the predict function returns the gradient too
+#' prd1 <- predict(fm1, newdata = SoyF)
+#' ## Gradient
+#' head(attr(prd1, "gradient"))
+#' ## Prediction method using gradient
+#' prds <- predict2_nls(fm1, interval = "conf")
+#' SoyFA <- cbind(SoyF, prds)
+#' ggplot(data = SoyFA, aes(x = Time, y = weight)) + 
+#'    geom_point() + 
+#'    geom_line(aes(y = Estimate)) + 
+#'    geom_ribbon(aes(ymin = Q2.5, ymax = Q97.5), fill = "purple", alpha = 0.3) +
+#'    ggtitle("95% Confidence Bands")
+#' fm2 <- nls(weight ~ Asym/(1 + exp((xmid - Time)/scal)), data = SoyF,
+#'            start = c(Asym = 20, xmid = 56, scal = 8))
+#' ## Using predict.nls on this object will not return a gradient 
+#' ## so predict2_nls will fail
+#' predict(fm2)
+#' ## For this reason, functions which use a selfStart are recommended
+#' ## Prediction interval
+#' prdi <- predict2_nls(fm1, interval = "pred")
+#' SoyFA.PI <- cbind(SoyF, prdi) 
+#' ## Make prediction interval plot
+#' ggplot(data = SoyFA.PI, aes(x = Time, y = weight)) + 
+#'    geom_point() + 
+#'    geom_line(aes(y = Estimate)) + 
+#'    geom_ribbon(aes(ymin = Q2.5, ymax = Q97.5), fill = "purple", alpha = 0.3) + 
+#'    ggtitle("95% Prediction Band")
+#' ## For these data we should be using gnls instead with an increasing variance
+#' fmg1 <- gnls(weight ~ SSlogis(Time, Asym, xmid, scal), 
+#'              data = SoyF, weights = varPower())
+#' IC_tab(fm1, fmg1)
+#' prdg <- predict_nlme(fmg1, plevel = 1, interval = "pred")
+#' SoyFA.GPI <- cbind(SoyF, prdg) 
+#' ## These prediction bands are not perfect, but they could be smoothed
+#' ## to eliminate the ragged appearance
+#'  ggplot(data = SoyFA.GPI, aes(x = Time, y = weight)) + 
+#'    geom_point() + 
+#'    geom_line(aes(y = Estimate)) + 
+#'    geom_ribbon(aes(ymin = Q2.5, ymax = Q97.5), fill = "purple", alpha = 0.3) + 
+#'    ggtitle("95% Prediction Band. NLS model which \n accomodates an increasing variance")
+#' }
+predict2_nls <- function(object, newdata = NULL, 
+                         interval = c("none", "confidence", "prediction"), 
+                         level = 0.95){
+  
+  if(!inherits(object, "nls"))
+    stop("This function is only for objects of class 'nls'")
+  
+  interval <- match.arg(interval)
+  npar <- length(coef(object))
+  degf <- length(fitted(object)) - npar
+  
+  prd <- predict(object, newdata = newdata) ## predictions plus gradient
+  se.prd <- NA
+  Lwr <- NA
+  Upr <- NA
+  if(interval != "none"){
+    grd <- attr(prd, "gradient") ## retrieve gradient  
+    if(is.null(grd))
+      stop("The gradient on the predictions is required for this function. See examples",
+           call. = FALSE)
+    Rmat <- object$m$Rmat() ## R matrix
+    vtR <- grd %*% solve(Rmat) ## gradient times R^-1
+    vtR.L <- sqrt(apply(vtR^2, 1, sum)) ## length of vector
+    se.prd <- sigma(object) * vtR.L 
+    ci.width <- se.prd * sqrt(npar * stats::qf(level, npar, degf))
+    Lwr <- as.vector(prd) - ci.width
+    Upr <- as.vector(prd) + ci.width
+  }
+  
+  if(interval == "prediction"){
+    ci.width <- sqrt(se.prd^2 + sigma(object)^2) * sqrt(npar * stats::qf(level, npar, degf))
+    Lwr <- as.vector(prd) - ci.width
+    Upr <- as.vector(prd) + ci.width
+  }
+  
+  ans <- data.frame(Estimate = as.vector(prd), Est.Error = se.prd, 
+                    Lwr = Lwr, Upr = Upr)
+  names(ans) <- c("Estimate", "Est.Error", 
+                  paste0("Q", 100 * (1 - level)/2), 
+                  paste0("Q", 100 - 100 * (1 - level)/2))
+  return(ans)
+}

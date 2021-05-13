@@ -71,6 +71,9 @@ simulate_nlme_one <- function(object, psim = 1, level = Q, asList = FALSE, na.ac
   args <- list(...)
   if(!is.null(args$newdata)){
     newdata <- args$newdata
+    if(length(unique(attr(residuals(object), "std"))) > 1 && psim == 2)
+      stop("At this point newdata is not compatible with observation-level simulation",
+           call. = FALSE)
   }else{
     if(is.null(data)){
       newdata <- try(nlme::getData(object), silent = TRUE)
