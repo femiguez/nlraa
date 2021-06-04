@@ -11,9 +11,10 @@
 #' @param nsim number of simulations to perform for intervals. Default 1000.
 #' @param resid.type either \sQuote{none}, \dQuote{resample}, \dQuote{normal} or \dQuote{wild}.
 #' @param newdata new data frame for predictions
-#' @return numeric vector of the same length as the fitted object.
+#' @return numeric vector of the same length as the fitted object when interval is equal to \sQuote{none}. Otherwise,
+#' a data.frame with columns named (for a 0.95 level) \sQuote{Estimate}, \sQuote{Est.Error}, \sQuote{Q2.5} and \sQuote{Q97.5}
 #' @note all the objects should be fitted to the same data. Weights are
-#' based on the chosen IC value (exp(-0.5 * IC)). 
+#' based on the chosen IC value (exp(-0.5 * delta IC)). 
 #' For models of class \code{\link[mgcv]{gam}} there is very limited support.
 #' @seealso \code{\link[stats]{predict.lm}}, \code{\link[stats]{predict.nls}}, \code{\link[mgcv]{predict.gam}}, \code{\link{simulate_nls}}, \code{\link{simulate_gam}}
 #' @export
@@ -221,12 +222,108 @@ get_mnames <- function(x){
   mnames
 }
 
-
-#' @name predict_gam
+#' @name predict2_gam
 #' @rdname predict_nls
 #' @description predict function for objects of class \code{\link[mgcv]{gam}}
 #' @export
-predict_gam <- predict_nls
+predict2_gam <- predict_nls
+
+#' @title Modified prediciton function based on predict.gam
+#' @name predict_gam
+#' @description Largely based on predict.gam, but with some minor modifications to make it compatible
+#' with \code{\link{predict_nls}}
+#' @param object object of class \sQuote{gam} or as returned by function \sQuote{gamm}
+#' @param newdata see \code{\link[mgcv]{predict.gam}}
+#' @param type see \code{\link[mgcv]{predict.gam}}
+#' @param se.fit see \code{\link[mgcv]{predict.gam}}. Notice that the default is changed to TRUE.
+#' @param terms see \code{\link[mgcv]{predict.gam}}
+#' @param exclude see \code{\link[mgcv]{predict.gam}}
+#' @param block.size see \code{\link[mgcv]{predict.gam}}
+#' @param newdata.guaranteed see \code{\link[mgcv]{predict.gam}}
+#' @param na.action see \code{\link[mgcv]{predict.gam}}
+#' @param unconditional see \code{\link[mgcv]{predict.gam}}
+#' @param iterms.type see \code{\link[mgcv]{predict.gam}}
+#' @param interval either \sQuote{none}, \sQuote{confidence} or \sQuote{prediction}.
+#' @param level probability level for the interval (default 0.95)
+#' @param tvalue t-value statistic used for constructing the intervals
+#' @param ... additional arguments to be passed to \code{\link[mgcv]{predict.gam}}.
+#' @return numeric vector of the same length as the fitted object when interval is equal to \sQuote{none}. 
+#' Otherwise, a data.frame with columns named (for a 0.95 level) 
+#' \sQuote{Estimate}, \sQuote{Est.Error}, \sQuote{Q2.5} and \sQuote{Q97.5}
+#' @note this is a very simple wrapper for \code{\link[mgcv]{predict.gam}}.
+#' @seealso \code{\link[stats]{predict.lm}}, \code{\link[stats]{predict.nls}}, \code{\link[mgcv]{predict.gam}}, \code{\link{simulate_nls}}, \code{\link{simulate_gam}}
+#' @export
+#' @examples 
+#' \donttest{
+#' require(ggplot2)
+#' require(mgcv)
+#' data(barley)
+#' 
+#' fm.G <- gam(yield ~ s(NF, k = 6), data = barley)
+#' 
+#' ## confidence and prediction intervals
+#' cis <- predict_gam(fm.G, interval = "conf")
+#' pis <- predict_gam(fm.G, interval = "pred")
+#' 
+#' barleyA.ci <- cbind(barley, cis)
+#' barleyA.pi <- cbind(barley, pis)
+#' 
+#' ggplot() + 
+#'   geom_point(data = barleyA.ci, aes(x = NF, y = yield)) + 
+#'   geom_line(data = barleyA.ci, aes(x = NF, y = Estimate)) + 
+#'   geom_ribbon(data = barleyA.ci, aes(x = NF, ymin = Q2.5, ymax = Q97.5), 
+#'               color = "red", alpha = 0.3) + 
+#'   geom_ribbon(data = barleyA.pi, aes(x = NF, ymin = Q2.5, ymax = Q97.5), 
+#'               color = "blue", alpha = 0.3) + 
+#'   ggtitle("95% confidence and prediction bands")
+#'   
+#' }
+predict_gam <- function(object, newdata=NULL, type="link", se.fit=TRUE, terms=NULL,
+                        exclude=NULL, block.size=NULL, newdata.guaranteed=FALSE,
+                        na.action=na.pass, unconditional=FALSE, iterms.type=NULL,
+                        interval = c("none", "confidence", "prediction"),
+                        level = 0.95, tvalue=NULL, ...){
+  
+  if(is.list(object) && inherits(object[[1]], "lme") && inherits(object[[2]], "gam")){
+    object <- object[[2]]
+  }
+  
+  if(!inherits(object, "gam")) stop("object should be of class 'gam'")
+  
+  interval <- match.arg(interval)
+  
+  if(missing(newdata)) newdata <- eval(object$call$data)
+
+  prd <- mgcv::predict.gam(object, newdata=newdata, type=type, se.fit=se.fit,
+                           terms=terms, exclude=exclude, block.size=block.size, 
+                           newdata.guaranteed=newdata.guaranteed, na.action=na.action,
+                           unconditional = unconditional, iterms.type = iterms.type, ...)
+  
+  if(interval == "none"){
+    ans <- prd$fit
+  }
+  
+  if(interval == "confidence"){
+    if(missing(tvalue)){
+      tvalue <- stats::qt(level, df = object$df.residual)
+    }
+    lwr <- prd$fit - tvalue * prd$se.fit
+    upr <- prd$fit + tvalue * prd$se.fit
+    ans <- data.frame(Estimate = prd$fit, Est.Error = prd$se.fit, lwr = lwr, upr = upr)
+    names(ans) <- c("Estimate", "Est.Error", paste0("Q", 100*(1 - level)/2), paste0("Q", 100 * (1 - (1 - level)/2)))
+  }
+  
+  if(interval == "prediction"){
+    if(missing(tvalue)){
+      tvalue <- stats::qt(level, df = object$df.residual)
+    }
+    lwr <- prd$fit - tvalue * sqrt(prd$se.fit^2 + sigma(object)^2)
+    upr <- prd$fit + tvalue * sqrt(prd$se.fit^2 + sigma(object)^2)
+    ans <- data.frame(Estimate = prd$fit, Est.Error = prd$se.fit, lwr = lwr, upr = upr)
+    names(ans) <- c("Estimate", "Est.Error", paste0("Q", 100*(1 - level)/2), paste0("Q", 100 * (1 - (1 - level)/2)))
+  }
+  return(ans)
+}
 
 #' The method used in this function is described in Battes and Watts (2007)
 #' Nonlinear Regression Analysis and Its Applications (see pages 58-59). It is 

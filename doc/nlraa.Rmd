@@ -1,5 +1,5 @@
 ---
-title: "Nonlinear Regression Agricultural Applications"
+title: "nlraa: An R package for Nonlinear Regression Applications in Agricultural Research"
 author: "Fernando Miguez"
 date: "`r Sys.Date()`"
 fig_width: 6
@@ -54,18 +54,21 @@ One of the objectives of those publications was to introduce a large family of n
 10. SSplin (plateau-linear)
 11. SSquadp (quadratic-plateau)
 12. SSpquad (plateau-quadratic)
-13. SSblin (bilinear)
-14. SSexpf (exponential function)
-15. SSexpfp (exponential-plateau)
-16. SSpexpf (plateau-exponential)
-17. SSbell (bell-shaped function)
-18. SSratio (rational function)
-19. SSlogis5 (five-parameter logistic)
-20. SStrlin (tri-linear function)
-21. SSexplin (expolinear)
-22. SShill-123 (Hill function with 1, 2, or 3 parameters)
-23. SSbeta5 (beta temperature response function with 5 parameters)
-24. SStemp3 (temperature response function with 3 parameters)
+13. SSquadp3 (quadratic-plateau-3-parameters)
+14. SSpquad3 (plateau-quadratic-3-parameters)
+15. SSblin (bilinear)
+16. SSexpf (exponential function)
+17. SSexpfp (exponential-plateau)
+18. SSpexpf (plateau-exponential)
+19. SSbell (bell-shaped function)
+20. SSratio (rational function)
+21. SSlogis5 (five-parameter logistic)
+22. SStrlin (tri-linear function)
+23. SSexplin (expolinear)
+24. SShill-123 (Hill function with 1, 2, or 3 parameters)
+25. SSbeta5 (beta temperature response function with 5 parameters)
+26. SStemp3 (temperature response function with 3 parameters)
+27. SSmoh (modified hyperbola)
 
 For the reference on the Beta growth function see Yin et al. 2003 (https://doi.org/10.1093/aob/mcg029) and Erratum: (https://doi.org/10.1093/aob/mcg091). For a reference on the beta temperature response function see Yin et al. 1995 (https://doi.org/10.1016/0168-1923(95)02236-Q).
 For a reference on a use of the declining logistic see Oddi et al. (2019) (and vignette in this package). For the Ricker model see: (https://en.wikipedia.org/wiki/Ricker_model). For the protein profile in the canopy see Johnson et al. (2010) (https://doi.org/10.1093/aob/mcq183). 
@@ -80,6 +83,28 @@ The main benefit of having these self starting functions is that they can be inc
 apropos("^SS")
 ```
 
+## Prediction, Simulation and Bootstrap
+
+Functions for prediction:
+
+1. predict_nls
+2. predict_nlme
+
+Some particularly useful functions which simplify generating simulations:
+
+1. simulate_lm
+2. simulate_nls
+3. simulate_lme
+4. simulate_nlme
+
+Other functions which can perform bootsrapping:
+
+1. boot_lm
+2. boot_nls
+3. boot_lme
+4. boot_nlme
+
+
 # Datasets
 
 These are the available datasets distributed with this package:
@@ -88,6 +113,7 @@ These are the available datasets distributed with this package:
 2. "lfmc"
 3. "swpg"
 4. "barley"
+5. "maizeleafext"
 
 ```{r sm}
 ## Sorghum and Maize dataset
@@ -122,6 +148,16 @@ ggplot(data = barley, aes(x = NF, y = yield, color = as.factor(year))) +
   geom_point() +
   xlab("Nitrogen fertilizer (g/m^2)") +
   ylab("Grain (g/m^2)")
+```
+
+```{r maizeleafext}
+## Response of barley to nitrogen fertilizer
+## There is a barley dataset also in package 'lattice'
+data(maizeleafext, package = "nlraa")
+ggplot(data = maizeleafext, aes(x = temp, y = rate)) +
+  geom_point() + geom_line() + 
+  xlab("Temperature (C)") +
+  ylab("Leaf Extension Rate (relative)")
 ```
 
 # What to do when convergence fails?
@@ -262,6 +298,7 @@ for 'nls' objects.
 
 ## **HydroMe** package
 
+Note: As of 2020-12-8 it has been removed from CRAN.
 This package has functions for fitting water retention curves. It
 uses the 'minpack.lm' package which has a different implementation of the 
 minimization algorithm (Levenberg-Marquardt).
@@ -288,14 +325,15 @@ And additional models, such as:
 ## Nonlinear mixed models packages
 
 **saemix**, **nlmixr** and **brms** (Bayesian). I'm planning to review these pacakges in a
-next version of nlraa.
+future version of nlraa.
 
 ## Additional material on growth models
 
 1. A unified approach to the Richards-model family for use in growth analyses:
 Why we need only two model forms. \doi{10.1016/j.jtbi.2010.09.008}. Might incorporate this function in the package in the future.
 
-2. The use of Gompertz models in growth analyses, and new Gompertz-model approach: An addition to the Unified-Richards family. (https://doi.org/10.1371/journal.pone.0178691).
+2. The use of Gompertz models in growth analyses, and new Gompertz-model approach: An addition to the Unified-Richards family. (At the moment the DOI does not work.)
+<!-- (https://doi.org/10.1371/journal.pone.0178691). -->
 
 3. Choosing the right sigmoid growth function using the unified-models approach. \doi{10.1111/ibi.12592}.
 

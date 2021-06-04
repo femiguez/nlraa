@@ -2,7 +2,7 @@
 % Please edit documentation in R/predict_nls.R
 \name{predict_nls}
 \alias{predict_nls}
-\alias{predict_gam}
+\alias{predict2_gam}
 \title{Average predictions from several (non)linear models based on IC weights}
 \usage{
 predict_nls(
@@ -15,7 +15,7 @@ predict_nls(
   newdata = NULL
 )
 
-predict_gam(
+predict2_gam(
   ...,
   criteria = c("AIC", "AICc", "BIC"),
   interval = c("none", "confidence", "prediction"),
@@ -41,7 +41,8 @@ predict_gam(
 \item{newdata}{new data frame for predictions}
 }
 \value{
-numeric vector of the same length as the fitted object.
+numeric vector of the same length as the fitted object when interval is equal to \sQuote{none}. Otherwise,
+a data.frame with columns named (for a 0.95 level) \sQuote{Estimate}, \sQuote{Est.Error}, \sQuote{Q2.5} and \sQuote{Q97.5}
 }
 \description{
 Computes weights based on AIC, AICc, or BIC and it generates weighted predictions by
@@ -51,7 +52,7 @@ predict function for objects of class \code{\link[mgcv]{gam}}
 }
 \note{
 all the objects should be fitted to the same data. Weights are
-based on the chosen IC value (exp(-0.5 * IC)). 
+based on the chosen IC value (exp(-0.5 * delta IC)). 
 For models of class \code{\link[mgcv]{gam}} there is very limited support.
 }
 \examples{

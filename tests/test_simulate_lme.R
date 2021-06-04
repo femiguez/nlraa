@@ -2,6 +2,7 @@
 require(nlme)
 require(nlraa)
 require(ggplot2)
+require(car)
 
 run.test.simulate.lme <- Sys.info()[["user"]] == "fernandomiguez"
 
@@ -137,4 +138,72 @@ if(run.test.simulate.lme){
     geom_point(data = Orange, aes(x = age, y = circumference, color = Tree)) + 
     geom_line(data = Orange.newdata, aes(x = age, y = prd, color = Tree)) + 
     geom_ribbon(data = Orange.newdata, aes(x = age, ymin = lwr, ymax = upr, fill = Tree), alpha = 0.1)
+}
+
+if(run.test.simulate.lme){
+  
+  data(barley, package = "nlraa")
+  
+  fm0 <- lme(yield ~ NF + I(NF^2), random = ~ 1 | year, data = barley)
+
+  prd1 <- predict_lme(fm0, interval = "conf")
+  barleyA1 <- cbind(barley, prd1)
+  
+  ggplot(data = barleyA1, aes(x = NF, y = yield)) + 
+    geom_point() + 
+    geom_line(aes(y = Estimate)) + 
+    geom_ribbon(aes(ymin = Q2.5, ymax = Q97.5), fill = "blue", alpha = 0.3)
+  
+  ## Considering the effect of random effects
+  ## Note: there is a bug, psim = 3 is not compatible with level = 0
+  prd_fun0 <- function(x) predict(x, level = 0)
+  boot1 <- boot_lme(fm0, prd_fun0, cores = 3)
+  
+  barleyA2 <- cbind(barley, summary_simulate(t(boot1$t)))
+
+  ggplot(data = barleyA2, aes(x = NF, y = yield)) + 
+    geom_point() + 
+    geom_line(aes(y = Estimate)) + 
+    geom_ribbon(aes(ymin = Q2.5, ymax = Q97.5), fill = "blue", alpha = 0.3)
+  
+  ## Now resample the random effects
+  boot2 <- boot_lme(fm0, prd_fun0, psim = 3, cores = 3)
+  
+  barleyA3 <- cbind(barley, summary_simulate(t(boot2$t)))
+  
+  ggplot() + 
+    geom_point(data = barley, aes(x = NF, y = yield)) + 
+    geom_line(data = barleyA2, aes(x = NF, y = Estimate)) + 
+    geom_ribbon(data = barleyA2, aes(x = NF, ymin = Q2.5, ymax = Q97.5, fill = "psim = 2"), alpha = 0.3) + 
+    geom_ribbon(data = barleyA3, aes(x = NF, ymin = Q2.5, ymax = Q97.5, fill = "psim = 3"), alpha = 0.3)
+  
+  ### Bootstrapping the covariance parameter
+  rand.int <- function(x) sqrt(var_cov(x, type = "random"))
+  boot.cvp.psim1 <- boot_lme(fm0, rand.int, cores = 3)
+  boot.cvp.psim3 <- boot_lme(fm0, rand.int, cores = 3, psim = 3)
+
+  ## Clearly, psim 3 is necessary when bootstrapping the random effects
+  hist(boot.cvp.psim1, ci = "perc")
+  hist(boot.cvp.psim3, ci = "perc")
+  
+  ## This second model is better
+  fm1 <- lme(yield ~ NF + I(NF^2), random = ~ NF | year, data = barley)
+    
+  anova(fm0, fm1)
+  IC_tab(fm0, fm1)
+  
+  fm2 <- lme(yield ~ NF + I(NF^2), random = ~ NF + I(NF^2) | year, data = barley)
+
+  anova(fm0, fm1, fm2)
+  IC_tab(fm0, fm1, fm2)
+  
+  prd3 <- predict_lme(fm2, interval = "conf", psim = 3)
+  barleyA3 <- cbind(barley, prd3)
+  
+  ggplot(data = barleyA3, aes(x = NF, y = yield)) + 
+    geom_point() + 
+    geom_line(aes(y = Estimate)) + 
+    geom_ribbon(aes(ymin = Q2.5, ymax = Q97.5), fill = "blue", alpha = 0.3)
+  
+  
 }

@@ -19,7 +19,7 @@
 #' x <- seq(0, 2000, 100)
 #' y <- logis5(x, 35, 10, 800, 5, 2) + rnorm(length(x), 0, 0.5)
 #' dat <- data.frame(x = x, y = y)
-#' fit <- nls(y ~ SSlogis5(x, asym1, asym2, xmid, scal, theta), data = dat)
+#' fit <- nls(y ~ SSlogis5(x, asym1, asym2, xmid, iscal, theta), data = dat)
 #' ## plot
 #' ggplot(data = dat, aes(x = x, y = y)) + 
 #'   geom_point() + 
@@ -36,7 +36,7 @@ logis5Init <- function(mCall, LHS, data, ...){
   asym1 <- xy[1,"y"]
   asym2 <- xy[nrow(xy),"y"]
   xmid <- NLSstClosestX(xy, mean(c(asym1, asym2)))
-  iscal <- 1/(max(xy[,"x"]) - xmid)
+  iscal <- 1/(max(xy[,"x"], na.rm = TRUE) - xmid)
   theta <- 1
   
   objfun <- function(cfs){
@@ -47,7 +47,7 @@ logis5Init <- function(mCall, LHS, data, ...){
   cfs <- c(asym1, asym2, xmid, iscal, theta)
   op <- try(stats::optim(cfs, objfun), silent = TRUE)
   
-  if(class(op) != "try-error"){
+  if(!inherits(op, "try-error")){
     asym1 <- op$par[1]
     asym2 <- op$par[2]
     xmid <- op$par[3]

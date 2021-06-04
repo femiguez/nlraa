@@ -1,4 +1,4 @@
-## ----setup, include=FALSE------------------------------------------------
+## ----setup, include=FALSE-----------------------------------------------------
 knitr::opts_chunk$set(echo = TRUE, fig.width = 7, fig.height = 6)
 library(lattice)
 library(nlme)
@@ -7,14 +7,14 @@ library(nlraa)
 library(bbmle)
 library(emmeans)
 
-## ----lfmc-data-----------------------------------------------------------
+## ----lfmc-data----------------------------------------------------------------
 data(lfmc)
 lfmc.gd <- groupedData(lfmc ~ time | group, data = lfmc, order.groups=FALSE) 
 ## a groupedData class object is created 
 lfmc.gd$plot = with(lfmc.gd, factor(plot, levels=c("4", "5", "6", "1", "2", "3")))
 ## "plot" is coded as factor in the groupedData object
 
-## ----lfmc-plot-----------------------------------------------------------
+## ----lfmc-plot----------------------------------------------------------------
 ggplot(data = lfmc, aes(x = time, y = lfmc)) + 
   geom_point() + 
   geom_smooth(method = "loess") +
@@ -22,7 +22,7 @@ ggplot(data = lfmc, aes(x = time, y = lfmc)) +
   xlab("Time (days)") + 
   ylab("LFMC (%)") # The LFMC temporal dynamics is plotted by "leaf type" 
 
-## ----lfmc-nlslist--------------------------------------------------------
+## ----lfmc-nlslist-------------------------------------------------------------
 ## Fixed-effects model for each group usign the selfStart function ("SSdlf")
 nlsL <- nlsList(lfmc ~ SSdlf(time, A, w, m, s), data = lfmc.gd) 
 ## one nls() model is fitted for each group ("plot" x "leaf type"). 
@@ -31,11 +31,11 @@ coef(nlsL)
 plot(intervals(nlsL)) 
 ## confidence intervals (wide intervals indicate convergence problems)
 
-## ----lfmc-RE-model-------------------------------------------------------
+## ----lfmc-RE-model------------------------------------------------------------
 nl.re <- nlme(nlsL, control = nlmeControl(maxIter = 5000, msMaxIter = 1500)) 
 ## all effects on A, w, m, s are assumed as random. The model variance-covariance is unstructured.   
 
-## ----lfmc-RE-model-2-----------------------------------------------------
+## ----lfmc-RE-model-2----------------------------------------------------------
 ## Therefore, 
 nl.re.1 <- update(nl.re, random = pdDiag(A + w + m + s ~ 1)) 
 ## a random-effects model assuming zero correlation among the random-effects is fitted 
@@ -43,14 +43,14 @@ nl.re.1 <- update(nl.re, random = pdDiag(A + w + m + s ~ 1))
 fxf <- fixef(nl.re.1) # the intercepts of the previous model are obtained to be used in the next step. 
 ## Mixed-effects model ("leaf type" is included as a fixed-effect on A, W, M, S) 
 
-## ----lfmc-RE-model-no-converge, eval = FALSE-----------------------------
+## ----lfmc-RE-model-no-converge, eval = FALSE----------------------------------
 #  nl.me <- update(nl.re.1, fixed = list(A + w + m + s ~ leaf.type),
 #                  start = c(A=fxf[1],0,0,0, w=fxf[2],0,0,0, m=fxf[3],0,0,0, s=fxf[4],0,0,0))
 #  ## Error in (function (model, data = sys.frame(sys.parent()), fixed, random,  :
 #  ##  Singularity in backsolve at level 0, block 1
 #  ## convergence problems
 
-## ----lfmc-refining-the-model---------------------------------------------
+## ----lfmc-refining-the-model--------------------------------------------------
 nl.re.1 # StdDev of "S" is small. 
 ## Therefore, the random-effects on "S" could be removed to achieve convergence 
 nl.re.2 <- update(nl.re.1, random = pdDiag(A + w + m ~ 1))  
@@ -70,14 +70,14 @@ AICtab(nl.me.1, nl.me.2) # and the AIC comparison supports the simpler model
 nl.me.3 <- update(nl.me.2, random = pdDiag(A ~ 1)) 
 AICtab(nl.me.2, nl.me.3) # the model fit is similar, supporting the simpler model
 
-## ----lfmc-plot-resid, echo = FALSE---------------------------------------
+## ----lfmc-plot-resid, echo = FALSE--------------------------------------------
 # Residual checking:
 plot(nl.me.3) # heterocedasticity is clear
 hist(resid(nl.me.3, type="normalized"), main="", xlab="Residuals") 
 qqnorm(resid(nl.me.3, type="normalized"))
 qqline(resid(nl.me.3, type="normalized"))
 
-## ----lfmc-variance-modeling----------------------------------------------
+## ----lfmc-variance-modeling---------------------------------------------------
 # Heterocedasticity: variance modeling ---- 
 nl.me.3.vm <- update(nl.me.3, weights = varIdent(form=~1|leaf.type)) 
 AICtab(nl.me.3, nl.me.3.vm) 
@@ -94,7 +94,7 @@ qqline(resid(nl.me.3.vm, type="normalized"))
 plot(ACF(nl.me.3.vm), alpha = 0.01) 
 ## This plot suggests there is no need for modeling the correlation of the residuals
 
-## ----lfmc-RE-model-plus-FE-----------------------------------------------
+## ----lfmc-RE-model-plus-FE----------------------------------------------------
 # Evaluation of the fixed-effects
 nl.me.ml <- update(nl.me.3.vm, method ="ML") 
 ## the model is fitted by Maximum likelihood 
@@ -119,14 +119,14 @@ nl.me.ml.4 <- update(nl.me.ml, fixed = list(w ~ leaf.type, A + m + s  ~ 1),
 AICtab(nl.me.ml.2, nl.me.ml.4) 
 ## the AIC comparison suggests to "A" to be modeled as a function of "leaf type" 
 
-## ----lfmc-final-model----------------------------------------------------
+## ----lfmc-final-model---------------------------------------------------------
 M1 <- update(nl.me.ml.2, method = "REML")
 summary(M1)
 fixef(M1) # Fixed effects 
 ranef(M1) # Random effects
 intervals(M1) # Confidence intervals
 
-## ----lfmc-facu-script----------------------------------------------------
+## ----lfmc-facu-script---------------------------------------------------------
 # 2.2.1 - Overall predictions (Table 3) ---- 
 Agw <- fixef(M1)[1] # "A" for grasses in the W site (GW) 
 Age <- fixef(M1)[1]+fixef(M1)[2] # "A" for grasses in the E site (GE)

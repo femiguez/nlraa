@@ -18,19 +18,19 @@ if(Sys.info()[["user"]] == "fernandomiguez"){
   IC_tab(fmg, fmb)
   
   fmgp <- predict_gam(fmg, interval = "conf")
-  fmbp <- predict_gam(fmb, interval = "conf")
+  fmbp <- predict2_nls(fmb, interval = "conf")
   
   maizeleafextAG <- cbind(maizeleafext, fmgp)
   maizeleafextAB <- cbind(maizeleafext, fmbp)
   
   ggplot() + 
     geom_point(data = maizeleafextAG, aes(x = temp, y = rate)) + 
-    geom_line(data = maizeleafextAG, aes(x = temp, y = Estimate, color = "GAM")) + 
-    geom_line(data = maizeleafextAB, aes(x = temp, y = Estimate, color = "Beta5")) + 
+    geom_line(data = maizeleafextAG, aes(x = temp, y = Estimate, color = "GAM"), color = "red") + 
+    geom_line(data = maizeleafextAB, aes(x = temp, y = Estimate, color = "Beta5"), color = "blue") + 
     geom_ribbon(data = maizeleafextAG, 
-                aes(x = temp, ymin = Q2.5, ymax = Q97.5), fill = "purple", alpha = 0.3) + 
+                aes(x = temp, ymin = Q2.5, ymax = Q97.5), fill = "red", alpha = 0.3) + 
     geom_ribbon(data = maizeleafextAB, 
-                aes(x = temp, ymin = Q2.5, ymax = Q97.5), fill = "purple", alpha = 0.3)
+                aes(x = temp, ymin = Q2.5, ymax = Q97.5), fill = "blue", alpha = 0.3)
   
   data(swpg)
   
@@ -69,5 +69,38 @@ if(Sys.info()[["user"]] == "fernandomiguez"){
     geom_point() + 
     geom_line(aes(y = Estimate)) + 
     geom_ribbon(aes(ymin = Q2.5, ymax = Q97.5, fill = Crop, color = NULL), alpha = 0.3)
+ 
+  ## Comparing predict_gam with predict2_gam
+  data(barley)
   
+  fm.G <- gam(yield ~ s(NF, k = 6), data = barley)
+  
+  brly.prd1 <- predict_gam(fm.G, interval = "conf")
+  brly.prd2 <- predict2_gam(fm.G, interval = "conf")
+  
+  cmp.gam <- data.frame(method = rep(c("GAM", "MC"), each = nrow(barley)), 
+                        rbind(barley, barley),
+                        rbind(brly.prd1, brly.prd2))
+  
+  ggplot(data = cmp.gam, aes(x = NF, y = yield)) + 
+    geom_point() + 
+    facet_wrap(~ method) + 
+    geom_line(aes(y = Estimate)) + 
+    geom_ribbon(aes(ymin = Q2.5, ymax = Q97.5), color = "purple", alpha = 0.3) + 
+    ggtitle("95% confidence bands")
+  
+  brly.prd1 <- predict_gam(fm.G, interval = "pred")
+  brly.prd2 <- predict2_gam(fm.G, interval = "pred")
+  
+  cmp2.gam <- data.frame(method = rep(c("GAM", "MC"), each = nrow(barley)), 
+                        rbind(barley, barley),
+                        rbind(brly.prd1, brly.prd2))
+  
+  ggplot(data = cmp2.gam, aes(x = NF, y = yield)) + 
+    geom_point() + 
+    facet_wrap(~ method) + 
+    geom_line(aes(y = Estimate)) + 
+    geom_ribbon(aes(ymin = Q2.5, ymax = Q97.5), color = "purple", alpha = 0.3) + 
+    ggtitle("95% predicition bands")
+
 }

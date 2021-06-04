@@ -40,7 +40,7 @@ set.seed(1234)
 x <- seq(0, 2000, 100)
 y <- logis5(x, 35, 10, 800, 5, 2) + rnorm(length(x), 0, 0.5)
 dat <- data.frame(x = x, y = y)
-fit <- nls(y ~ SSlogis5(x, asym1, asym2, xmid, scal, theta), data = dat)
+fit <- nls(y ~ SSlogis5(x, asym1, asym2, xmid, iscal, theta), data = dat)
 ## plot
 ggplot(data = dat, aes(x = x, y = y)) + 
   geom_point() + 

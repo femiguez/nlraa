@@ -1,26 +1,26 @@
-## ----setup, include=FALSE------------------------------------------------
+## ----setup, include=FALSE-----------------------------------------------------
 knitr::opts_chunk$set(echo = TRUE, fig.width = 7, fig.height = 6)
 library(ggplot2)
 library(nlraa)
 
-## ----apropos-------------------------------------------------------------
+## ----apropos------------------------------------------------------------------
 apropos("^SS")
 
-## ----sm------------------------------------------------------------------
+## ----sm-----------------------------------------------------------------------
 ## Sorghum and Maize dataset
 data(sm)
 ggplot(data = sm, aes(x = DOY, y = Yield, color = Crop)) + 
   geom_point() + 
   facet_wrap(~ Input)
 
-## ----lfmc----------------------------------------------------------------
+## ----lfmc---------------------------------------------------------------------
 ## Live fuel moisture content
 data(lfmc)
 ggplot(data = lfmc, aes(x = time, y = lfmc, color = leaf.type)) +
   geom_point() + 
   ylab("Live fuel moisture content (%)")
 
-## ----swpg----------------------------------------------------------------
+## ----swpg---------------------------------------------------------------------
 ## Soil water and plant growth
 data(swpg)
 ggplot(data = swpg, aes(x = ftsw, y = lfgr)) +
@@ -28,7 +28,7 @@ ggplot(data = swpg, aes(x = ftsw, y = lfgr)) +
   xlab("Fraction Transpirable Soil Water") + 
   ylab("Relative Leaf Growth")
 
-## ----barley--------------------------------------------------------------
+## ----barley-------------------------------------------------------------------
 ## Response of barley to nitrogen fertilizer
 ## There is a barley dataset also in package 'lattice'
 data(barley, package = "nlraa")
@@ -37,21 +37,30 @@ ggplot(data = barley, aes(x = NF, y = yield, color = as.factor(year))) +
   xlab("Nitrogen fertilizer (g/m^2)") +
   ylab("Grain (g/m^2)")
 
-## ---- eval = FALSE-------------------------------------------------------
+## ----maizeleafext-------------------------------------------------------------
+## Response of barley to nitrogen fertilizer
+## There is a barley dataset also in package 'lattice'
+data(maizeleafext, package = "nlraa")
+ggplot(data = maizeleafext, aes(x = temp, y = rate)) +
+  geom_point() + geom_line() + 
+  xlab("Temperature (C)") +
+  ylab("Leaf Extension Rate (relative)")
+
+## ---- eval = FALSE------------------------------------------------------------
 #  ## Error in nls(y ~ SSratio(x, a, b, c, d), data = dat) :
 #  ##  step factor 0.000488281 reduced below 'minFactor' of 0.000976562
 
-## ---- eval = FALSE-------------------------------------------------------
+## ---- eval = FALSE------------------------------------------------------------
 #  ## Error in qr.default(.swts * gr) :
 #  ##  NA/NaN/Inf in foreign function call (arg 1)
 
-## ----barleyG-------------------------------------------------------------
+## ----barleyG------------------------------------------------------------------
 library(nlme)
 data(barley, package = "nlraa")
 barley$yearf <- as.factor(barley$year)
 barleyG <- groupedData(yield ~ NF | yearf, data = barley)
 
-## ----barleyG-mixed-------------------------------------------------------
+## ----barleyG-mixed------------------------------------------------------------
 ## Fit the nonlinear model for each year
 fit.nlis <- nlsList(yield ~ SSasymp(NF, Asym, R0, lrc), data = barleyG)
 ## Use this to fit a nonlinear mixed model
