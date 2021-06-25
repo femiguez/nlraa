@@ -73,6 +73,18 @@ if(run.predict.nlme){
     geom_ribbon(aes(ymin = Q5, ymax = Q95, color = NULL, fill = Tree), alpha = 0.3) + 
     ggtitle("90% Prediciton bands at the level of 'Tree'")
   
+  ## Testing new-prediction
+  prdnp <- predict_nlme(fm.L, interval = "new-prediction", plevel = 1)
+  OrangeANP <- cbind(Orange, prdnp)
+  
+  ## These should really be unlabal
+  OrangeANP$lbs <- with(OrangeANP, paste("New", Tree, sep = "_"))
+  ggplot(data = OrangeANP, aes(x = age, y = circumference)) + 
+    facet_wrap(~ lbs) + 
+    geom_line(aes(y = Estimate, group = Tree)) + 
+    geom_ribbon(aes(ymin = Q2.5, ymax = Q97.5), alpha = 0.5) + 
+    ggtitle("95% Prediction Band for a NEW Tree")
+  
   ## Example using Soybean
   data(Soybean)
   

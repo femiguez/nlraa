@@ -8,7 +8,7 @@
 predict_nlme(
   ...,
   criteria = c("AIC", "AICc", "BIC"),
-  interval = c("none", "confidence", "prediction"),
+  interval = c("none", "confidence", "prediction", "new-prediction"),
   level = 0.95,
   nsim = 1000,
   plevel = 0,
@@ -18,7 +18,7 @@ predict_nlme(
 predict_lme(
   ...,
   criteria = c("AIC", "AICc", "BIC"),
-  interval = c("none", "confidence", "prediction"),
+  interval = c("none", "confidence", "prediction", "new-prediction"),
   level = 0.95,
   nsim = 1000,
   plevel = 0,
@@ -30,7 +30,9 @@ predict_lme(
 
 \item{criteria}{either \sQuote{AIC}, \sQuote{AICc} or \sQuote{BIC}.}
 
-\item{interval}{either \sQuote{none}, \sQuote{confidence} or \sQuote{prediction}.}
+\item{interval}{either \sQuote{none}, \sQuote{confidence} or \sQuote{prediction}.
+It is also possible to choose \sQuote{new-prediction}, which is a prediction that
+resamples the random effects (only relevant for \sQuote{lme} or \sQuote{nlme} objects.)}
 
 \item{level}{probability level for the interval (default 0.95)}
 

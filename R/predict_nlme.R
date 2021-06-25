@@ -7,6 +7,8 @@
 #' @param ... nlme, lme, gls or gnls objects. 
 #' @param criteria either \sQuote{AIC}, \sQuote{AICc} or \sQuote{BIC}.
 #' @param interval either \sQuote{none}, \sQuote{confidence} or \sQuote{prediction}.
+#' It is also possible to choose \sQuote{new-prediction}, which is a prediction that
+#' resamples the random effects (only relevant for \sQuote{lme} or \sQuote{nlme} objects.)
 #' @param level probability level for the interval (default 0.95)
 #' @param nsim number of simulations to perform for intervals. Default 1000.
 #' @param plevel parameter level prediction to be passed to prediciton functions.
@@ -53,7 +55,7 @@
 #' }
 
 predict_nlme <- function(..., criteria = c("AIC", "AICc", "BIC"), 
-                         interval = c("none", "confidence", "prediction"),
+                         interval = c("none", "confidence", "prediction", "new-prediction"),
                          level = 0.95, nsim = 1e3, plevel = 0,
                          newdata = NULL){
   
@@ -114,9 +116,12 @@ predict_nlme <- function(..., criteria = c("AIC", "AICc", "BIC"),
     }
   }
   
-  if(interval == "confidence" || interval == "prediction"){
+  if(interval == "confidence" || interval == "prediction" || interval == "new-prediction"){
     
-    psim <- ifelse(interval == "confidence", 1, 2)
+    if(interval == "confidence") psim <- 1
+    if(interval == "prediction") psim <- 2
+    if(interval == "new-prediction") psim <- 3
+    
     lb <- (1 - level)/2
     ub <- 1 - lb 
     
@@ -134,6 +139,9 @@ predict_nlme <- function(..., criteria = c("AIC", "AICc", "BIC"),
       } 
         
       if(inherits(obj, "gls")){
+        
+        if(psim == 3) stop("new-prediction is only possible for lme or nlme objects")
+        
         if(inherits(obj, "gnls")){
           tmp.sim <- simulate_nlme(obj, psim = psim, nsim = nsim, newdata = newdata)  
         }else{

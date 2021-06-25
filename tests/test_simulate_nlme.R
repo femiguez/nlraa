@@ -216,4 +216,113 @@ if(run.test.simulate.nlme){
   ## This shows that a 'good' nls model is better than a 'GAM' but 'gams'
   ## are much, much more flexible
   IC_tab(fit.gnls, fit.gam)
+  
+  ## Testing the implementation of psim = 3 for nlme objects
+  ## Picking up the previous Soybean model
+  data(Soybean)
+  
+  fmsL <- nlsList(SSlogis, Soybean)
+  fmsm <- nlme(fmsL)  
+  
+  fxf <- fixef(fmsm)
+  fmsm2 <- update(fmsm, fixed = list(Asym + xmid + scal ~ Variety),
+                  start = c(fxf[1], 0, fxf[2], 0, fxf[3], 0),
+                  random = pdDiag(Asym + xmid + scal ~ 1))
+  
+  ## Ok, this seems to work
+  sim2.psim2 <- simulate_nlme(fmsm2, nsim = 1, 
+                              psim = 2, level = 1,
+                              value = "data.frame")
+  
+  sim2.psim2$id <- with(sim2.psim2, paste(Plot, Variety, sep = "_"))
+  
+  ggplot(data = sim2.psim2, aes(x = Time, y = weight)) + 
+    geom_line(aes(x = Time, y = sim.y, group = id), color = "gray", alpha = 0.4) + 
+    geom_point() 
+  
+  ## psim = 3 is not specific for a given subject
+  sim2.psim3 <- simulate_nlme(fmsm2, nsim = 10, 
+                              psim = 3, level = 1,
+                              value = "data.frame")
+
+  sim2.psim3$id <- with(sim2.psim3, paste(Plot, Variety, ii, sep = "_"))
+  
+  ggplot(data = sim2.psim3, aes(x = Time, y = weight)) + 
+    geom_line(aes(x = Time, y = sim.y, group = id), color = "gray", alpha = 0.3) + 
+    geom_point() 
+  
+  ## Since psim = 3 is not specific to an individual subject
+  ## we should not expect for the lines to vary around the observed data
+  ## in each individual panel. If that is what you want then
+  ## you need to use psim = 2
+  ggplot(data = sim2.psim3, aes(x = Time, y = weight)) + 
+    facet_wrap(~ Variety * Plot) + 
+    geom_line(aes(x = Time, y = sim.y, group = ii), color = "gray", alpha = 0.3) + 
+    geom_point() 
+  
+  fmsm3 <- update(fmsm2, random = list(Year = pdDiag(Asym + xmid + scal ~ 1),
+                                       Plot = pdDiag(Asym + xmid + scal ~ 1)),
+                  groups = ~Year/Plot)
+  
+  ## I won't check if this gives you the right answer at the moment, but it runs
+  sim3.psim3 <- simulate_nlme(fmsm3, nsim = 10, psim = 3, value = "data.frame")
+  
+  sim3.psim3$id <- with(sim3.psim3, paste(Plot, Variety, Year, ii, sep = "_"))
+  
+  ggplot(data = sim3.psim3, aes(x = Time, y = weight)) + 
+    geom_point() + 
+    geom_line(aes(x = Time, y = sim.y, group = id), alpha = 0.1)
+  
+  ggplot(data = sim3.psim3, aes(x = Time, y = weight)) + 
+    facet_wrap(~ Year * Variety) + 
+    geom_point() + 
+    geom_line(aes(x = Time, y = sim.y, group = id), alpha = 0.1)
+
+  varT <- var(Soybean$weight)  
+  
+  sim3.psim2.2 <- simulate_nlme(fmsm3, nsim = 2e3, psim = 2)
+  sim3.psim3.2 <- simulate_nlme(fmsm3, nsim = 2e3, psim = 3)
+  
+  varT.psim2 <- apply(sim3.psim2.2, 2, var, na.rm = TRUE)  
+  varT.psim3 <- apply(sim3.psim3.2, 2, var, na.rm = TRUE)  
+  
+  ggplot() + 
+    geom_density(aes(x = varT.psim2, color = "psim = 2")) + 
+    geom_density(aes(x = varT.psim3, color = "psim = 3")) + 
+    geom_vline(xintercept = varT)
+  ## Unexpectedly, this shows that the variance for psim = 3
+  ## is lower than the variance for psim2, perhaps I need to do more simulations?
+  ## Try a different dataset
+  
+  data(Orange)
+  fitL <- nlsList(circumference ~ SSlogis(age, Asym, xmid, scal), data = Orange)
+  fmm <- nlme(fitL, random = pdDiag(Asym + xmid + scal ~ 1))
+  
+  varT <- var(Orange$circumference)
+  fmm.sim.psim2 <- simulate_nlme(fmm, nsim = 1e3, psim = 2)  
+  fmm.sim.psim3 <- simulate_nlme(fmm, nsim = 1e3, psim = 3)  
+ 
+  varT.psim2 <- apply(fmm.sim.psim2, 2, var, na.rm = TRUE)  
+  varT.psim3 <- apply(fmm.sim.psim3, 2, var, na.rm = TRUE)  
+  
+  ggplot() + 
+    geom_density(aes(x = varT.psim2, color = "psim = 2")) + 
+    geom_density(aes(x = varT.psim3, color = "psim = 3")) + 
+    geom_vline(xintercept = varT) 
+  
+  ## Prediction Interval for the mean of a NEW Tree
+  nprd <- simulate_nlme(fmm, nsim = 1e3, psim = 3, value = "data.frame")  
+  
+  ## First step: remove the observation-level variation
+  nprdA1 <- aggregate(sim.y ~ ii + age + Tree, data = nprd, FUN = mean)
+  
+  nprdA <- aggregate(sim.y ~ age, data = nprdA1, FUN = median)
+  nprdA$lwr <- aggregate(sim.y ~ age, data = nprdA1, FUN = quantile, probs = 0.05)$sim.y
+  nprdA$upr <- aggregate(sim.y ~ age, data = nprdA1, FUN = quantile, probs = 0.95)$sim.y
+
+  ggplot() + 
+    geom_point(data = Orange, aes(x = age, y = circumference, color = Tree)) + 
+    geom_line(data = nprdA, aes(x = age, y = sim.y)) + 
+    geom_ribbon(data = nprdA, aes(x = age, ymin = lwr, ymax = upr), alpha = 0.3) + 
+    ggtitle("90% Prediction Interval for a NEW Tree regression")
 }

@@ -18,7 +18,7 @@ simulate_nlme(
 
 \item{nsim}{number of samples, default 1}
 
-\item{psim}{simulation level for vector of fixed parameters for \code{\link{simulate_nlme_one}}}
+\item{psim}{simulation level for fixed and random parameters see \code{\link{simulate_nlme_one}} for more details.}
 
 \item{value}{whether to return a matrix (default) or an augmented data frame}
 

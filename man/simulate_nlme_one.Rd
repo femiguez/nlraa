@@ -20,7 +20,9 @@ simulate_nlme_one(
 
 \item{psim}{parameter simulation level, 0: for fitted values, 1: for simulation from 
 fixed parameters (assuming a fixed vcov matrix), 2: for simulation considering the 
-residual error (sigma), this returns data which will appear similar to the observed values}
+residual error (sigma), this returns data which will appear similar to the observed values.
+Currently, working on psim = 3, which will simulate a new set of random effects. This
+can be useful when computing prediction intervals at the subject-level.}
 
 \item{level}{level at which simulations are performed. See \code{\link[nlme]{predict.nlme}}. 
 An important difference is that for this function multiple levels are not allowed.}

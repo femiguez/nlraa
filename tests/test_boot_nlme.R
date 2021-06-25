@@ -120,9 +120,6 @@ if(run.boot.test){
 
 if(run.boot.test){
   
-  # library(lme4)
-  # library(rstanarm)
-  
   fmL1 <- nlsList(yield ~ SSasymp(NF, Asym, R0, lrc), data = barleyG)
   
   fm1 <- nlme(fmL1)
@@ -156,5 +153,37 @@ if(run.boot.test){
   ## rstanarm failed with this example. Chains did not converge (2020-05-22)
   ## fm3 <- stan_nlmer(yield ~ SSasymp(NF, Asym, R0, lrc) ~ Asym + R0 + lrc | year.f, 
   ##                  data = barley, cores = 2)  
+  
+  ## What is the impact of psim = 2 vs. psim = 3 on bootstrapping?
+  data(barley, package = "nlraa")
+  barley$year.f <- as.factor(barley$year)
+  barleyG <- groupedData(yield ~ NF | year.f, data = barley)
+  fmL1 <- nlsList(yield ~ SSasymp(NF, Asym, R0, lrc), data = barleyG)
+  fm1 <- nlme(fmL1)
+  fm2 <- update(fm1, random = pdDiag(Asym + R0 + lrc ~ 1))
+  fm3 <- update(fm1, random = pdDiag(Asym + R0 ~ 1))
+
+  anova(fm2, fm3)
+  ## Bootstrap the random effects
+  vcov_est <- function(x) diag(var_cov(x, type = "random"))
+  
+  system.time(fm3.vc.bt2 <- boot_nlme(fm3, vcov_est, psim = 2, cores = 4))
+  
+  fm3.vc.bt2
+  
+  hist(fm3.vc.bt2, 1, ci = "perc")
+  hist(fm3.vc.bt2, 2, ci = "perc")
+  
+  system.time(fm3.vc.bt3 <- boot_nlme(fm3, vcov_est, psim = 3, cores = 4))
+
+  fm3.vc.bt3
+  
+  hist(fm3.vc.bt3, 1, ci = "perc")
+  hist(fm3.vc.bt3, 2, ci = "perc")
+  
+  ## Does this show that this method results in biased estimates of the
+  ## variance components? Bootstrapping has substantial bias
+  ## Is it because I attempt to fix the variance (I use empirical = TRUE in MASS::rmvnorm)
+  ## I could either set empirical to FALSE or simulate new variance components...
   
 }

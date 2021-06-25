@@ -288,7 +288,6 @@ simulate_lme_one <- function(object, psim = 1, level = Q, asList = FALSE, na.act
       dimnames(val) <- dimnames(re[[i]])
       j <- j + 1
     }
-    
     re[[i]] <- val
   }
   

@@ -25,7 +25,9 @@
 #' @param object object of class \code{\link[nlme]{nlme}}
 #' @param psim parameter simulation level, 0: for fitted values, 1: for simulation from 
 #' fixed parameters (assuming a fixed vcov matrix), 2: for simulation considering the 
-#' residual error (sigma), this returns data which will appear similar to the observed values
+#' residual error (sigma), this returns data which will appear similar to the observed values.
+#' Currently, working on psim = 3, which will simulate a new set of random effects. This
+#' can be useful when computing prediction intervals at the subject-level.
 #' @param level level at which simulations are performed. See \code{\link[nlme]{predict.nlme}}. 
 #' An important difference is that for this function multiple levels are not allowed.
 #' @param asList optional logical value. See \code{\link[nlme]{predict.nlme}}
@@ -50,8 +52,8 @@ simulate_nlme_one <- function(object, psim = 1, level = Q, asList = FALSE, na.ac
   
   Q <- object$dims$Q
 
-  if(!missing(level) && psim == 2 && level < Q)
-    stop("psim = 2 should only be used for the deepest level of the hierarchy")
+  if(!missing(level) && psim > 1 && level < Q)
+    stop("psim = 2 or psim = 3, should only be used for the deepest level of the hierarchy")
   
   if(level > Q) stop("level cannot be greater than Q")
     
@@ -71,7 +73,7 @@ simulate_nlme_one <- function(object, psim = 1, level = Q, asList = FALSE, na.ac
   args <- list(...)
   if(!is.null(args$newdata)){
     newdata <- args$newdata
-    if(length(unique(attr(residuals(object), "std"))) > 1 && psim == 2)
+    if(length(unique(attr(residuals(object), "std"))) > 1 && psim > 1)
       stop("At this point newdata is not compatible with observation-level simulation",
            call. = FALSE)
   }else{
@@ -218,7 +220,7 @@ simulate_nlme_one <- function(object, psim = 1, level = Q, asList = FALSE, na.ac
       fix <- MASS::mvrnorm(n = 1, mu = nlme::fixef(object), Sigma = vcov(object))
     }
     
-    if(psim == 2){
+    if(psim >= 2){
       fix <- MASS::mvrnorm(n = 1, mu = nlme::fixef(object), Sigma = vcov(object))
       
       if(is.null(object$modelStruct$corStruct)){
@@ -235,6 +237,7 @@ simulate_nlme_one <- function(object, psim = 1, level = Q, asList = FALSE, na.ac
         rsds <- Matrix::as.matrix(chol.var.cov.err %*% rnorm(nrow(chol.var.cov.err)))
       }
     }
+    
     ##-------------------------------------------------------------##
     
     for(nm in fnames){
@@ -254,7 +257,31 @@ simulate_nlme_one <- function(object, psim = 1, level = Q, asList = FALSE, na.ac
       for(i in seq_along(ranForm)) {
         names(ranForm[[i]]) <- rnames[[i]]
       }
-      ran <- nlme::ranef(object)
+      
+      ran <- nlme::ranef(object)  
+      
+      if(psim == 3){
+        ## I really have no idea if this code will work for more
+        ## than one group
+        re <- object$coefficients$random[1:maxQ]
+        ## If there is more than one group... I need to loop over that?
+        for(k in names(re)){
+          reDelta <- as.matrix(object$modelStruct$reStruct[[k]]) * sigma(object)^2
+          
+          rval <- MASS::mvrnorm(n = nrow(re[[k]]), 
+                               mu = rep(0, ncol(re[[k]])), 
+                               Sigma = reDelta, empirical = TRUE)
+          
+          dimnames(rval) <- dimnames(re[[k]])
+          
+          if(inherits(ran, "data.frame")){
+            ran[1:nrow(ran),] <- as.data.frame(rval)  
+          }else{
+            ran[[k]] <- as.data.frame(rval)
+          }
+        }
+      }
+      
       ran <- if(is.data.frame(ran)) list(ran) else rev(ran)
       ##    rn <- lapply(ran[whichQ], names)
       ran <- lapply(ran, t)

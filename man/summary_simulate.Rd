@@ -4,7 +4,14 @@
 \alias{summary_simulate}
 \title{Summarize a matrix of simulations by their mean (median), sd (mad), and quantiles}
 \usage{
-summary_simulate(object, probs = c(0.025, 0.975), robust = FALSE, ...)
+summary_simulate(
+  object,
+  probs = c(0.025, 0.975),
+  robust = FALSE,
+  data,
+  by,
+  ...
+)
 }
 \arguments{
 \item{object}{nobs x nsim matrix where nobs are the number of observations in the
@@ -16,7 +23,17 @@ dataset and nsim are the number of simulations}
 and the standard deviation as the measure of variability. 
 If TRUE, the median and the median absolute deviation (MAD) are applied instead.}
 
+\item{data}{the original data.frame used to fit the model. A data.frame will be
+returned instead of a matrix in this case.}
+
+\item{by}{opionally aggregate the results by some factor in the data.frame. It 
+will be coarced to a formula. If robust is FALSE, the mean will be used. Otherwise, the median.}
+
 \item{...}{additional arguments to be passed. (none used at the moment)}
+}
+\value{
+By default it returns a matrix unless the data argument is present and then
+it will return a data.frame
 }
 \description{
 Utility function to summarize the output from \sQuote{simulate} 
@@ -28,6 +45,12 @@ data(barley, package = "nlraa")
 fit <- nls(yield ~ SSlinp(NF, a, b, xs), data = barley)
 sim <- simulate_nls(fit, nsim = 100)
 sims <- summary_simulate(sim)
+
+## If we want to combined the data.frame
+simd <- summary_simulate(sim, data = barley)
+## If we want to aggregate by nitrogen rate
+simda <- summary_simulate(sim, data = barley, by = "NF")
+
 }
 
 }

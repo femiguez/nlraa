@@ -4,7 +4,7 @@
 #' @name simulate_nlme
 #' @param object object of class \code{\link[nlme]{gnls}} or \code{\link[nlme]{nlme}}
 #' @param nsim number of samples, default 1
-#' @param psim simulation level for vector of fixed parameters for \code{\link{simulate_nlme_one}}
+#' @param psim simulation level for fixed and random parameters see \code{\link{simulate_nlme_one}} for more details.
 #' @param value whether to return a matrix (default) or an augmented data frame
 #' @param data the data argument is needed when using this function inside user defined functions.
 #' @param ... additional arguments to be passed to either \code{\link{simulate_gnls}} or \code{\link{simulate_nlme_one}}

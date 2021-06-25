@@ -298,7 +298,7 @@ ggplot() +
   ggtitle("95% confidence bands")
 ```
 
-I'm somewhat confused by their statement that it is not possible to compute prediction bands. Their statement is "Also, having considered confidence bands, it is natural to wonder whether one could construct simultaneous prediction bands. However, this is not possible, as shown by Donnelly (2003)". A Bayesian approach will certainly be able to give you an answer to this question, but I'm not sure how "good" that answer is expected to be... but this is very different from "impossible". I think that the issue is that it might not be clear what is meant by prediction in this case. Is it for an observation within the regression of a specific subject? Or is it a prediction band for the mean function of any subject?
+I'm somewhat confused by their statement that it is not possible to compute prediction bands. Their statement is "Also, having considered confidence bands, it is natural to wonder whether one could construct simultaneous prediction bands. However, this is not possible, as shown by Donnelly (2003)". A Bayesian approach will certainly be able to give you an answer to this question, but I'm not sure how "good" that answer is expected to be... but this is very different from "impossible". I think that the issue is that it might not be clear what is meant by prediction in this case. Is it for an observation within the regression of a specific subject? Or is it a prediction band for the mean function of any subject? I have implemented the ability to sample new random effects (using psim = 3), which can be used to compute prediction bands for a new subject.
 
 ### Nonlinear Example: Prediction bands for an observation within a subject
 
