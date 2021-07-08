@@ -139,7 +139,7 @@ IA_tab <- function(obs, sim, object, null.object){
                          slope = slope,
                          RSS = RSS, MSE = MSE, RMSE = RMSE,
                          R2.1 = R2.1, R2.2 = R2.2$R2, 
-                         ME = mod.eff, NME = mod.eff, Corr = corr,
+                         ME = mod.eff, NME = norm.mod.eff, Corr = corr,
                          ConCorr = concor)
   }else{
     ia_tab <- data.frame(bias = bias, 
@@ -149,7 +149,7 @@ IA_tab <- function(obs, sim, object, null.object){
                          R2 = R2.1, 
                          R2.marginal = R2$R2.marginal,
                          R2.conditional = R2$R2.conditional,
-                         ME = mod.eff, NME = mod.eff, Corr = corr,
+                         ME = mod.eff, NME = norm.mod.eff, Corr = corr,
                          ConCorr = concor)
   }
 
