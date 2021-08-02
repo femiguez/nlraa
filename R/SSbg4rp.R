@@ -14,7 +14,7 @@
 #' @title self start for the reparameterized Beta growth function with four parameters
 #' @name SSbg4rp
 #' @rdname SSbg4rp
-#' @description Self starter for Beta Growth function with parameters w.max, lt.m, ldt
+#' @description Self starter for Beta Growth function with parameters w.max, lt.e, ldtm, ldtb
 #' @param time input vector (x) which is normally \sQuote{time}, the smallest value should be close to zero.
 #' @param w.max value of weight or mass at its peak
 #' @param lt.e log of the time at which the maximum weight or mass has been reached.

@@ -41,32 +41,45 @@ This package supports the following publications:
 
 Recent publications which cite this package:
 
-1. The Effects of Agronomic Management and 40 Years of Variety Release on 
-Soybean Seed Fill and Yield Components. Kathryn Graf. 2018. MS thesis. 
-Purdue University.
+7. Long-term no-till increases soil nitrogen mineralization but does not affect 
+optimal corn nitrogen fertilization practices relative to inversion tillage. 
+Lucas Pecci Canisares, John Grove, Fernando Miguez and Hanna Poffenbarger. 
+Soil and Tillage Research. Volume 213. 2021. 105080. https://doi.org/10.1016/j.still.2021.105080.
 
-2. Interactive effect of glyphosate-based herbicides and organic soil layer 
-thickness on growth and reproduction of the tropical earthworm 
-Pontoscolex corethrurus (Müller, 1857). Garcia-Perez et al. (2020).
-https://doi.org/10.1016/j.apsoil.2020.103648
-
-3. Abendroth, L.J., Miguez, F.E., Castellano, M.J., Carter, P.R., Messina, 
-C.D., Dixon, P.M. and Hatfield, J.L. (2021), Lengthening of maize maturity 
-time is not a widespread climate change adaptation strategy in the US Midwest. 
-Glob Change Biol. https://doi.org/10.1111/gcb.15565
-
-4. Rotating maize reduces the risk and rate of nitrate leaching. 
+6. Rotating maize reduces the risk and rate of nitrate leaching. 
 Heather Randolph Pasley, Nichols Virginia, Michael J Castellano, Matthew J Helmers, 
 Mitchell E Baum, Eileen J Kladivko and Sotirios Archontoulis. 2021. Environmental
 Research Letters. https://doi.org/10.1088/1748-9326/abef8f
 
-5. Short-term effects of integrated tillage systems and cover crop on
+5. Abendroth, L.J., Miguez, F.E., Castellano, M.J., Carter, P.R., Messina, 
+C.D., Dixon, P.M. and Hatfield, J.L. (2021), Lengthening of maize maturity 
+time is not a widespread climate change adaptation strategy in the US Midwest. 
+Glob Change Biol. https://doi.org/10.1111/gcb.15565
+
+4. Interactive effect of glyphosate-based herbicides and organic soil layer 
+thickness on growth and reproduction of the tropical earthworm 
+Pontoscolex corethrurus (Müller, 1857). Garcia-Perez et al. (2020).
+https://doi.org/10.1016/j.apsoil.2020.103648
+
+3. Cuando la variabilidad varía: Heterocedasticidad y funciones de varianza. 
+Oddi, F. J., Miguez, F. E., Benedetti, G. G., & Garibaldi, L. A. (2020). 
+Ecología Austral; 30; 438-453.
+
+2. Short-term effects of integrated tillage systems and cover crop on
 agronomic response and soil health in North Central Iowa. Alex Cleveringa. 2020.
 MS Thesis. Iowa State University.
 
-6. Cuando la variabilidad varía: Heterocedasticidad y funciones de varianza. 
-Oddi, F. J., Miguez, F. E., Benedetti, G. G., & Garibaldi, L. A. (2020). 
-Ecología Austral; 30; 438-453.
+1. The Effects of Agronomic Management and 40 Years of Variety Release on 
+Soybean Seed Fill and Yield Components. Kathryn Graf. 2018. MS thesis. 
+Purdue University.
+
+
+
+
+
+
+
+
 
 Other publications where we have used nonlinear mixed models:
 

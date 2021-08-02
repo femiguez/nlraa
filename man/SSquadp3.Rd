@@ -30,7 +30,7 @@ Self starter for quadratic plateau function with (three) parameters a (intercept
 The equation is, for a response (y) and a predictor (x): \cr
   \eqn{y ~ (x <= xs) * (a + b * x + c * x^2) + (x >= xs) * (a + (-b^2)/(4 * c))} \cr
   
-where the break-point (xs) is -b/c \cr
+where the break-point (xs) is -0.5*b/c \cr
 and the asymptote is (a + (-b^2)/(4 * c))
 }
 \examples{

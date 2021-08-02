@@ -24,7 +24,7 @@ SSbg4rp(time, w.max, lt.e, ldtm, ldtb)
 bg4rp: vector of the same length as x (time) using the beta growth function with four parameters
 }
 \description{
-Self starter for Beta Growth function with parameters w.max, lt.m, ldt
+Self starter for Beta Growth function with parameters w.max, lt.e, ldtm, ldtb
 }
 \details{
 For details see the publication by Yin et al. (2003) \dQuote{A Flexible Sigmoid Function of Determinate Growth}.

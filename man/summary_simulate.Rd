@@ -46,9 +46,9 @@ fit <- nls(yield ~ SSlinp(NF, a, b, xs), data = barley)
 sim <- simulate_nls(fit, nsim = 100)
 sims <- summary_simulate(sim)
 
-## If we want to combined the data.frame
+## If we want to combine the data.frame
 simd <- summary_simulate(sim, data = barley)
-## If we want to aggregate by nitrogen rate
+## If we also want to aggregate by nitrogen rate
 simda <- summary_simulate(sim, data = barley, by = "NF")
 
 }

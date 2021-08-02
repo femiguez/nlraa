@@ -157,7 +157,8 @@ if(run.test.simulate.lme){
   ## Considering the effect of random effects
   ## Note: there is a bug, psim = 3 is not compatible with level = 0
   prd_fun0 <- function(x) predict(x, level = 0)
-  boot1 <- boot_lme(fm0, prd_fun0, cores = 3)
+  ## boot1 <- boot_lme(fm0, prd_fun0, cores = 3)
+  boot1 <- boot_lme(fm0, prd_fun0)
   
   barleyA2 <- cbind(barley, summary_simulate(t(boot1$t)))
 
@@ -167,7 +168,8 @@ if(run.test.simulate.lme){
     geom_ribbon(aes(ymin = Q2.5, ymax = Q97.5), fill = "blue", alpha = 0.3)
   
   ## Now resample the random effects
-  boot2 <- boot_lme(fm0, prd_fun0, psim = 3, cores = 3)
+  ## boot2 <- boot_lme(fm0, prd_fun0, psim = 3, cores = 3)
+  boot2 <- boot_lme(fm0, prd_fun0, psim = 3)
   
   barleyA3 <- cbind(barley, summary_simulate(t(boot2$t)))
   
@@ -179,8 +181,10 @@ if(run.test.simulate.lme){
   
   ### Bootstrapping the covariance parameter
   rand.int <- function(x) sqrt(var_cov(x, type = "random"))
-  boot.cvp.psim1 <- boot_lme(fm0, rand.int, cores = 3)
-  boot.cvp.psim3 <- boot_lme(fm0, rand.int, cores = 3, psim = 3)
+  # boot.cvp.psim1 <- boot_lme(fm0, rand.int, cores = 3)
+  # boot.cvp.psim3 <- boot_lme(fm0, rand.int, cores = 3, psim = 3)
+  boot.cvp.psim1 <- boot_lme(fm0, rand.int)
+  boot.cvp.psim3 <- boot_lme(fm0, rand.int, psim = 3)
 
   ## Clearly, psim 3 is necessary when bootstrapping the random effects
   hist(boot.cvp.psim1, ci = "perc")
@@ -197,7 +201,7 @@ if(run.test.simulate.lme){
   anova(fm0, fm1, fm2)
   IC_tab(fm0, fm1, fm2)
   
-  prd3 <- predict_lme(fm2, interval = "conf", psim = 3)
+  prd3 <- predict_lme(fm2, interval = "conf")
   barleyA3 <- cbind(barley, prd3)
   
   ggplot(data = barleyA3, aes(x = NF, y = yield)) + 
