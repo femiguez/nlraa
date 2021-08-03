@@ -414,7 +414,7 @@ fm0.Theoph.bt <- boot_nlme(fm0.Theoph, pred_band_BS) ## This takes a bit over a 
 save(fm0.Theoph.bt, file = "fm0.Theoph.bt.rda", compress = "xz")
 ```
 ```{r, load-fm0-Theoph-bt, echo = FALSE}
-data(fmm1.bt, package = "nlraa")
+data(fm0.Theoph.bt, package = "nlraa")
 ```
 
 ```{r, Theoph-PB-between-subjects-3}

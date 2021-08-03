@@ -33,4 +33,5 @@ Suggests:
 	rmarkdown,
 	segmented
 LazyData: true
+LazyDataCompression: xz
 RoxygenNote: 7.1.1
