@@ -57,7 +57,7 @@ boot_nls <- function(object,
   dat <- try(eval(getCall(object)$data), silent = TRUE)
   if(inherits(dat, "try-error") && missing(data)){
     stop("'data' argument is required. It is likely you are using boot_lm inside another function. 
-          The data are not in an available environment.", call. = TRUE)    
+          The data are not in an available environment.", call. = FALSE)    
   } 
   
   if(!missing(data)){

@@ -128,8 +128,19 @@ The function *predict.nls* has arguments for the standard error and for interval
 
 After these observations, we can continue with the *Loblolly* example.
 
-```{r, Loblolly-bootstrap-estimates}
-Lob.bt.pe <- boot_nls(fnlm1) ## This takes a few seconds
+```{r, Loblolly-bootstrap-estimates-1, eval = FALSE}
+Lob.bt.pe <- boot_nls(fnlm1) ## This takes a few seconds (~7s)
+```
+
+```{r, save-Lob-bt-pe, echo = FALSE, eval = FALSE}
+save(Lob.bt.pe, file = "Lob.bt.pe.rda", compress = "xz")
+```
+
+```{r, load-Lob-bt-pe, echo = FALSE}
+data(Lob.bt.pe, package = "nlraa")
+```
+
+```{r, Loblolly-bootstrap-estimate-2}
 pairs(Lob.bt.pe$t, labels = c("Asym", "R0", "lrc"))
 print(cov2cor(var(Lob.bt.pe$t)), digits = 2) ## Correlation matrix
 ```
@@ -156,7 +167,17 @@ fm2.Lob.dm.dat <- data.frame(method = "Delta-Method", Lob,
                              upr = fm2.Lob.dm[,4])
 ## Nonlinear model + bootstrap
 fm2.Lob <- nls(height ~ SSasymp(age, Asym, R0, lrc), data = Lob)
-fm2.Lob.bt <- boot_nls(fm2.Lob, fitted)
+```
+```{r, Loblolly-methods-2, eval = FALSE}
+fm2.Lob.bt <- boot_nls(fm2.Lob, fitted) ## This takes about 7s
+```
+```{r, save-fm2-Lob-bt, echo = FALSE, eval = FALSE}
+save(fm2.Lob.bt, file = "fm2.Lob.bt.rda", compress = "xz")
+```
+```{r, load-fm2-Lob-bt, echo = FALSE}
+data(fm2.Lob.bt, package = "nlraa")
+```
+```{r, Loblolly-methods-3}
 fm2.Lob.prd <- summary_simulate(t(fm2.Lob.bt$t))
 fm2.Lob.bt.dat <- data.frame(method = "nls-bootstrap", Lob, 
                           fit = fm2.Lob.prd[,1], 
@@ -193,7 +214,7 @@ Add Prediction Bands
 
 The *Puromycin* dataset was used in the Book by Bates and Watts and confidence bands are briefly described in pages 58-59. They report a 95% confidence band at x = 0.4 of [171.6, 195]. Their method is known as the Delta method and it is implemented in function predict2_nls. (Clearly, I thought of implementing this method at a later time. The issue is that I was trying to find a method that would extend to more complex models: nlme).
 
-```{r, Puromycin}
+```{r, Puromycin-1}
 PurTrt <- Puromycin[ Puromycin$state == "treated", ]
 fm1.P <- nls(rate ~ SSmicmen(conc, Vm, K), data = PurTrt)
 ## Confidence bands using the Delta method
@@ -206,11 +227,35 @@ ggplot(data = PurTrtA.dm, aes(x = conc, y = rate)) +
   geom_line(aes(y = fitted(fm1.P))) + 
   geom_ribbon(aes(ymin = Q2.5, ymax = Q97.5), fill = "purple", alpha = 0.2) + 
   ggtitle("95% Delta Method Confidence Bands")
+```
+
+```{r, Puromycin-2, eval = FALSE}
 ## Confidence bands using the bootstrap method
-fm1.P.bt <- boot_nls(fm1.P)
+fm1.P.bt <- boot_nls(fm1.P) ## this takes about 5 seconds
+```
+```{r, save-fm1-P-bt, echo = FALSE, eval = FALSE}
+save(fm1.P.bt, file = "fm1.P.bt.rda", compress = "xz")
+```
+```{r, load-fm1-P-bt, echo = FALSE}
+data(fm1.P.bt, package = "nlraa")
+```
+
+```{r, Puromycin-3}
 pairs(fm1.P.bt$t, labels = c("Vm", "K"))
+```
+
+```{r, Puromycin-4, eval = FALSE}
 ## Bootstrapped confidence bands
-fm1.P.bt.ft <- boot_nls(fm1.P, fitted)
+fm1.P.bt.ft <- boot_nls(fm1.P, fitted) ## This takes about 5s
+```
+```{r, save-fm1-P-bt-ft, echo = FALSE, eval = FALSE}
+save(fm1.P.bt.ft, file = "fm1.P.bt.ft.rda", compress = "xz")
+```
+```{r, load-fm1-P-bt-ft, echo = FALSE}
+data(fm1.P.bt.ft, package = "nlraa")
+```
+
+```{r, Puromycin-5}
 fm1.P.bt.ft.prd <- summary_simulate(t(fm1.P.bt.ft$t))
 PurTrtA <- cbind(PurTrt, fm1.P.bt.ft.prd)
 ## Plot data and bands
@@ -222,7 +267,18 @@ ggplot(data = PurTrtA, aes(x = conc, y = rate)) +
 ## Predictions at 0.4
 prd_fun <- function(x) predict(x, newdata = data.frame(conc = 0.4))
 prd_fun(fm1.P) ## It also provides the gradient
-fm1.P.at.x.0.4 <- boot_nls(fm1.P, prd_fun)
+```
+```{r, Puromycin-6, eval = FALSE}
+fm1.P.at.x.0.4 <- boot_nls(fm1.P, prd_fun) ## This takes about 6s
+```
+```{r, save-fm1-P-at-x-0p4, echo = FALSE, eval = FALSE}
+save(fm1.P.at.x.0.4, file = "fm1.P.at.x.0.4.rda", compress = "xz")
+```
+```{r, load-fm1-P-at-x-0p4, echo = FALSE}
+data(fm1.P.at.x.0.4, package = "nlraa")
+```
+
+```{r, Puromycin-7}
 boot::boot.ci(fm1.P.at.x.0.4, type = "perc") 
 ```
 
@@ -270,8 +326,20 @@ ggplot(data = mlf, aes(x = temp, y = rate)) +
   geom_point() + geom_line(aes(y = fitted(fmm1))) + 
   geom_ribbon(aes(ymin = Q2.5, ymax = Q97.5), 
               fill = "purple", alpha = 0.3)
+```
+
+```{r, maizeleafext-2, eval = FALSE}
 ## What about bootstrap?
-fmm1.bt <- boot_nls(fmm1)
+fmm1.bt <- boot_nls(fmm1) ## This takes about 5s
+```
+```{r, save-fmm1-bt, echo = FALSE, eval = FALSE}
+save(fmm1.bt, file = "fmm1.bt.rda", compress = "xz")
+```
+```{r, load-fmm1-bt, echo = FALSE}
+data(fmm1.bt, package = "nlraa")
+```
+
+```{r, maizeleafext-3}
 ## Notice that the model does not converge in many instances
 pairs(fmm1.bt$t, labels = c("t.m", "t.l", "t.h"))
 ```
@@ -338,7 +406,18 @@ To get prediciton bands at this level I will use bootstrapping.
 
 ```{r, Theoph-PB-between-subjects}
 pred_band_BS <- function(x) predict(x, newdata = ndat, level = 1)
-fm0.Theoph.bt <- boot_nlme(fm0.Theoph, pred_band_BS)
+```
+```{r, Theoph-PB-between-subjects-2, eval = FALSE}
+fm0.Theoph.bt <- boot_nlme(fm0.Theoph, pred_band_BS) ## This takes a bit over a minute
+```
+```{r, save-fm0-Theoph-bt, echo = FALSE, eval = FALSE}
+save(fm0.Theoph.bt, file = "fm0.Theoph.bt.rda", compress = "xz")
+```
+```{r, load-fm0-Theoph-bt, echo = FALSE}
+data(fmm1.bt, package = "nlraa")
+```
+
+```{r, Theoph-PB-between-subjects-3}
 fm0.Theoph.bt.ss <- cbind(ndat[,-4], summary_simulate(t(na.omit(fm0.Theoph.bt$t))))
 fm0.Theoph.bt.ss.A <- aggregate(cbind(Estimate, Est.Error, Q2.5, Q97.5) ~ Time, 
                                 data = fm0.Theoph.bt.ss, FUN = mean)
@@ -352,7 +431,6 @@ ggplot() +
 ```
 
 In the previous calculation of prediction bands I have fixed the Does at the median value, this is part of the reason why the uncertainty seems lower than it should be. The other reason is that I'm not taking into account the uncertainty from the random effects. (I will implement this the day I needed because it is not trivial for nonlinear mixed models). For linear mixed models using the **lme** function this is indeed possible.
-
 
 # References
 

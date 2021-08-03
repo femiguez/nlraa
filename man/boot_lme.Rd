@@ -4,7 +4,7 @@
 \alias{boot_lme}
 \title{Bootstraping for linear mixed models}
 \usage{
-boot_lme(object, f = NULL, R = 999, psim = 1, cores = 1L, ...)
+boot_lme(object, f = NULL, R = 999, psim = 1, cores = 1L, data = NULL, ...)
 }
 \arguments{
 \item{object}{object of class \code{\link[nlme]{lme}} or \code{\link[nlme]{gls}}}
@@ -16,6 +16,8 @@ boot_lme(object, f = NULL, R = 999, psim = 1, cores = 1L, ...)
 \item{psim}{simulation level for vector of fixed parameters either for \code{\link{simulate_gls}} or \code{\link{simulate_lme}}}
 
 \item{cores}{number of cores to use for parallel computation}
+
+\item{data}{optional data argument (useful/needed when data are not in an available environment).}
 
 \item{...}{additional arguments to be passed to function \code{\link[boot]{boot}}}
 }

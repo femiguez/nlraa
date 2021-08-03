@@ -80,6 +80,62 @@
  #' @source Walls, W.R., 1971. Role of temperature in the regulation of leaf extension in Zea mays. Nature, 229: 46-47. 
  "maizeleafext"
  
+ #' @title object for confidence bands vignette Lob.bt.pe
+ #' @format An object of class \sQuote{boot}
+ #' \describe{
+ #'   \item{Lob.bt.pe}{object created in the vignette in chunk \sQuote{Loblolly-bootstrap-estimates-1}}
+  #' }
+ #' @source this package vignette
+ "Lob.bt.pe"
+ 
+ #' @title object for confidence bands vignette fm2.Lob.bt
+ #' @format An object of class \sQuote{boot}
+ #' \describe{
+ #'   \item{fm2.Lob.bt}{object created in the vignette in chunk \sQuote{Loblolly-methods-2}}
+ #' }
+ #' @source this package vignette
+ "fm2.Lob.bt"
+ 
+ #' @title object for confidence bands vignette fm1.P.bt
+ #' @format An object of class \sQuote{boot}
+ #' \describe{
+ #'   \item{fm1.P.bt}{object created in the vignette in chunk \sQuote{Puromycin-2}}
+ #' }
+ #' @source this package vignette
+ "fm1.P.bt"
+ 
+ #' @title object for confidence bands vignette fm1.P.bt.ft
+ #' @format An object of class \sQuote{boot}
+ #' \describe{
+ #'   \item{fm1.P.bt.ft}{object created in the vignette in chunk \sQuote{Puromycin-4}}
+ #' }
+ #' @source this package vignette
+ "fm1.P.bt.ft"
+ 
+ #' @title object for confidence bands vignette fm1.P.at.x.0.4
+ #' @format An object of class \sQuote{boot}
+ #' \describe{
+ #'   \item{fm1.P.at.x.0.4}{object created in the vignette in chunk \sQuote{Puromycin-6}}
+ #' }
+ #' @source this package vignette
+ "fm1.P.at.x.0.4"
+ 
+ #' @title object for confidence bands vignette fmm1.bt
+ #' @format An object of class \sQuote{boot}
+ #' \describe{
+ #'   \item{fmm1.bt}{object created in the vignette in chunk \sQuote{maizeleafext-2}}
+ #' }
+ #' @source this package vignette
+ "fmm1.bt"
+ 
+ #' @title object for confidence bands vignette fm0.Theoph.bt
+ #' @format An object of class \sQuote{boot}
+ #' \describe{
+ #'   \item{fm0.Theoph.bt}{object created in the vignette in chunk \sQuote{Theoph-PB-between-subjects-2}}
+ #' }
+ #' @source this package vignette
+ "fm0.Theoph.bt"
+ 
  ## Import packages needed for nlraa to work correctly
  #' @import boot knitr MASS nlme stats
  #' @importFrom utils warnErrList
