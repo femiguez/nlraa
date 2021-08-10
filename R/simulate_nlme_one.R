@@ -74,7 +74,7 @@ simulate_nlme_one <- function(object, psim = 1, level = Q, asList = FALSE, na.ac
   if(!is.null(args$newdata)){
     newdata <- args$newdata
     if(length(unique(attr(residuals(object), "std"))) > 1 && psim > 1)
-      stop("At this point newdata is not compatible with observation-level simulation",
+      stop("At this point 'newdata' is not compatible with observation-level simulation",
            call. = FALSE)
   }else{
     if(is.null(data)){
@@ -82,6 +82,12 @@ simulate_nlme_one <- function(object, psim = 1, level = Q, asList = FALSE, na.ac
       if(inherits(newdata, "try-error") || is.null(newdata)) 
         stop("'data' argument is required. It is likely you are using simulate_nlme_one inside another function")
     }else{
+      if(object$dims$N != nrow(data)){
+        stop("Number of rows in data argument does not match the original data \n
+              The data argument should only be used to pass the same data.frame \n 
+              used to fit the model",
+             call. = FALSE)
+      }
       newdata <- data
     }  
   } 

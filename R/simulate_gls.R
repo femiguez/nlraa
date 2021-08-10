@@ -34,6 +34,7 @@
 #' @param na.action default \sQuote{na.fail}. See \code{\link[nlme]{predict.gls}}
 #' @param naPattern missing value pattern. See \code{\link[nlme]{predict.gls}}
 #' @param data the data argument is needed when using this function inside user defined functions.
+#' It should be identical to the data used to fit the model.
 #' @param ... additional arguments (it is possible to supply a newdata this way)
 #' @return It returns a vector with simulated values with length equal to the number of rows 
 #' in the original data
@@ -67,12 +68,21 @@ simulate_gls <- function(object, psim = 1, na.action = na.fail, naPattern = NULL
   args <- list(...)
   if(!is.null(args$newdata)){
     newdata <- args$newdata
+    if(length(unique(attr(residuals(object), "std"))) > 1 && psim == 2)
+      stop("At this point 'newdata' is not compatible with observation-level simulation",
+           call. = FALSE)
   }else{
     if(is.null(data)){
       newdata <- try(nlme::getData(object), silent = TRUE)
       if(inherits(newdata, "try-error") || is.null(newdata)) 
         stop("'data' argument is required. It is likely you are using simulate_gls inside another function")
     }else{
+      if(object$dims$N != nrow(data)){
+        stop("Number of rows in data argument does not match the original data \n
+              The data argument should only be used to pass the same data.frame \n 
+              used to fit the model",
+             call. = FALSE)
+      }
       newdata <- data
     } 
   } 

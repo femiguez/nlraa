@@ -71,7 +71,7 @@ simulate_lme <- function(object, nsim = 1, psim = 1,
     sim.mat <- matrix(ncol = nsim, nrow = nrow(list(...)$newdata))  
   } 
     
-  ## First example for the gnls case
+  ## First example for the gls case
   for(i in seq_len(nsim)){
     if(inherits(object, "gls")){
       sim.mat[,i] <- as.vector(simulate_gls(object, psim = psim, data = data, ...))
@@ -131,12 +131,21 @@ simulate_lme_one <- function(object, psim = 1, level = Q, asList = FALSE, na.act
   args <- list(...)
   if(!is.null(args$newdata)){
     newdata <- args$newdata
+    if(length(unique(attr(object[["residuals"]], "std"))) > 1 && psim == 2)
+      stop("At this point 'newdata' is not compatible with observation-level simulation",
+           call. = FALSE)
   }else{
     if(is.null(data)){
       newdata <- try(nlme::getData(object), silent = TRUE)
       if(inherits(newdata, "try-error") || is.null(newdata)) 
         stop("'data' argument is required. It is likely you are using simulate_lme_one inside another function")
     }else{
+      if(object$dims$N != nrow(data)){
+        stop("Number of rows in data argument does not match the original data \n
+              The data argument should only be used to pass the same data.frame \n 
+              used to fit the model",
+             call. = FALSE)
+      }
       newdata <- data
     }  
   } 
