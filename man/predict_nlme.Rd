@@ -3,6 +3,8 @@
 \name{predict_nlme}
 \alias{predict_nlme}
 \alias{predict_lme}
+\alias{predict_gnls}
+\alias{predict_gls}
 \title{Average predictions from several (non)linear models based on IC weights}
 \usage{
 predict_nlme(
@@ -16,6 +18,26 @@ predict_nlme(
 )
 
 predict_lme(
+  ...,
+  criteria = c("AIC", "AICc", "BIC"),
+  interval = c("none", "confidence", "prediction", "new-prediction"),
+  level = 0.95,
+  nsim = 1000,
+  plevel = 0,
+  newdata = NULL
+)
+
+predict_gnls(
+  ...,
+  criteria = c("AIC", "AICc", "BIC"),
+  interval = c("none", "confidence", "prediction", "new-prediction"),
+  level = 0.95,
+  nsim = 1000,
+  plevel = 0,
+  newdata = NULL
+)
+
+predict_gls(
   ...,
   criteria = c("AIC", "AICc", "BIC"),
   interval = c("none", "confidence", "prediction", "new-prediction"),
@@ -50,6 +72,10 @@ Computes weights based on AIC, AICc, or BIC and it generates weighted prediction
 the relative value of the IC values
 
 predict function for objects of class \code{\link[nlme]{lme}}
+
+predict function for objects of class \code{\link[nlme]{gnls}}
+
+predict function for objects of class \code{\link[nlme]{gls}}
 }
 \note{
 all the objects should be fitted to the same data. The weights are
