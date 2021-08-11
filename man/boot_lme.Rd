@@ -2,9 +2,12 @@
 % Please edit documentation in R/boot_lme.R
 \name{boot_lme}
 \alias{boot_lme}
+\alias{boot_gls}
 \title{Bootstraping for linear mixed models}
 \usage{
 boot_lme(object, f = NULL, R = 999, psim = 1, cores = 1L, data = NULL, ...)
+
+boot_gls(object, f = NULL, R = 999, psim = 1, cores = 1L, data = NULL, ...)
 }
 \arguments{
 \item{object}{object of class \code{\link[nlme]{lme}} or \code{\link[nlme]{gls}}}
@@ -23,6 +26,8 @@ boot_lme(object, f = NULL, R = 999, psim = 1, cores = 1L, data = NULL, ...)
 }
 \description{
 Bootstraping tools for linear mixed-models using a consistent interface
+
+bootstrap function for objects of class \code{\link[nlme]{gls}}
 }
 \details{
 This function is inspired by \code{\link[car]{Boot}}, which does not

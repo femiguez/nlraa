@@ -2,6 +2,7 @@
 #' 
 #' @title Bootstraping for generalized nonlinear models and nonlinear mixed models
 #' @name boot_nlme
+#' @rdname boot_nlme
 #' @param object object of class \code{\link[nlme]{nlme}} or \code{\link[nlme]{gnls}}
 #' @param f function to be applied (and bootstrapped), default coef (gnls) or fixef (nlme)
 #' @param R number of bootstrap samples, default 999
@@ -156,6 +157,11 @@ boot_nlme <- function(object,
   assign(".k.boot", 0L, envir = nlraa.env)
   return(ans)
 }
+
+#' @rdname boot_nlme
+#' @description bootstrap function for objects of class \code{\link[nlme]{gnls}}
+#' @export
+boot_gnls <- boot_nlme
 
 #' Create an nlraa environment for bootstrapping
 #' 

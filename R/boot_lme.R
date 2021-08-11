@@ -2,6 +2,7 @@
 #' 
 #' @title Bootstraping for linear mixed models
 #' @name boot_lme
+#' @rdname boot_lme
 #' @param object object of class \code{\link[nlme]{lme}} or \code{\link[nlme]{gls}}
 #' @param f function to be applied (and bootstrapped), default coef (gls) or fixef (lme)
 #' @param R number of bootstrap samples, default 999
@@ -149,6 +150,11 @@ boot_lme <- function(object,
   assign(".k.boot.lme", 0L, envir = nlraa.lme.env)
   return(ans)
 }
+
+#' @rdname boot_lme
+#' @description bootstrap function for objects of class \code{\link[nlme]{gls}}
+#' @export
+boot_gls <- boot_lme
 
 #' Create an nlraa environment for bootstrapping lme
 #' 

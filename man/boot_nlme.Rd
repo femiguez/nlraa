@@ -2,9 +2,12 @@
 % Please edit documentation in R/boot_nlme.R
 \name{boot_nlme}
 \alias{boot_nlme}
+\alias{boot_gnls}
 \title{Bootstraping for generalized nonlinear models and nonlinear mixed models}
 \usage{
 boot_nlme(object, f = NULL, R = 999, psim = 1, cores = 1L, data = NULL, ...)
+
+boot_gnls(object, f = NULL, R = 999, psim = 1, cores = 1L, data = NULL, ...)
 }
 \arguments{
 \item{object}{object of class \code{\link[nlme]{nlme}} or \code{\link[nlme]{gnls}}}
@@ -23,6 +26,8 @@ boot_nlme(object, f = NULL, R = 999, psim = 1, cores = 1L, data = NULL, ...)
 }
 \description{
 Bootstraping tools for nonlinear models using a consistent interface
+
+bootstrap function for objects of class \code{\link[nlme]{gnls}}
 }
 \details{
 This function is inspired by \code{\link[car]{Boot}}, which does not
