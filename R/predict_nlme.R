@@ -79,12 +79,12 @@ predict_nlme <- function(..., criteria = c("AIC", "AICc", "BIC"),
     prd.mat.upr <- matrix(nrow = nr, ncol = lobjs)
   } 
   
-  data.name <- as.character(objs[[1]]$call$data)
+  data.name <- as.character(deparse(objs[[1]]$call$data))
   
   for(i in seq_len(lobjs)){
     obj <- objs[[i]]
     if(!inherits(obj, c("nlme","lme","gnls","gls"))) stop("All objects should be of class 'nlme', 'lme', 'gnls' or 'gls'")
-    if(data.name != as.character(obj$call$data)) stop("All models should be fitted to the same data")
+    if(data.name != as.character(deparse(obj$call$data))) stop("All models should be fitted to the same data")
     
     wtab$model[i] <- nms[i]
     
