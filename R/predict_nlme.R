@@ -175,8 +175,17 @@ predict_nlme <- function(..., criteria = c("AIC", "AICc", "BIC"),
   return(ans)
 }
 
-#' @name predict_lme
 #' @rdname predict_nlme
 #' @description predict function for objects of class \code{\link[nlme]{lme}}
 #' @export
 predict_lme <- predict_nlme
+
+#' @rdname predict_nlme
+#' @description predict function for objects of class \code{\link[nlme]{gnls}}
+#' @export
+predict_gnls <- predict_nlme
+
+#' @rdname predict_nlme
+#' @description predict function for objects of class \code{\link[nlme]{gls}}
+#' @export
+predict_gls <- predict_nlme

@@ -25,7 +25,8 @@ will appear similar to the observed values}
 
 \item{naPattern}{missing value pattern. See \code{\link[nlme]{predict.gnls}}}
 
-\item{data}{the data argument is needed when using this function inside user defined functions.}
+\item{data}{the data argument is needed when using this function inside user defined functions.
+It should be identical to the data used to fit the model.}
 
 \item{...}{additional arguments (it is possible to supply a newdata this way)}
 }
