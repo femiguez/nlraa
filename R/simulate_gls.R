@@ -68,8 +68,8 @@ simulate_gls <- function(object, psim = 1, na.action = na.fail, naPattern = NULL
   args <- list(...)
   if(!is.null(args$newdata)){
     newdata <- args$newdata
-    if(length(unique(attr(residuals(object), "std"))) > 1 && psim == 2)
-      stop("At this point 'newdata' is not compatible with observation-level simulation",
+    if(!is.null(object$modelStruct$corStruct) && psim == 2)
+      stop("At this point 'newdata' is not compatible with correlated residuals",
            call. = FALSE)
   }else{
     if(is.null(data)){
@@ -78,6 +78,7 @@ simulate_gls <- function(object, psim = 1, na.action = na.fail, naPattern = NULL
         stop("'data' argument is required. It is likely you are using simulate_gls inside another function")
     }else{
       if(object$dims$N != nrow(data)){
+        ## I could fit the model here to make sure
         stop("Number of rows in data argument does not match the original data \n
               The data argument should only be used to pass the same data.frame \n 
               used to fit the model",
@@ -135,8 +136,13 @@ simulate_gls <- function(object, psim = 1, na.action = na.fail, naPattern = NULL
     ## For more details see the comments in simulate_gnls
     cf <- MASS::mvrnorm(n = 1, mu = coef(object), Sigma = vcov(object))
     if(is.null(object$modelStruct$corStruct)){
-      rsds.std <- stats::rnorm(N, 0, 1)
-      rsds <- rsds.std * attr(residuals(object), "std") ## This last term is 'sigma'
+      if(is.null(args$newdata) || is.null(object$modelStruct$varStruct)){
+        rsds.std <- stats::rnorm(N, 0, 1)
+        rsds <- rsds.std * attr(residuals(object), "std") ## This last term is 'sigma'        
+      }else{
+        rsds.std <- stats::rnorm(nrow(newdata), 0, 1)
+        rsds <- rsds.std * predict_varfun(object, newdata = newdata)
+      }
     }else{
       ## This is one way of doing this, but might not be the best
       var.cov.err <- var_cov(object, sparse = TRUE, data = newdata)
@@ -159,5 +165,81 @@ simulate_gls <- function(object, psim = 1, na.action = na.fail, naPattern = NULL
     lab <- paste(lab, aux)
   }
   structure(val, label = lab)
+}
+
+#' Function to predict the residual variance for newdata
+#' @name predict_varfun
+#' @param object object of class \sQuote{gls}, \sQuote{gnls}, \sQuote{lme} or \sQuote{nlme}
+#' @param newdata new data frame for which to predict the variance based on the structure in \sQuote{object}
+#' @noRd
+predict_varfun <- function(object, newdata){
+  
+  ## If this fails, we know that newdata is not appropriate for this object
+  fttd <- predict(object, newdata = newdata)
+  
+  if(is.null(object$modelStruct$varStruct))
+    stop("varStruct should not be null for this function to be used", call. = TRUE)
+  
+  ## These are the standard deviations, for the original model
+  stds <- sigma(object)/nlme::varWeights(object$modelStruct$varStruct)
+  vrSt <- object$modelStruct$varStruct
+  
+  if(!inherits(vrSt, c("varIdent", "varFixed", "varExp", "varPower"))){
+    stop("Only varIdent, varFixed, varExp, varPower classes are supported at this time", call. = FALSE)
+  }
+      
+  ## Here I would need a specific method for each variance function
+  if(inherits(vrSt, "varFixed")){
+    ## I don't think groups are relevant in this case
+    ans <- sigma(object) * sqrt(newdata[[as.character(formula(vrSt)[2])]])
+  }
+  
+  if(inherits(vrSt, "varIdent")){
+    ## Groups are relevant in this case
+    if(is.null(getGroups(vrSt)))
+      stop("Groups should be present for varIdent", call. = FALSE)
+    if(!is.null(getCovariate(vrSt)))
+      stop("Do not know how to handle covariates for varIdent yet", call. = FALSE)
+    ans <- numeric(nrow(newdata))
+    grp.nm <- as.character(getGroupsFormula(vrSt)[[2]])
+    for(i in 1:nrow(newdata)){
+      crr.grp <- newdata[i, grp.nm] ## This is the current group
+      wch.grp.nm <- which(names(varWeights(vrSt)) == crr.grp)[1] ## This is the index for the weight of the current group
+      ans[i] <- sigma(object) * (1/varWeights(vrSt))[wch.grp.nm]  ## This computes the std for the current group row
+    }
+  }
+    
+  if(inherits(vrSt, "varExp")){
+    var_exp_fun <- function(x, t) exp(2 * t * x)
+    if(is.null(getGroups(vrSt))){
+      if(any(grepl("fitted", as.character(formula(vrSt))))){
+        ## Need to fit the model to get the covariate
+        cvrt <- predict(object, newdata = newdata)
+      }else{
+        cvrt <- newdata[[as.character(formula(vrSt)[2])]] ## Is this guranteed to always work?
+      }
+      ans <- sigma(object) * sqrt(var_exp_fun(cvrt, coef(vrSt)))
+    }else{
+      stop("Groups are not supported at the moment", call. = FALSE)
+    }
+  }
+  
+  if(inherits(vrSt, "varPower")){
+    var_power_fun <- function(x, delta) abs(x)^(2 * delta)
+    if(is.null(getGroups(vrSt))){
+      if(any(grepl("fitted", as.character(formula(vrSt))))){
+        ## Need to fit the model to get the covariate
+        cvrt <- predict(object, newdata = newdata)
+      }else{
+        cvrt <- newdata[[as.character(formula(vrSt)[2])]]
+      }
+      ans <- sigma(object) * sqrt(var_power_fun(cvrt, coef(vrSt)))
+    }else{
+      stop("Groups are not supported at the moment", call. = FALSE)
+    }
+  }
+  
+  ans <- c(as.vector(ans))
+  return(ans)
 }
 
