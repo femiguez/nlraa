@@ -28,6 +28,10 @@ if(run.test.predict_varFunc){
   
   ## Soybean dataset
   data(Soybean)
+  
+  ggplot(Soybean, aes(Time, weight, color = Variety)) + 
+    geom_point()
+  
   fm1 <- gls(weight ~ Time + I(Time^2), Soybean,
               weights = varPower())
   new.soy <- data.frame(Time = 14:84)
@@ -70,10 +74,31 @@ if(run.test.predict_varFunc){
   fm1 <- gnls(weight ~ SSlogis(Time, Asym, xmid, scal), Soybean,
               weights = varPower())
  
-  new.soy <- data.frame(Time = 14:84)
+  new.soy <- expand.grid(Time = 14:84)
   sim2.nd <- simulate_gnls(fm1, psim = 2, newdata = new.soy)
   new.soy.A <- cbind(new.soy, prd = sim2.nd)
 
   ggplot(data = new.soy.A, aes(x = Time, y = prd)) + 
     geom_point()   
+  
+  new.soy <- expand.grid(Time = 14:84, Variety = c("F", "P"))
+  ## Changing the covariate
+  fm2 <- gnls(weight ~ SSlogis(Time, Asym, xmid, scal), Soybean,
+              weights = varPower(form = ~ Time | Variety))
+  
+  sim2.nd <- simulate_gnls(fm2, psim = 2, newdata = new.soy) 
+  new.soy.A <- cbind(new.soy, prd = sim2.nd)
+  
+  ggplot(data = new.soy.A, aes(x = Time, y = prd, color = Variety)) + 
+    geom_point()   
+  
+  ## This takes forever... okay, maybe a minute
+  prds <- predict_gnls(fm2, interval = "pred", newdata = new.soy)
+  
+  new.soy.P <- cbind(new.soy, prds)
+
+  ggplot(data = new.soy.P, aes(x = Time, y = Estimate, color = Variety)) + 
+    geom_point() + 
+    geom_ribbon(aes(ymin = Q2.5, ymax = Q97.5, fill = Variety, color = NULL), alpha = 0.3)
+    
 }

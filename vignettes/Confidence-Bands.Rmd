@@ -114,7 +114,7 @@ The function *predict.nls* has arguments for the standard error and for interval
 
 1. Nonlinear models which have parameters which do present empirical distributions which are close to normal have better statistical properties in general. If this is not the case, it is usually possible to reparameterize them so they are approximately normal. In my experience, nonlinear models with empirical parameter distributions which are far from *spherical* are harder to fit and less reliable in many ways. This is worse as the model gets more complicated or when we use Bayesian methods.
 
-2. To clarify, it is ok if the parameter estimates distributions deviate from normal to some extent and/or if they are correlated. It is the degree of these two things. If they strongly deviate from normality, this can represent an issue and if the correlation is very high, it might point to an over-parameterized model (but nor always!)
+2. To clarify, it is ok if the parameter estimates distributions deviate from normal to some extent and/or if they are correlated. It is the degree of these two things. If they strongly deviate from normality, this can represent an issue and if the correlation is very high, it might point to an over-parameterized model (but not always!)
 
 3. If we are **not** comfortable with the normality assumption of the distribution of the parameter estimates in our nonlinear models, then, I would think, that the t-table produced by *summary* should also be only approximate and not entirely to be trusted. (Let me know if this is not correct.)
 
@@ -145,7 +145,7 @@ pairs(Lob.bt.pe$t, labels = c("Asym", "R0", "lrc"))
 print(cov2cor(var(Lob.bt.pe$t)), digits = 2) ## Correlation matrix
 ```
 
-These distributions deviate somewhat from a multivariate normal. (A formal test would reject the hypothesis that the data is MVN - not shown.) Here I propose to compute confidence bands to these data using the following methods:
+These distributions deviate somewhat from a multivariate normal. (A formal test would reject the hypothesis that the data is MVN - not shown.) Here I propose to compute confidence bands for these data using the following methods:
 
 1. A polynomial linear model
 2. A nonlinear model and the Delta Method
@@ -207,8 +207,6 @@ ggplot(data = prd.all, aes(x = age, y = height)) +
 
 The differences among the methods are minor and in practical terms should not result in different decisions. Apparently, the bootstrap method is slightly wider than the other three, but by a small margin.
 If we are willing to accept that these methods are approximately similar even under conditions which deviate from the ideal, we might be willing to extend these methods to more complex models.
-
-Add Prediction Bands
 
 ### Nonlinear Example: Puromycin
 
@@ -321,7 +319,7 @@ ggplot(data = maizeleafext, aes(x = temp, y = rate)) +
 ## The model seems slightly inadequate for these data
 fmm1.dm <- predict2_nls(fmm1, interval = "conf")
 mlf <- cbind(maizeleafext, fmm1.dm)
-## The confidence bands are significant
+## The confidence bands are fairly wide
 ggplot(data = mlf, aes(x = temp, y = rate)) + 
   geom_point() + geom_line(aes(y = fitted(fmm1))) + 
   geom_ribbon(aes(ymin = Q2.5, ymax = Q97.5), 
@@ -430,7 +428,7 @@ ggplot() +
   ggtitle("95% prediction bands (between subjects)")
 ```
 
-In the previous calculation of prediction bands I have fixed the Does at the median value, this is part of the reason why the uncertainty seems lower than it should be. The other reason is that I'm not taking into account the uncertainty from the random effects. (I will implement this the day I needed because it is not trivial for nonlinear mixed models). For linear mixed models using the **lme** function this is indeed possible.
+In the previous calculation of prediction bands I have fixed the Dose at the median value, this is part of the reason why the uncertainty seems lower than it should be. The other reason is that I am not taking into account the uncertainty from the random effects. (This is possible for **lme** or **nlme** objects: see psim = 3 in the *simulate_* functions or the **new-prediction** option in the *predict_* functions).
 
 # References
 

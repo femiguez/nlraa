@@ -202,6 +202,8 @@ predict_varFunc <- function(object, newdata){
     ## The covariate is ignored for this variance function
     ans <- numeric(nrow(newdata))
     grp.nm <- as.character(getGroupsFormula(vrSt)[[2]])
+    if(!grepl(grp.nm, names(newdata)))
+      stop("Grouping factor should be present in 'newdata' object", call. = FALSE)
     if(grepl("*", grp.nm, fixed = TRUE))
       stop("This is not supported yet. Please submit this as an issue to github if you need it.")
     for(i in 1:nrow(newdata)){
@@ -218,12 +220,17 @@ predict_varFunc <- function(object, newdata){
         ## Need to fit the model to get the covariate
         cvrt <- fttd
       }else{
-        cvrt <- newdata[[as.character(getCovariateFormula(vrSt))[2]]] ## Is this guranteed to always work?
+        cvrt.nm <- as.character(getCovariateFormula(vrSt))[2]
+        if(!grepl(cvrt.nm, names(newdata)))
+          stop("Variance covariate should be present in 'newdata' object", call. = FALSE)
+        cvrt <- newdata[[cvrt.nm]] ## Is this guranteed to always work?
       }
       ans <- sigma(object) * sqrt(var_exp_fun(cvrt, coef(vrSt)))
     }else{
       ans <- numeric(nrow(newdata))
       grp.nm <- as.character(getGroupsFormula(vrSt)[[2]])
+      if(!grepl(grp.nm, names(newdata)))
+        stop("Grouping factor should be present in 'newdata' object", call. = FALSE)
       if(grepl("*", grp.nm, fixed = TRUE))
         stop("This is not supported yet. Please submit this as an issue to github if you need it.")
       for(i in 1:nrow(newdata)){
@@ -247,14 +254,19 @@ predict_varFunc <- function(object, newdata){
         ## Need to fit the model to get the covariate
         cvrt <- fttd
       }else{
-        cvrt <- newdata[[as.character(getCovariateFormula(vrSt))[[2]]]]
+        cvrt.nm <- as.character(getCovariateFormula(vrSt))[2]
+        if(!grepl(cvrt.nm, names(newdata)))
+          stop("Variance covariate should be present in 'newdata' object", call. = FALSE)
+        cvrt <- newdata[[cvrt.nm]]
       }
       ans <- sigma(object) * sqrt(var_power_fun(cvrt, coef(vrSt)))
     }else{
       ans <- numeric(nrow(newdata))
       grp.nm <- as.character(getGroupsFormula(vrSt)[[2]])
+      if(!grepl(grp.nm, names(newdata)))
+        stop("Grouping factor should be present in 'newdata' object", call. = FALSE)
       if(grepl("*", grp.nm, fixed = TRUE))
-        stop("This is not supported yet. Please submit this as an issue to github if you need it.")
+        stop("This is not supported yet. Please submit this as an issue to github if you need it.", call. = FALSE)
       for(i in 1:nrow(newdata)){
         crr.grp <- newdata[i, grp.nm] ## This is the current group
         grp.coef <- coef(vrSt)[which(attr(vrSt, "groupNames") == crr.grp)] ## This is the coef for the current group
