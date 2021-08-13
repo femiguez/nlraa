@@ -39,7 +39,7 @@
 #' in the original data
 #' @details It uses function \code{\link[MASS]{mvrnorm}} to generate new values for the coefficients
 #' of the model using the Variance-Covariance matrix \code{\link{vcov}}. This variance-covariance matrix 
-#' refers to the one for the parameters 'beta', not the one for the residuals.
+#' refers to the one for the parameters \sQuote{beta}, not the one for the residuals.
 #' @seealso \code{\link[nlme]{predict.gnls}}
 #' @export
 #' @examples 
@@ -66,8 +66,8 @@ simulate_gnls <- function(object, psim = 1, na.action = na.fail, naPattern = NUL
     args <- list(...)
     if(!is.null(args$newdata)){
       ndata <- args$newdata
-      if(length(unique(attr(residuals(object), "std"))) > 1 && psim == 2)
-        stop("At this point 'newdata' is not compatible with observation-level simulation",
+      if(!is.null(object$modelStruct$corStruct) && psim == 2)
+        stop("At this point 'newdata' is not compatible with psim = 2 and correlated residuals",
              call. = FALSE)
     }else{
       if(is.null(data)){
@@ -163,8 +163,14 @@ simulate_gnls <- function(object, psim = 1, na.action = na.fail, naPattern = NUL
       ## N is the number of rows in the data
       ## this works for uncorrelated errors
       if(is.null(object$modelStruct$corStruct)){
-        rsds.std <- stats::rnorm(N, 0, 1)
-        rsds <- rsds.std * attr(residuals(object), "std") ## This last term is 'sigma'
+        if(is.null(args$newdata) || is.null(object$modelStruct$varStruct)){
+          rsds.std <- stats::rnorm(N, 0, 1)
+          rsds <- rsds.std * attr(residuals(object), "std") ## This last term is 'sigma'        
+        }else{
+          ## This chunk of code was added 2021-08-13. It allows for newdata, varStruct and psim = 2
+          rsds.std <- stats::rnorm(nrow(ndata), 0, 1)
+          rsds <- rsds.std * predict_varFunc(object, newdata = ndata)
+        }
       }else{
         ## This was added 2020-05-04
         ## This extracts the variance covariance of the error matrix

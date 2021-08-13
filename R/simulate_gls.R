@@ -40,7 +40,7 @@
 #' in the original data
 #' @details It uses function \code{\link[MASS]{mvrnorm}} to generate new values for the coefficients
 #' of the model using the Variance-Covariance matrix \code{\link{vcov}}. This variance-covariance matrix 
-#' refers to the one for the parameters 'beta', not the one for the residuals.
+#' refers to the one for the parameters \sQuote{beta}, not the one for the residuals.
 #' @seealso \code{\link[nlme]{predict.gls}} \code{\link{simulate_lme}}
 #' @export
 #' @examples 
@@ -69,7 +69,7 @@ simulate_gls <- function(object, psim = 1, na.action = na.fail, naPattern = NULL
   if(!is.null(args$newdata)){
     newdata <- args$newdata
     if(!is.null(object$modelStruct$corStruct) && psim == 2)
-      stop("At this point 'newdata' is not compatible with correlated residuals",
+      stop("At this point 'newdata' is not compatible with psim = 2 and correlated residuals",
            call. = FALSE)
   }else{
     if(is.null(data)){
@@ -141,7 +141,7 @@ simulate_gls <- function(object, psim = 1, na.action = na.fail, naPattern = NULL
         rsds <- rsds.std * attr(residuals(object), "std") ## This last term is 'sigma'        
       }else{
         rsds.std <- stats::rnorm(nrow(newdata), 0, 1)
-        rsds <- rsds.std * predict_varfun(object, newdata = newdata)
+        rsds <- rsds.std * predict_varFunc(object, newdata = newdata)
       }
     }else{
       ## This is one way of doing this, but might not be the best
@@ -168,11 +168,11 @@ simulate_gls <- function(object, psim = 1, na.action = na.fail, naPattern = NULL
 }
 
 #' Function to predict the residual variance for newdata
-#' @name predict_varfun
+#' @name predict_varFunc
 #' @param object object of class \sQuote{gls}, \sQuote{gnls}, \sQuote{lme} or \sQuote{nlme}
 #' @param newdata new data frame for which to predict the variance based on the structure in \sQuote{object}
 #' @noRd
-predict_varfun <- function(object, newdata){
+predict_varFunc <- function(object, newdata){
   
   ## If this fails, we know that newdata is not appropriate for this object
   fttd <- predict(object, newdata = newdata)
@@ -191,6 +191,7 @@ predict_varfun <- function(object, newdata){
   ## Here I would need a specific method for each variance function
   if(inherits(vrSt, "varFixed")){
     ## I don't think groups are relevant in this case
+    ## nlme actually throws a warning saying that grouping factors are ignored
     ans <- sigma(object) * sqrt(newdata[[as.character(formula(vrSt)[2])]])
   }
   
@@ -198,10 +199,11 @@ predict_varfun <- function(object, newdata){
     ## Groups are relevant in this case
     if(is.null(getGroups(vrSt)))
       stop("Groups should be present for varIdent", call. = FALSE)
-    if(!is.null(getCovariate(vrSt)))
-      stop("Do not know how to handle covariates for varIdent yet", call. = FALSE)
+    ## The covariate is ignored for this variance function
     ans <- numeric(nrow(newdata))
     grp.nm <- as.character(getGroupsFormula(vrSt)[[2]])
+    if(grepl("*", grp.nm, fixed = TRUE))
+      stop("This is not supported yet. Please submit this as an issue to github if you need it.")
     for(i in 1:nrow(newdata)){
       crr.grp <- newdata[i, grp.nm] ## This is the current group
       wch.grp.nm <- which(names(varWeights(vrSt)) == crr.grp)[1] ## This is the index for the weight of the current group
@@ -214,13 +216,27 @@ predict_varfun <- function(object, newdata){
     if(is.null(getGroups(vrSt))){
       if(any(grepl("fitted", as.character(formula(vrSt))))){
         ## Need to fit the model to get the covariate
-        cvrt <- predict(object, newdata = newdata)
+        cvrt <- fttd
       }else{
-        cvrt <- newdata[[as.character(formula(vrSt)[2])]] ## Is this guranteed to always work?
+        cvrt <- newdata[[as.character(getCovariateFormula(vrSt))[2]]] ## Is this guranteed to always work?
       }
       ans <- sigma(object) * sqrt(var_exp_fun(cvrt, coef(vrSt)))
     }else{
-      stop("Groups are not supported at the moment", call. = FALSE)
+      ans <- numeric(nrow(newdata))
+      grp.nm <- as.character(getGroupsFormula(vrSt)[[2]])
+      if(grepl("*", grp.nm, fixed = TRUE))
+        stop("This is not supported yet. Please submit this as an issue to github if you need it.")
+      for(i in 1:nrow(newdata)){
+        crr.grp <- newdata[i, grp.nm] ## This is the current group
+        grp.coef <- coef(vrSt)[which(attr(vrSt, "groupNames") == crr.grp)] ## This is the coef for the current group
+        if(any(grepl("fitted", as.character(formula(vrSt))))){
+          ## Need to fit the model to get the covariate
+          cvrt <- predict(object, newdata = newdata[i,])
+        }else{
+          cvrt <- newdata[i, as.character(getCovariateFormula(vrSt))[[2]]] ## Is this guranteed to always work?
+        }
+        ans[i] <- sigma(object) * sqrt(var_exp_fun(cvrt, grp.coef)) ## This computes the std for the current group row
+      }
     }
   }
   
@@ -229,13 +245,27 @@ predict_varfun <- function(object, newdata){
     if(is.null(getGroups(vrSt))){
       if(any(grepl("fitted", as.character(formula(vrSt))))){
         ## Need to fit the model to get the covariate
-        cvrt <- predict(object, newdata = newdata)
+        cvrt <- fttd
       }else{
-        cvrt <- newdata[[as.character(formula(vrSt)[2])]]
+        cvrt <- newdata[[as.character(getCovariateFormula(vrSt))[[2]]]]
       }
       ans <- sigma(object) * sqrt(var_power_fun(cvrt, coef(vrSt)))
     }else{
-      stop("Groups are not supported at the moment", call. = FALSE)
+      ans <- numeric(nrow(newdata))
+      grp.nm <- as.character(getGroupsFormula(vrSt)[[2]])
+      if(grepl("*", grp.nm, fixed = TRUE))
+        stop("This is not supported yet. Please submit this as an issue to github if you need it.")
+      for(i in 1:nrow(newdata)){
+        crr.grp <- newdata[i, grp.nm] ## This is the current group
+        grp.coef <- coef(vrSt)[which(attr(vrSt, "groupNames") == crr.grp)] ## This is the coef for the current group
+        if(any(grepl("fitted", as.character(formula(vrSt))))){
+          ## Need to fit the model to get the covariate
+          cvrt <- predict(object, newdata = newdata[i,])
+        }else{
+          cvrt <- newdata[i, as.character(getCovariateFormula(vrSt))[[2]]] ## Is this guranteed to always work?
+        }
+        ans[i] <- sigma(object) * sqrt(var_power_fun(cvrt, grp.coef)) ## This computes the std for the current group row
+      }
     }
   }
   

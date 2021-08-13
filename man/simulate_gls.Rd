@@ -45,7 +45,7 @@ This function is based on \code{\link[nlme]{predict.gls}} function
 
 It uses function \code{\link[MASS]{mvrnorm}} to generate new values for the coefficients
 of the model using the Variance-Covariance matrix \code{\link{vcov}}. This variance-covariance matrix 
-refers to the one for the parameters 'beta', not the one for the residuals.
+refers to the one for the parameters \sQuote{beta}, not the one for the residuals.
 }
 \examples{
 \donttest{

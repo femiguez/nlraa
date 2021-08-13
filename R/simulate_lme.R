@@ -131,8 +131,8 @@ simulate_lme_one <- function(object, psim = 1, level = Q, asList = FALSE, na.act
   args <- list(...)
   if(!is.null(args$newdata)){
     newdata <- args$newdata
-    if(length(unique(attr(object[["residuals"]], "std"))) > 1 && psim == 2)
-      stop("At this point 'newdata' is not compatible with observation-level simulation",
+    if(!is.null(object$modelStruct$corStruct) && psim > 1)
+      stop("At this point 'newdata' is not compatible with psim > 1 and correlated residuals",
            call. = FALSE)
   }else{
     if(is.null(data)){
@@ -315,8 +315,13 @@ simulate_lme_one <- function(object, psim = 1, level = Q, asList = FALSE, na.act
     fix <- MASS::mvrnorm(n = 1, mu = fixef(object), Sigma = vcov(object))
     
     if(is.null(object$modelStruct$corStruct)){
-      rsds.std <- stats::rnorm(N, 0, 1) ## These are standardized residuals 'pearson'?
-      rsds <- rsds.std * attr(object[["residuals"]], "std") ## This last term is 'sigma'
+      if(is.null(args$newdata) || is.null(object$modelStruct$varStruct)){
+        rsds.std <- stats::rnorm(N, 0, 1)
+        rsds <- rsds.std * attr(object[["residuals"]], "std") ## This last term is 'sigma'        
+      }else{
+        rsds.std <- stats::rnorm(nrow(newdata), 0, 1)
+        rsds <- rsds.std * predict_varFunc(object, newdata = newdata)
+      }
     }else{
       ## For details on this see simulate_gnls
       var.cov.err <- var_cov(object, sparse = TRUE, data = newdata)
