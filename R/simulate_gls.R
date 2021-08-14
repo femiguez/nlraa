@@ -178,7 +178,7 @@ predict_varFunc <- function(object, newdata){
   fttd <- predict(object, newdata = newdata)
   
   if(is.null(object$modelStruct$varStruct))
-    stop("varStruct should not be null for this function to be used", call. = TRUE)
+    stop("varStruct should not be null for this function", call. = TRUE)
   
   ## These are the standard deviations, for the original model
   stds <- sigma(object)/nlme::varWeights(object$modelStruct$varStruct)
@@ -202,7 +202,7 @@ predict_varFunc <- function(object, newdata){
     ## The covariate is ignored for this variance function
     ans <- numeric(nrow(newdata))
     grp.nm <- as.character(getGroupsFormula(vrSt)[[2]])
-    if(!grepl(grp.nm, names(newdata)))
+    if(!grp.nm %in% names(newdata))
       stop("Grouping factor should be present in 'newdata' object", call. = FALSE)
     if(grepl("*", grp.nm, fixed = TRUE))
       stop("This is not supported yet. Please submit this as an issue to github if you need it.")
@@ -229,20 +229,21 @@ predict_varFunc <- function(object, newdata){
     }else{
       ans <- numeric(nrow(newdata))
       grp.nm <- as.character(getGroupsFormula(vrSt)[[2]])
-      if(!grepl(grp.nm, names(newdata)))
+      if(!grp.nm %in% names(newdata))
         stop("Grouping factor should be present in 'newdata' object", call. = FALSE)
       if(grepl("*", grp.nm, fixed = TRUE))
         stop("This is not supported yet. Please submit this as an issue to github if you need it.")
-      for(i in 1:nrow(newdata)){
-        crr.grp <- newdata[i, grp.nm] ## This is the current group
-        grp.coef <- coef(vrSt)[which(attr(vrSt, "groupNames") == crr.grp)] ## This is the coef for the current group
+      ## Looping over group levels
+      for(i in unique(newdata[[grp.nm]])){
+        ## For each group compute the answer
+        wch.crr.grp <- which(newdata[[grp.nm]] == i)
+        grp.coef <- coef(vrSt)[which(attr(vrSt, "groupNames") == i)] ## This is the coef for the current group
         if(any(grepl("fitted", as.character(formula(vrSt))))){
-          ## Need to fit the model to get the covariate
-          cvrt <- predict(object, newdata = newdata[i,])
+          cvrt <- fttd[wch.crr.grp]
         }else{
-          cvrt <- newdata[i, as.character(getCovariateFormula(vrSt))[[2]]] ## Is this guranteed to always work?
+          cvrt <- newdata[wch.crr.grp, as.character(getCovariateFormula(vrSt))[[2]]] ## Is this guranteed to always work?
         }
-        ans[i] <- sigma(object) * sqrt(var_exp_fun(cvrt, grp.coef)) ## This computes the std for the current group row
+        ans[wch.crr.grp] <- sigma(object) * sqrt(var_exp_fun(cvrt, grp.coef)) ## This computes the std for the current group row
       }
     }
   }
@@ -263,20 +264,21 @@ predict_varFunc <- function(object, newdata){
     }else{
       ans <- numeric(nrow(newdata))
       grp.nm <- as.character(getGroupsFormula(vrSt)[[2]])
-      if(!grepl(grp.nm, names(newdata)))
+      if(!grp.nm %in% names(newdata))
         stop("Grouping factor should be present in 'newdata' object", call. = FALSE)
       if(grepl("*", grp.nm, fixed = TRUE))
         stop("This is not supported yet. Please submit this as an issue to github if you need it.", call. = FALSE)
-      for(i in 1:nrow(newdata)){
-        crr.grp <- newdata[i, grp.nm] ## This is the current group
-        grp.coef <- coef(vrSt)[which(attr(vrSt, "groupNames") == crr.grp)] ## This is the coef for the current group
+      ## I don't think this loop is that inefficienct
+      for(i in unique(newdata[[grp.nm]])){
+        ## For each group compute the answer
+        wch.crr.grp <- which(newdata[[grp.nm]] == i)
+        grp.coef <- coef(vrSt)[which(attr(vrSt, "groupNames") == i)] ## This is the coef for the current group
         if(any(grepl("fitted", as.character(formula(vrSt))))){
-          ## Need to fit the model to get the covariate
-          cvrt <- predict(object, newdata = newdata[i,])
+          cvrt <- fttd[wch.crr.grp]
         }else{
-          cvrt <- newdata[i, as.character(getCovariateFormula(vrSt))[[2]]] ## Is this guranteed to always work?
+          cvrt <- newdata[wch.crr.grp, as.character(getCovariateFormula(vrSt))[[2]]] ## Is this guranteed to always work?
         }
-        ans[i] <- sigma(object) * sqrt(var_power_fun(cvrt, grp.coef)) ## This computes the std for the current group row
+        ans[wch.crr.grp] <- sigma(object) * sqrt(var_power_fun(cvrt, grp.coef)) ## This computes the std for the current group row
       }
     }
   }

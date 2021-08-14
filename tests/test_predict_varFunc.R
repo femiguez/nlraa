@@ -62,8 +62,15 @@ if(run.test.predict_varFunc){
     geom_point()
   
   ## More complex variance structure with groups
-  fm4 <- gls(weight ~ Time + I(Time^2), Soybean,
-             weights = varExp(form = ~ Time | Variety))    
+  fm4.e <- gls(weight ~ Time + I(Time^2), Soybean,
+             weights = varExp(form = ~ Time | Variety))
+  
+  fm4.p <- gls(weight ~ Time + I(Time^2), Soybean,
+             weights = varPower(form = ~ Time | Variety))
+  
+  new.soy <- expand.grid(Time = 14:84, Variety = c("F", "P"))
+  system.time(prd.e <- predict_gls(fm4.e, interval = "pred", newdata = new.soy))
+  system.time(prd.p <- predict_gls(fm4.p, interval = "pred", newdata = new.soy))
 }
 
 if(run.test.predict_varFunc){
@@ -92,8 +99,8 @@ if(run.test.predict_varFunc){
   ggplot(data = new.soy.A, aes(x = Time, y = prd, color = Variety)) + 
     geom_point()   
   
-  ## This takes forever... okay, maybe a minute
-  prds <- predict_gnls(fm2, interval = "pred", newdata = new.soy)
+  ## This takes about 42 seconds
+  system.time(prds <- predict_gnls(fm2, interval = "pred", newdata = new.soy))
   
   new.soy.P <- cbind(new.soy, prds)
 
