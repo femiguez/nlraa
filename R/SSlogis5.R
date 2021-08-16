@@ -1,13 +1,17 @@
 #' 
+#' The equation for this function is:
+#' 
+#' \deqn{f(x) = asym2 + (asym1 - asym2)/(1 + exp(iscal * (log(x) - log(xmid))))^theta}
+#' 
 #' @title self start for five-parameter logistic function
 #' @name SSlogis5
 #' @rdname SSlogis5
 #' @description Self starter for a five-parameter logistic function.
-#' @param x input vector (x) which is normally light intensity (PPFD, Photosynthetic Photon Flux Density).
+#' @param x input vector (x) 
 #' @param asym1 asymptotic value for low values of x
 #' @param asym2 asymptotic value for high values of x
 #' @param iscal steepness of transition from asym1 to asym2 (inverse of the scale)
-#' @param xmid value of x at which y = (asym1 + asym2)/2
+#' @param xmid value of x at which y = (asym1 + asym2)/2 (only when theta = 1)
 #' @param theta asymmetry parameter, if it is equal to 1, this is the four parameter logistic
 #' @return a numeric vector of the same length as x (time) containing parameter estimates for equation specified
 #' @details This is known as the Richards' function or the log-logistic and it is described in Archontoulis and Miguez (2015) - (doi:10.2134/agronj2012.0506).
@@ -70,6 +74,9 @@ logis5Init <- function(mCall, LHS, data, ...){
 #' @export
 #' 
 logis5 <- function(x, asym1, asym2, xmid, iscal, theta){
+  
+  if(any(x < 0))
+    stop("Input (x) should be positive for this equation", call. = FALSE)
   
   .lxmid <- suppressWarnings(log(xmid))
   .expre1 <- 1 + exp(iscal * (log(x) - .lxmid))

@@ -10,13 +10,13 @@ logis5(x, asym1, asym2, xmid, iscal, theta)
 SSlogis5(x, asym1, asym2, xmid, iscal, theta)
 }
 \arguments{
-\item{x}{input vector (x) which is normally light intensity (PPFD, Photosynthetic Photon Flux Density).}
+\item{x}{input vector (x)}
 
 \item{asym1}{asymptotic value for low values of x}
 
 \item{asym2}{asymptotic value for high values of x}
 
-\item{xmid}{value of x at which y = (asym1 + asym2)/2}
+\item{xmid}{value of x at which y = (asym1 + asym2)/2 (only when theta = 1)}
 
 \item{iscal}{steepness of transition from asym1 to asym2 (inverse of the scale)}
 
@@ -31,6 +31,10 @@ logis5: vector of the same length as x (time) using the 5-parameter logistic
 Self starter for a five-parameter logistic function.
 }
 \details{
+The equation for this function is:
+
+\deqn{f(x) = asym2 + (asym1 - asym2)/(1 + exp(iscal * (log(x) - log(xmid))))^theta}
+
 This is known as the Richards' function or the log-logistic and it is described in Archontoulis and Miguez (2015) - (doi:10.2134/agronj2012.0506).
 }
 \examples{
