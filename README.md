@@ -8,6 +8,8 @@ downloads total](https://cranlogs.r-pkg.org/badges/grand-total/nlraa)](https://g
 
 [Documentation](https://femiguez.github.io/nlraa-docs/index.html)
 
+NOTE: the vignettes (nlraa-Oddi-LFMC and nlraa-AgronJ-paper) that used to be distributed with the package have been moved to the documentation above because of CRAN size limits.
+
 [Nonlinear Models (video) - part I](https://www.youtube.com/watch?v=fIQV4JxXnnA)
 
 [Nonlinear Models (video) - part II](https://www.youtube.com/watch?v=6ujBQxKYlwY)

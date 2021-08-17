@@ -128,14 +128,6 @@
  #' @source this package vignette
  "fmm1.bt"
  
- #' @title object for confidence bands vignette fm0.Theoph.bt
- #' @format An object of class \sQuote{boot}
- #' \describe{
- #'   \item{fm0.Theoph.bt}{object created in the vignette in chunk \sQuote{Theoph-PB-between-subjects-2}}
- #' }
- #' @source this package vignette
- "fm0.Theoph.bt"
- 
  ## Import packages needed for nlraa to work correctly
  #' @import boot knitr MASS nlme stats
  #' @importFrom utils warnErrList

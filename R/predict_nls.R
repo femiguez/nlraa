@@ -57,7 +57,7 @@ predict_nls <- function(..., criteria = c("AIC", "AICc", "BIC"),
                         resid.type = c("none", "resample", "normal", "wild"),
                         newdata = NULL){
   
-  ## all objects should be of class 'nls' or inherit 'lm'
+  ## all objects should be of class 'nls' or inherit 'lm' (but this includes 'gam' and 'glm')
   nls.objs <- list(...)
   criteria <- match.arg(criteria)
   interval <- match.arg(interval)

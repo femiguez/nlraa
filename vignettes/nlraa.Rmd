@@ -70,6 +70,13 @@ One of the objectives of those publications was to introduce a large family of n
 26. SStemp3 (temperature response function with 3 parameters)
 27. SSmoh (modified hyperbola)
 
+## Documentation
+
+Further documentation for the package has been moved to:
+https://femiguez.github.io/nlraa-docs/index.html
+
+## References
+
 For the reference on the Beta growth function see Yin et al. 2003 (https://doi.org/10.1093/aob/mcg029) and Erratum: (https://doi.org/10.1093/aob/mcg091). For a reference on the beta temperature response function see Yin et al. 1995 (https://doi.org/10.1016/0168-1923(95)02236-Q).
 For a reference on a use of the declining logistic see Oddi et al. (2019) (and vignette in this package). For the Ricker model see: (https://en.wikipedia.org/wiki/Ricker_model). For the protein profile in the canopy see Johnson et al. (2010) (https://doi.org/10.1093/aob/mcq183). 
 
@@ -87,23 +94,33 @@ apropos("^SS")
 
 Functions for prediction:
 
-1. predict_nls
-2. predict_nlme
+1. predict_nls (Monte Carlo method and model averaging)
+2. predict2_nls (Delta method)
+3. predict_gam (Monte Carlo method)
+4. predict2_gam (mgcv method)
+5. predict_gls (Monte Carlo method and model averaging)
+6. predict_gnls (Monte Carlo method and model averaging)
+7. predict_lme (Monte Carlo method and model averaging)
+8. predict_nlme (Monte Carlo method and model averaging)
+
+The main functions are *predict_nls*, *predict2_nls* and *predict2_gam*. In fact *predict_nls* takes objects of class *lm*, *nls* or *gam*. The other main function is *predict_nlme* and the others (*predict_gls*, *predict_gnls*, *predict_lme* are aliases).
 
 Some particularly useful functions which simplify generating simulations:
 
 1. simulate_lm
 2. simulate_nls
-3. simulate_lme
-4. simulate_nlme
+3. simulate_gnls
+4. simulate_lme
+5. simulate_nlme
 
 Other functions which can perform bootsrapping:
 
 1. boot_lm
 2. boot_nls
-3. boot_lme
-4. boot_nlme
-
+3. boot_gnls
+4. boot_gls
+5. boot_lme
+6. boot_nlme
 
 # Datasets
 
