@@ -12,9 +12,10 @@
 #' @param data the original data.frame used to fit the model. A data.frame will be
 #' returned instead of a matrix in this case.
 #' @param by opionally aggregate the results by some factor in the data.frame. It 
-#' will be coarced to a formula. If robust is FALSE, the mean will be used. Otherwise, the median.
+#' will be coarced to a formula. This should either be a character or a formula (starting with \sQuote{~}).
+#' The aggregation follows the \sQuote{robust} argument above.
 #' @param ... additional arguments to be passed. (none used at the moment)
-#' @return By default it returns a matrix unless the data argument is present and then
+#' @return By default it returns a matrix unless the \sQuote{data} argument is present and then
 #' it will return a data.frame
 #' @export
 #' @examples 
@@ -68,6 +69,12 @@ summary_simulate <- function(object, probs = c(0.025, 0.975), robust = FALSE,
       ans <- dat
     }else{
       if(!robust){
+        ## This new code allows me to use formula instead of a character
+        ## Testing for a formula
+        ## https://stackoverflow.com/questions/36361158/how-to-test-if-an-object-is-a-formula-in-base-r
+        if(is.call(by) && by[[1]] == quote(`~`)){
+          by <- as.character(by)[[2]]
+        }
         agf0 <- paste0(c("cbind(", c("Estimate,", "Est.Error,", lwr.lbl, ",", upr.lbl, ")")), collapse = " ")
         agf <- as.formula(paste0(c(agf0, paste0("~", by)), collapse = " "))
         ans <- stats::aggregate(formula = agf, data = dat, FUN = mean)
