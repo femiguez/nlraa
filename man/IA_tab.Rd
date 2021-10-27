@@ -17,7 +17,7 @@ IA_tab(obs, sim, object, null.object)
 \item{object}{alternative to the previous two arguments. An object of class \sQuote{lm}, \sQuote{nls} or \sQuote{lme}}
 
 \item{null.object}{optional object which represents the \sQuote{null} model. It is an intercept-only model
-by default.}
+by default. (Not used at the moment).}
 
 \item{x}{object of class \sQuote{IA_tab}.}
 

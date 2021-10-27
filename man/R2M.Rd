@@ -62,6 +62,8 @@ pharmacological and biochemical research: a Monte Carlo approach. BMC Pharmacol 
 
 \url{https://stat.ethz.ch/pipermail/r-sig-mixed-models/2010q1/003363.html} \cr
 
+\url{https://blog.minitab.com/en/adventures-in-statistics-2/why-is-there-no-r-squared-for-nonlinear-regression} \cr
+
 \url{https://stats.stackexchange.com/questions/111150/calculating-r2-in-mixed-models-using-nakagawa-schielzeths-2013-r2glmm-me/225334#225334} \cr
 }
 \note{

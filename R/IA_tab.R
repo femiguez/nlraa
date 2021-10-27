@@ -30,7 +30,7 @@
 #' @param sim vector with simulated data (should be the same length as observed)
 #' @param object alternative to the previous two arguments. An object of class \sQuote{lm}, \sQuote{nls} or \sQuote{lme}
 #' @param null.object optional object which represents the \sQuote{null} model. It is an intercept-only model
-#' by default.
+#' by default. (Not used at the moment).
 #' @seealso \code{\link{IC_tab}}
 #' @export
 #' @examples 
@@ -207,6 +207,8 @@ plot.IA_tab <- function(x, y, ..., type = c("OvsS", "RvsS")){
 #' \doi{10.1186/1471-2210-10-6} \cr
 #' 
 #' \url{https://stat.ethz.ch/pipermail/r-sig-mixed-models/2010q1/003363.html} \cr
+#' 
+#' \url{https://blog.minitab.com/en/adventures-in-statistics-2/why-is-there-no-r-squared-for-nonlinear-regression} \cr
 #' 
 #' \url{https://stats.stackexchange.com/questions/111150/calculating-r2-in-mixed-models-using-nakagawa-schielzeths-2013-r2glmm-me/225334#225334} \cr
 #'  

@@ -27,12 +27,13 @@ If TRUE, the median and the median absolute deviation (MAD) are applied instead.
 returned instead of a matrix in this case.}
 
 \item{by}{opionally aggregate the results by some factor in the data.frame. It 
-will be coarced to a formula. If robust is FALSE, the mean will be used. Otherwise, the median.}
+will be coarced to a formula. This should either be a character or a formula (starting with \sQuote{~}).
+The aggregation follows the \sQuote{robust} argument above.}
 
 \item{...}{additional arguments to be passed. (none used at the moment)}
 }
 \value{
-By default it returns a matrix unless the data argument is present and then
+By default it returns a matrix unless the \sQuote{data} argument is present and then
 it will return a data.frame
 }
 \description{

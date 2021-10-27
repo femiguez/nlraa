@@ -69,6 +69,7 @@ One of the objectives of those publications was to introduce a large family of n
 25. SSbeta5 (beta temperature response function with 5 parameters)
 26. SStemp3 (temperature response function with 3 parameters)
 27. SSmoh (modified hyperbola)
+28. SSquadp3xs (quadratic-plateau with break-point)
 
 ## Documentation
 
