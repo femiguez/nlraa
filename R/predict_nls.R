@@ -176,6 +176,7 @@ IC_tab <- function(..., criteria = c("AIC","AICc","BIC"), sort = TRUE){
   
   for(i in seq_len(lobjs)){
     obj <- objs[[i]]
+    
     if(data.name != as.character(deparse(obj$call$data))) 
       stop("All models should be fitted to the same data")
     

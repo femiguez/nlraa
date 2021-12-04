@@ -11,6 +11,7 @@ boot_lm(
   psim = 2,
   resid.type = c("resample", "normal", "wild"),
   data = NULL,
+  verbose = TRUE,
   ...
 )
 }
@@ -26,6 +27,9 @@ boot_lm(
 \item{resid.type}{either \dQuote{resample}, \dQuote{normal} or \dQuote{wild}.}
 
 \item{data}{optional data argument (useful/needed when data are not in an available environment).}
+
+\item{verbose}{logical (default TRUE) whether to print message if model does not converge. 
+(rare for linear models).}
 
 \item{...}{additional arguments to be passed to function \code{\link[boot]{boot}}}
 }

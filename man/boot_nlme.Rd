@@ -5,9 +5,27 @@
 \alias{boot_gnls}
 \title{Bootstraping for generalized nonlinear models and nonlinear mixed models}
 \usage{
-boot_nlme(object, f = NULL, R = 999, psim = 1, cores = 1L, data = NULL, ...)
+boot_nlme(
+  object,
+  f = NULL,
+  R = 999,
+  psim = 1,
+  cores = 1L,
+  data = NULL,
+  verbose = TRUE,
+  ...
+)
 
-boot_gnls(object, f = NULL, R = 999, psim = 1, cores = 1L, data = NULL, ...)
+boot_gnls(
+  object,
+  f = NULL,
+  R = 999,
+  psim = 1,
+  cores = 1L,
+  data = NULL,
+  verbose = TRUE,
+  ...
+)
 }
 \arguments{
 \item{object}{object of class \code{\link[nlme]{nlme}} or \code{\link[nlme]{gnls}}}
@@ -21,6 +39,8 @@ boot_gnls(object, f = NULL, R = 999, psim = 1, cores = 1L, data = NULL, ...)
 \item{cores}{number of cores to use for parallel computation}
 
 \item{data}{optional data argument (useful/needed when data are not in an available environment).}
+
+\item{verbose}{logical (default TRUE) whether to print a message if model does not converge.}
 
 \item{...}{additional arguments to be passed to function \code{\link[boot]{boot}}}
 }

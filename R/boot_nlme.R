@@ -9,6 +9,7 @@
 #' @param psim simulation level for vector of fixed parameters either for \code{\link{simulate_gnls}} or \code{\link{simulate_nlme_one}}
 #' @param cores number of cores to use for parallel computation
 #' @param data optional data argument (useful/needed when data are not in an available environment).
+#' @param verbose logical (default TRUE) whether to print a message if model does not converge. 
 #' @param ... additional arguments to be passed to function \code{\link[boot]{boot}}
 #' @details This function is inspired by \code{\link[car]{Boot}}, which does not
 #' seem to work with 'gnls' or 'nlme' objects. This function makes multiple copies 
@@ -41,6 +42,7 @@ boot_nlme <- function(object,
                       psim = 1, 
                       cores = 1L,
                       data = NULL,
+                      verbose = TRUE,
                       ...){
   ## I chose to write it in this way instead of UseMethod
   ## because I feel it is more efficient and results in less code
@@ -149,10 +151,12 @@ boot_nlme <- function(object,
                     cl = clst,
                     ...)
   
-  cat("Number of times model fit did not converge",
-      sum(is.na(ans$t[,1])),
-      "out of",R,"\n")
-  
+  if(sum(is.na(ans$t[,1])) > 0 && verbose){
+    cat("Number of times model fit did not converge",
+        sum(is.na(ans$t[,1])),
+        "out of", R, "\n")    
+  }
+
   assign(".bdat", NA, envir = nlraa.env)
   assign(".k.boot", 0L, envir = nlraa.env)
   return(ans)

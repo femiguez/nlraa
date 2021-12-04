@@ -5,6 +5,9 @@
 #' where the break-point (xs) is -0.5*b/c \cr
 #' and the asymptote is (a + (-b^2)/(4 * c))
 #' 
+#' In this model the parameter \sQuote{xs} is not directly estimated. If this is required,
+#' the model \sQuote{SSquadp3xs} should be used instead.
+#' 
 #' @title self start for quadratic-plateau function
 #' @name SSquadp3
 #' @rdname SSquadp3
