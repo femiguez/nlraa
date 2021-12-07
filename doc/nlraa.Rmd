@@ -69,6 +69,7 @@ One of the objectives of those publications was to introduce a large family of n
 25. SSbeta5 (beta temperature response function with 5 parameters)
 26. SStemp3 (temperature response function with 3 parameters)
 27. SSmoh (modified hyperbola)
+28. SSquadp3xs (quadratic-plateau with break-point)
 
 ## Documentation
 
@@ -103,20 +104,24 @@ Functions for prediction:
 7. predict_lme (Monte Carlo method and model averaging)
 8. predict_nlme (Monte Carlo method and model averaging)
 
+The main functions are *predict_nls*, *predict2_nls* and *predict2_gam*. In fact *predict_nls* takes objects of class *lm*, *nls* or *gam*. The other main function is *predict_nlme* and the others (*predict_gls*, *predict_gnls*, *predict_lme* are aliases).
+
 Some particularly useful functions which simplify generating simulations:
 
 1. simulate_lm
 2. simulate_nls
-3. simulate_lme
-4. simulate_nlme
+3. simulate_gnls
+4. simulate_lme
+5. simulate_nlme
 
 Other functions which can perform bootsrapping:
 
 1. boot_lm
 2. boot_nls
-3. boot_lme
-4. boot_nlme
-
+3. boot_gnls
+4. boot_gls
+5. boot_lme
+6. boot_nlme
 
 # Datasets
 

@@ -41,11 +41,19 @@ This package supports the following publications:
    as an example. Ecology and Evolution. \
    https://doi.org/10.1002/ece3.5543
 
-Recent publications which cite this package:
+Some recent publications which cite this package:
 
-8\. Topographic effects on soil microclimate and surface cover crop residue decomposition in rolling cropland.
-Sam J. Leuthold, Dan Quinn, Fernando Miguez, Ole Wendroth, Monsterrat Salmerón, Hanna Poffenbarger.
-Agriculture, Ecosystems & Environment, Volume 320, 2021. https://doi.org/10.1016/j.agee.2021.107609.
+13\. Positive associations of soil organic matter and crop yields across a regional network of working farms. Emily E. Oldfield,Mark A. Bradford,Abigail J. Augarten, Eric T. Cooley, Amber M. Radatz, Timothy Radatz, Matthew D. Ruark. Soil Science Society of America. 2021.  https://doi.org/10.1002/saj2.20349
+
+12\. Improvement of the Mass-Rearing Protocols for the South American Fruit Fly for Application of the Sterile Insect Technique. Mastrangelo et al. Insects 2021, 12(7), 622; https://doi.org/10.3390/insects12070622
+
+11\. High-yielding sugarcane in tropical Brazil – Integrating field experimentation and modelling approach for assessing variety performances. Henrique Boriolo Dias, Geoff Inman-Bamber, Paulo Cesar Sentelhas, Yvette Everingham, Rodrigo Bermejo, Diomedes Christodoulou. Field Crops Research. 2021. https://doi.org/10.1016/j.fcr.2021.108323.
+
+10\. Evaluation of mehlich-3 for determination of cation exchange capacity in Kansas soils. Edmond Bryan Rutter, Dorivar Ruiz Diaz,Lynn M. Hargrave. 2021. Soil Science Society of America. https://doi.org/10.1002/saj2.20354
+
+9\. Effects of human disturbance on postnatal growth and baseline corticosterone in a long-lived bird. Hannah Watson, Pat Monaghan, Britt J Heidinger, Mark Bolton. Conservation Physiology, Volume 9, Issue 1, 2021. https://doi.org/10.1093/conphys/coab052
+
+8\. Topographic effects on soil microclimate and surface cover crop residue decomposition in rolling cropland. Sam J. Leuthold, Dan Quinn, Fernando Miguez, Ole Wendroth, Monsterrat Salmerón, Hanna Poffenbarger. Agriculture, Ecosystems & Environment, Volume 320, 2021. https://doi.org/10.1016/j.agee.2021.107609.
 
 7\. Long-term no-till increases soil nitrogen mineralization but does not affect 
 optimal corn nitrogen fertilization practices relative to inversion tillage. 

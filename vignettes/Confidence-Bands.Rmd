@@ -410,12 +410,12 @@ interested readers to run this.
 pred_band_BS <- function(x) predict(x, newdata = ndat, level = 1)
 fm0.Theoph.bt <- boot_nlme(fm0.Theoph, pred_band_BS) ## This takes a bit over a minute
 ```
-# ```{r, save-fm0-Theoph-bt, echo = FALSE, eval = FALSE}
-# save(fm0.Theoph.bt, file = "fm0.Theoph.bt.rda", compress = "xz")
-# ```
-# ```{r, load-fm0-Theoph-bt, echo = FALSE}
-# data(fm0.Theoph.bt, package = "nlraa")
-# ```
+<!-- # ```{r, save-fm0-Theoph-bt, echo = FALSE, eval = FALSE} -->
+<!-- # save(fm0.Theoph.bt, file = "fm0.Theoph.bt.rda", compress = "xz") -->
+<!-- # ``` -->
+<!-- # ```{r, load-fm0-Theoph-bt, echo = FALSE} -->
+<!-- # data(fm0.Theoph.bt, package = "nlraa") -->
+<!-- # ``` -->
 
 ```{r, Theoph-PB-between-subjects-3, eval = FALSE}
 fm0.Theoph.bt.ss <- cbind(ndat[,-4], summary_simulate(t(na.omit(fm0.Theoph.bt$t))))
