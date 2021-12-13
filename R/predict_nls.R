@@ -424,11 +424,10 @@ predict2_nls <- function(object, newdata = NULL,
         grd <- object$m$gradient()
         colnames(grd) <- names(coef(object))
       }else{
-        stop("I haven't developed this yet")
-        ## Need to approximate the gradient
-        ## Do I need to go full jacobian?
-        # stop("The gradient on the predictions is required for this function. See examples",
-        #      call. = FALSE) 
+        ## Need to approximate the gradient numerically
+        form <- object$m$formula()
+        grd0 <- with(newdata, numericDeriv(form[[3]], names(coef(object))))
+        grd <- attr(grd0, "gradient")
       }
     }
     Rmat <- object$m$Rmat() ## R matrix

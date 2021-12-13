@@ -51,9 +51,13 @@
 #' image(log(v4[,ncol(v4):1]))
 #' }
 
-var_cov <- function(object, type = c("residual","random","all"), aug = FALSE, sparse = FALSE, data = NULL){
+var_cov <- function(object, type = c("residual","random","all", "conditional", "marginal"), 
+                    aug = FALSE, sparse = FALSE, data = NULL){
   
   type <- match.arg(type)
+  
+  if(type == "conditional") type <- "residual"
+  if(type == "marginal") type <- "all"
   
   if(type == "random" && inherits(object, c("lm","nls","gls")))
      stop("The variance-covariance of the random effects is only available for \n

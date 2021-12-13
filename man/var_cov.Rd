@@ -6,7 +6,7 @@
 \usage{
 var_cov(
   object,
-  type = c("residual", "random", "all"),
+  type = c("residual", "random", "all", "conditional", "marginal"),
   aug = FALSE,
   sparse = FALSE,
   data = NULL
