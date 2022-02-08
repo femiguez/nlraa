@@ -452,7 +452,3 @@ predict2_nls <- function(object, newdata = NULL,
                   paste0("Q", 100 - 100 * (1 - level)/2))
   return(ans)
 }
-
-
-
-

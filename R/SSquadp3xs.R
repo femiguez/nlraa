@@ -1,9 +1,9 @@
 #' 
 #' The equation is, for a response (y) and a predictor (x): \cr
-#'   \eqn{y ~ (x <= xs) * (a + b * x + (-0.5 * b/xs) * x^2) + (x > xs) * (a + (-b^2)/(4 * -0.5 * b/xs))} \cr
+#'   \eqn{y ~ (x <= xs) * (a + b * x + (-0.5 * b/xs) * x^2) + (x > xs) * (a + (b^2)/(-2 * b/xs))} \cr
 #'   
 #' where the quadratic term is (c) is -0.5*b/xs \cr
-#' and the asymptote is (a + (-b^2)/(4 * c)).
+#' and the asymptote is (a + (b^2)/(4 * c)).
 #' 
 #' This model does not estimate the quadratic parameter \sQuote{c} directly. 
 #' If this is required, the model \sQuote{SSquadp3} should be used instead.
@@ -55,8 +55,6 @@ quadp3xsInit <- function(mCall, LHS, data, ...){
 #' @return quadp3xs: vector of the same length as x using the quadratic-plateau function
 #' @export
 quadp3xs <- function(x, a, b, xs){
-  
-  ## .c <- -0.5 * b/xs
   
   .value <- (x <= xs) * (a + b * x + (-0.5 * b/xs) * x^2) + (x > xs) * (a + (-b^2)/(4 * -0.5 * b/xs))
   

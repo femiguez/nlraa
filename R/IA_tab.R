@@ -200,7 +200,7 @@ plot.IA_tab <- function(x, y, ..., type = c("OvsS", "RvsS")){
 #' Recommended reading: \cr
 #' Nakagawa and Schielzeth Methods in Ecology and Evolution \doi{10.1111/j.2041-210x.2012.00261.x} \cr
 #' 
-#' \url{https://stats.idre.ucla.edu/other/mult-pkg/faq/general/faq-what-are-pseudo-r-squareds/} \cr
+#' \url{https://stats.oarc.ucla.edu/other/mult-pkg/faq/general/faq-what-are-pseudo-r-squareds/} \cr
 #' 
 #' Spiess, AN., Neumeyer, N. An evaluation of R2 as an inadequate measure for nonlinear models in 
 #' pharmacological and biochemical research: a Monte Carlo approach. BMC Pharmacol 10, 6 (2010). 

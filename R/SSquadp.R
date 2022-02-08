@@ -82,11 +82,14 @@ quadp <- function(x, a, b, c, xs){
   ## .exp4 <- deriv(~ a  + b * xs + c * xs^2, "xs")
   .exp4 <- ifelse(x < xs, 0, b + 2 * c * xs)
   
-  .actualArgs <- as.list(match.call()[c("a","b","c","xs")])
+  .actualArgs <- as.list(match.call()[c("a", "b", "c", "xs")])
+  
+  # print(cbind(.exp1, .exp2, .exp3, .exp4))
+  # cat("-\n")
   
   ##  Gradient
   if (all(unlist(lapply(.actualArgs, is.name)))) {
-    .grad <- array(0, c(length(.value), 4L), list(NULL, c("a","b","c","xs")))
+    .grad <- array(0, c(length(.value), 4L), list(NULL, c("a", "b", "c", "xs")))
     .grad[, "a"] <- .exp1
     .grad[, "b"] <- .exp2
     .grad[, "c"] <- .exp3
