@@ -51,6 +51,9 @@ sims <- summary_simulate(sim)
 simd <- summary_simulate(sim, data = barley)
 ## If we also want to aggregate by nitrogen rate
 simda <- summary_simulate(sim, data = barley, by = "NF")
+## The robust option uses the median instead
+simdar <- summary_simulate(sim, data = barley, by = "NF",
+                           robust = TRUE)
 
 }
 

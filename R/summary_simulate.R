@@ -29,6 +29,9 @@
 #' simd <- summary_simulate(sim, data = barley)
 #' ## If we also want to aggregate by nitrogen rate
 #' simda <- summary_simulate(sim, data = barley, by = "NF")
+#' ## The robust option uses the median instead
+#' simdar <- summary_simulate(sim, data = barley, by = "NF",
+#'                            robust = TRUE)
 #'
 #' }
 #'
@@ -56,30 +59,34 @@ summary_simulate <- function(object, probs = c(0.025, 0.975), robust = FALSE,
     mat[,2] <- apply(object, 1, stats::mad)
   } 
   
+  if(!missing(by) && missing(data))
+    stop("argument `data` should be used along with argument `by`", call. = FALSE)
+    
   if(missing(data)){
     ans <- mat
   }else{
     
     if(nrow(data) != nrow(mat))
-      stop("number of rows in the data argument should match the number of rows in the matrix")
+      stop("number of rows in the data argument should match the number of rows in the matrix", call. = FALSE)
     
     dat <- cbind(data, mat)
     
     if(missing(by)){
       ans <- dat
     }else{
+      ## This new code allows me to use formula instead of a character
+      ## Testing for a formula
+      ## https://stackoverflow.com/questions/36361158/how-to-test-if-an-object-is-a-formula-in-base-r
+      if(is.call(by) && by[[1]] == quote(`~`)){
+        by <- as.character(by)[[2]]
+      }
+      agf0 <- paste0(c("cbind(", c("Estimate,", "Est.Error,", lwr.lbl, ",", upr.lbl, ")")), collapse = " ")
+      agf <- as.formula(paste0(c(agf0, paste0("~", by)), collapse = " "))
+      
       if(!robust){
-        ## This new code allows me to use formula instead of a character
-        ## Testing for a formula
-        ## https://stackoverflow.com/questions/36361158/how-to-test-if-an-object-is-a-formula-in-base-r
-        if(is.call(by) && by[[1]] == quote(`~`)){
-          by <- as.character(by)[[2]]
-        }
-        agf0 <- paste0(c("cbind(", c("Estimate,", "Est.Error,", lwr.lbl, ",", upr.lbl, ")")), collapse = " ")
-        agf <- as.formula(paste0(c(agf0, paste0("~", by)), collapse = " "))
-        ans <- stats::aggregate(formula = agf, data = dat, FUN = mean)
+        ans <- stats::aggregate(agf, data = dat, FUN = mean)
       }else{
-        ans <- stats::aggregate(formula = agf, data = dat, FUN = median)
+        ans <- stats::aggregate(agf, data = dat, FUN = median)
       } 
     }
   } 
