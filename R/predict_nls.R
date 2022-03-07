@@ -11,6 +11,8 @@
 #' @param nsim number of simulations to perform for intervals. Default 1000.
 #' @param resid.type either \sQuote{none}, \dQuote{resample}, \dQuote{normal} or \dQuote{wild}.
 #' @param newdata new data frame for predictions
+#' @param weights vector of weights of the same length as the number of models. It should sum up to one and 
+#' it will override the information-criteria based weights. The weights should match the order of the models.
 #' @return numeric vector of the same length as the fitted object when interval is equal to \sQuote{none}. Otherwise,
 #' a data.frame with columns named (for a 0.95 level) \sQuote{Estimate}, \sQuote{Est.Error}, \sQuote{Q2.5} and \sQuote{Q97.5}
 #' @note all the objects should be fitted to the same data. Weights are
@@ -55,7 +57,7 @@ predict_nls <- function(..., criteria = c("AIC", "AICc", "BIC"),
                         interval = c("none", "confidence", "prediction"),
                         level = 0.95, nsim = 1e3,
                         resid.type = c("none", "resample", "normal", "wild"),
-                        newdata = NULL){
+                        newdata = NULL, weights){
   
   ## all objects should be of class 'nls' or inherit 'lm' (but this includes 'gam' and 'glm')
   nls.objs <- list(...)
@@ -91,6 +93,18 @@ predict_nls <- function(..., criteria = c("AIC", "AICc", "BIC"),
     if(criteria == "AIC") wtab$IC[i] <- stats::AIC(nls.obj)
     if(criteria == "AICc") wtab$IC[i] <- AICc(nls.obj)
     if(criteria == "BIC") wtab$IC[i] <- stats::BIC(nls.obj)
+  }
+  
+  ## Check weights
+  if(!missing(weights)){
+    if(length(weights) != lobjs)
+      stop("'weights' should be a vector of length equal to the number of models", call. = FALSE)
+    if(isFALSE(all.equal(sum(weights), 1)))
+      stop("'sum of 'weights' should be equal to 1.", call. = FALSE)
+    if(any(weights < 0))
+      stop("all weights should be greater than zero", call. = FALSE)
+    if(any(weights > 1))
+      stop("all weights should be greater than zero", call. = FALSE)
   }
   
   ## Predictions
@@ -135,7 +149,13 @@ predict_nls <- function(..., criteria = c("AIC", "AICc", "BIC"),
   }
 
   wtab$dIC <- wtab$IC - min(wtab$IC)
-  wtab$weight <- exp(-0.5 * wtab$dIC) / sum(exp(-0.5 * wtab$dIC))
+  
+  if(missing(weights)){
+    wtab$weight <- exp(-0.5 * wtab$dIC) / sum(exp(-0.5 * wtab$dIC))  
+  }else{
+    wtab$weight <- weights
+  }
+  
   
   if(interval == "none"){
     ans <- rowSums(sweep(prd.mat, 2, wtab$weight, "*"))

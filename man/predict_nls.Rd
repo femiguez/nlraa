@@ -12,7 +12,8 @@ predict_nls(
   level = 0.95,
   nsim = 1000,
   resid.type = c("none", "resample", "normal", "wild"),
-  newdata = NULL
+  newdata = NULL,
+  weights
 )
 
 predict2_gam(
@@ -22,7 +23,8 @@ predict2_gam(
   level = 0.95,
   nsim = 1000,
   resid.type = c("none", "resample", "normal", "wild"),
-  newdata = NULL
+  newdata = NULL,
+  weights
 )
 }
 \arguments{
@@ -39,6 +41,9 @@ predict2_gam(
 \item{resid.type}{either \sQuote{none}, \dQuote{resample}, \dQuote{normal} or \dQuote{wild}.}
 
 \item{newdata}{new data frame for predictions}
+
+\item{weights}{vector of weights of the same length as the number of models. It should sum up to one and 
+it will override the information-criteria based weights. The weights should match the order of the models.}
 }
 \value{
 numeric vector of the same length as the fitted object when interval is equal to \sQuote{none}. Otherwise,

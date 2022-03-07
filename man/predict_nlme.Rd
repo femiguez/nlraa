@@ -14,7 +14,8 @@ predict_nlme(
   level = 0.95,
   nsim = 1000,
   plevel = 0,
-  newdata = NULL
+  newdata = NULL,
+  weights
 )
 
 predict_lme(
@@ -24,7 +25,8 @@ predict_lme(
   level = 0.95,
   nsim = 1000,
   plevel = 0,
-  newdata = NULL
+  newdata = NULL,
+  weights
 )
 
 predict_gnls(
@@ -34,7 +36,8 @@ predict_gnls(
   level = 0.95,
   nsim = 1000,
   plevel = 0,
-  newdata = NULL
+  newdata = NULL,
+  weights
 )
 
 predict_gls(
@@ -44,7 +47,8 @@ predict_gls(
   level = 0.95,
   nsim = 1000,
   plevel = 0,
-  newdata = NULL
+  newdata = NULL,
+  weights
 )
 }
 \arguments{
@@ -63,6 +67,9 @@ resamples the random effects (only relevant for \sQuote{lme} or \sQuote{nlme} ob
 \item{plevel}{parameter level prediction to be passed to prediciton functions.}
 
 \item{newdata}{new data frame for predictions}
+
+\item{weights}{vector of weights of the same length as the number of models. It should sum up to one and 
+it will override the information-criteria based weights. The weights should match the order of the models.}
 }
 \value{
 numeric vector of the same length as the fitted object.

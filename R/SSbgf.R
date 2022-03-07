@@ -108,3 +108,26 @@ bgf2 <- function(time, w.max, w.b, t.e, t.m, t.b){
   .value[is.nan(.value)] <- 0
   .value
 }
+
+bgf_maximum_growth_rate <- function(coefs){
+  
+  ## This is equation 9 in the paper by Yin et al. (2003)
+  
+  if(!missing(coefs)){
+    if(length(coefs) != 3)
+      stop("Length of coefs should be equal to 3", call. = FALSE)
+    w.max <- coefs[1]
+    t.e <- coefs[2]
+    t.m <- coefs[3]
+  }else{
+     stop(" 'coefs' is required for this function", call. = FALSE)
+  }
+  
+  num <- 2 * t.e - t.m
+  den <- t.e * (t.e - t.m)
+  prt3 <- (t.m / t.e)^ (t.m/ (t.e - t.m))
+  
+  ans <- as.vector(num/den * prt3 * w.max)
+  
+  ans
+}

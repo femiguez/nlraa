@@ -13,6 +13,8 @@
 #' @param nsim number of simulations to perform for intervals. Default 1000.
 #' @param plevel parameter level prediction to be passed to prediciton functions.
 #' @param newdata new data frame for predictions
+#' @param weights vector of weights of the same length as the number of models. It should sum up to one and 
+#' it will override the information-criteria based weights. The weights should match the order of the models.
 #' @return numeric vector of the same length as the fitted object.
 #' @note all the objects should be fitted to the same data. The weights are
 #' based on the IC value.
@@ -57,7 +59,7 @@
 predict_nlme <- function(..., criteria = c("AIC", "AICc", "BIC"), 
                          interval = c("none", "confidence", "prediction", "new-prediction"),
                          level = 0.95, nsim = 1e3, plevel = 0,
-                         newdata = NULL){
+                         newdata = NULL, weights){
   
   objs <- list(...)
   criteria <- match.arg(criteria)
@@ -91,6 +93,18 @@ predict_nlme <- function(..., criteria = c("AIC", "AICc", "BIC"),
     if(criteria == "AIC") wtab$IC[i] <- stats::AIC(obj)
     if(criteria == "AICc") wtab$IC[i] <- AICc(obj)
     if(criteria == "BIC") wtab$IC[i] <- stats::BIC(obj)
+  }
+  
+  ## Check weights
+  if(!missing(weights)){
+    if(length(weights) != lobjs)
+      stop("'weights' should be a vector of length equal to the number of models", call. = FALSE)
+    if(isFALSE(all.equal(sum(weights), 1)))
+      stop("'sum of 'weights' should be equal to 1.", call. = FALSE)
+    if(any(weights < 0))
+      stop("all weights should be greater than zero", call. = FALSE)
+    if(any(weights > 1))
+      stop("all weights should be less than one", call. = FALSE)
   }
   
   ## Predictions
@@ -157,7 +171,12 @@ predict_nlme <- function(..., criteria = c("AIC", "AICc", "BIC"),
   }
   
   wtab$dIC <- wtab$IC - min(wtab$IC)
-  wtab$weight <- exp(-0.5 * wtab$dIC) / sum(exp(-0.5 * wtab$dIC))
+  
+  if(missing(weights)){
+    wtab$weight <- exp(-0.5 * wtab$dIC) / sum(exp(-0.5 * wtab$dIC))  
+  }else{
+    wtab$weight <- weights
+  }
   
   if(interval == "none"){
     ans <- rowSums(sweep(prd.mat, 2, wtab$weight, "*"))

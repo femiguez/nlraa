@@ -43,7 +43,11 @@ This package supports the following publications:
 
 Some recent publications which cite this package:
 
-14\. Positive associations of soil organic matter and crop yields across a regional network of working farms. Emily E. Oldfield,Mark A. Bradford,Abigail J. Augarten, Eric T. Cooley, Amber M. Radatz, Timothy Radatz, Matthew D. Ruark. Soil Science Society of America. 2021.  https://doi.org/10.1002/saj2.20349
+16\. Guamani-Quimis, Lenin A., Ariolfo L. Solís-Bowen, Diego Portalanza, and Felipe R. Garcés-Fiallos. 2022. Can Mathematical Models Describe Spear Rot Progress in Oil Palm Trees? A Five-Year Black Weevil-Disease Assessment from Ecuador. Agriculture 12, no. 2: 257. https://doi.org/10.3390/agriculture12020257
+
+15\. Nichols, V. A., Moore, E. B., Gailans, S., Kaspar, T. C., & Liebman, M. (2022). Site-specific effects of winter cover crops on soil water storage. Agrosyst Geosci Environ, 5:e220238. https://doi.org/10.1002/agg2.20238
+
+14\. Positive associations of soil organic matter and crop yields across a regional network of working farms. Emily E. Oldfield, Mark A. Bradford, Abigail J. Augarten, Eric T. Cooley, Amber M. Radatz, Timothy Radatz, Matthew D. Ruark. Soil Science Society of America. 2021.  https://doi.org/10.1002/saj2.20349
 
 13\. Improvement of the Mass-Rearing Protocols for the South American Fruit Fly for Application of the Sterile Insect Technique. Mastrangelo et al. Insects 2021, 12(7), 622; https://doi.org/10.3390/insects12070622
 
