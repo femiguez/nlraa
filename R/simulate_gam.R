@@ -153,6 +153,8 @@ simulate_gam_one <- function(object, psim = 1,
   }
   
   ## Simulate using default simulate.lm method
+  ## I think this works because simulate automatically works in the 
+  ## response scale
   if(psim == 2 && resid.type == "none"){
     ans <- simulate(object, nsim = 1)[,1]
   }

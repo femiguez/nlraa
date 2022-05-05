@@ -212,6 +212,8 @@ plot.IA_tab <- function(x, y, ..., type = c("OvsS", "RvsS")){
 #' 
 #' \url{https://stats.stackexchange.com/questions/111150/calculating-r2-in-mixed-models-using-nakagawa-schielzeths-2013-r2glmm-me/225334#225334} \cr
 #'  
+#' Other R pacakges which calculate some version of an R-squared: performance, rcompanion, MuMIn
+#' 
 #' @title R-squared for nonlinear mixed models
 #' @name R2M
 #' @rdname R2M

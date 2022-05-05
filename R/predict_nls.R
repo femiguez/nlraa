@@ -112,9 +112,17 @@ predict_nls <- function(..., criteria = c("AIC", "AICc", "BIC"),
     for(i in seq_len(lobjs)){
       nls.obj <- nls.objs[[i]]
       if(!is.null(newdata)){
-        prd.mat[,i] <- predict(nls.obj, newdata = newdata)  
+        if(inherits(nls.obj, "gam")){
+          prd.mat[,i] <- predict(nls.obj, newdata = newdata, type = "response")  
+        }else{
+          prd.mat[,i] <- predict(nls.obj, newdata = newdata)    
+        }
       }else{
-        prd.mat[,i] <- predict(nls.obj)  
+        if(inherits(nls.obj, "gam")){
+          prd.mat[,i] <- predict(nls.obj, type = "response")  
+        }else{
+          prd.mat[,i] <- predict(nls.obj)    
+        }
       }
     }
   }
@@ -133,7 +141,7 @@ predict_nls <- function(..., criteria = c("AIC", "AICc", "BIC"),
         tmp.sim <- simulate_lm(nls.obj, psim = psim, nsim = nsim, 
                                resid.type = resid.type, newdata = newdata) 
       
-      if(inherits(nls.obj, "glm")) 
+      if(inherits(nls.obj, "gam")) 
         tmp.sim <- simulate_gam(nls.obj, psim = psim, nsim = nsim, 
                                 resid.type = resid.type, newdata = newdata) 
       
