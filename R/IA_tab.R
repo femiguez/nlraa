@@ -1,6 +1,6 @@
 #' This function returns several indexes that might be useful for interpretation
 #' 
-#' For obbjects of class \sQuote{lm} or \sQuote{nls} \cr
+#' For objects of class \sQuote{lm} or \sQuote{nls} \cr
 #' bias: mean(obs - sim) \cr
 #' intercept: intercept of the model obs ~ beta_0 + beta_1 * sim + error \cr
 #' slope: slope of the model obs ~ beta_0 + beta_1 * sim + error \cr
