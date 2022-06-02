@@ -98,8 +98,15 @@ IA_tab <- function(obs, sim, object, null.object){
         stop("data argument should be used when fitting lm or nls models")
       obs <- eval(getCall(object)$data)[[resp.var]]
     }
+    
     if(inherits(object, c("gls", "gnls", "lme", "nlme")))
       obs <- nlme::getResponse(object)
+    
+    if(inherits(object, c("lmerMod", "merMod"))){
+      rsp.nm <- gsub("\\s+", "", strsplit(deparse(formula(fm1)), "~")[[1]][1])
+      obs <- getData(object)[[rsp.nm]]
+    }
+      
   }
   ## Bias
   bias <- mean(obs - sim)
@@ -142,15 +149,30 @@ IA_tab <- function(obs, sim, object, null.object){
                          ME = mod.eff, NME = norm.mod.eff, Corr = corr,
                          ConCorr = concor)
   }else{
-    ia_tab <- data.frame(bias = bias, 
-                         intercept = intercept,
-                         slope = slope,
-                         RSS = RSS, MSE = MSE, RMSE = RMSE,
-                         R2 = R2.1, 
-                         R2.marginal = R2$R2.marginal,
-                         R2.conditional = R2$R2.conditional,
-                         ME = mod.eff, NME = norm.mod.eff, Corr = corr,
-                         ConCorr = concor)
+    if(inherits(object, c("lmerMod", "merMod"))){
+      warning("R2 for 'lmerMod' or 'merMod' objects are not available.
+              There are some other packages which can compute this.
+              For example, MuMIn.")
+      ia_tab <- data.frame(bias = bias, 
+                           intercept = intercept,
+                           slope = slope,
+                           RSS = RSS, MSE = MSE, RMSE = RMSE,
+                           R2 = NA, 
+                           R2.marginal = NA,
+                           R2.conditional = NA,
+                           ME = mod.eff, NME = norm.mod.eff, Corr = corr,
+                           ConCorr = concor) 
+    }else{
+      ia_tab <- data.frame(bias = bias, 
+                           intercept = intercept,
+                           slope = slope,
+                           RSS = RSS, MSE = MSE, RMSE = RMSE,
+                           R2 = R2.1, 
+                           R2.marginal = R2$R2.marginal,
+                           R2.conditional = R2$R2.conditional,
+                           ME = mod.eff, NME = norm.mod.eff, Corr = corr,
+                           ConCorr = concor)      
+    }
   }
 
   lst <- list(IA_tab = ia_tab, obs = obs, sim = sim)

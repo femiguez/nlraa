@@ -201,7 +201,7 @@ IC_tab <- function(..., criteria = c("AIC","AICc","BIC"), sort = TRUE){
   
   ictab <- data.frame(model = character(lobjs), df = NA, AIC = NA, AICc = NA, BIC = NA)  
   
-  if(inherits(objs[[1]], "lmerMod")){
+  if(inherits(objs[[1]], c("lmerMod", "merMod"))){
     data.name <- as.character(deparse(objs[[1]]@call$data))
   }else{
     data.name <- as.character(deparse(objs[[1]]$call$data))  
@@ -210,7 +210,7 @@ IC_tab <- function(..., criteria = c("AIC","AICc","BIC"), sort = TRUE){
   for(i in seq_len(lobjs)){
     obj <- objs[[i]]
   
-    if(inherits(obj, "lmerMod")){
+    if(inherits(obj, c("lmerMod", "merMod"))){
       if(data.name != as.character(deparse(obj@call$data))) 
         stop("All models should be fitted to the same data")
     }else{
