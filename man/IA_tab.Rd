@@ -2,10 +2,13 @@
 % Please edit documentation in R/IA_tab.R
 \name{IA_tab}
 \alias{IA_tab}
+\alias{print.IA_tab}
 \alias{plot.IA_tab}
 \title{Indexes of Agreement Table}
 \usage{
 IA_tab(obs, sim, object, null.object)
+
+\method{print}{IA_tab}(x, ..., digits = 2)
 
 \method{plot}{IA_tab}(x, y, ..., type = c("OvsS", "RvsS"))
 }
@@ -14,28 +17,32 @@ IA_tab(obs, sim, object, null.object)
 
 \item{sim}{vector with simulated data (should be the same length as observed)}
 
-\item{object}{alternative to the previous two arguments. An object of class \sQuote{lm}, \sQuote{nls} or \sQuote{lme}}
+\item{object}{alternative to the previous two arguments. An object of class \sQuote{lm}, \sQuote{nls}, \sQuote{lme} or \sQuote{nlme}}
 
 \item{null.object}{optional object which represents the \sQuote{null} model. It is an intercept-only model
 by default. (Not used at the moment).}
 
 \item{x}{object of class \sQuote{IA_tab}.}
 
-\item{y}{not used at the moment}
-
 \item{...}{additional plotting arguments (none use at the moment).}
+
+\item{digits}{number of digits for rounding (default is 2)}
+
+\item{y}{not used at the moment}
 
 \item{type}{either \dQuote{OvsS} (observed vs. simulated) or \dQuote{RvsS} (residuals vs. simulated).}
 }
 \description{
 Indexes of agreement
 
+printing function for IA_tab
+
 plotting function for a IA_tab, it requires \sQuote{ggplot2}
 }
 \details{
 This function returns several indexes that might be useful for interpretation
 
-For obbjects of class \sQuote{lm} or \sQuote{nls} \cr
+For objects of class \sQuote{lm} and \sQuote{nls} \cr
 bias: mean(obs - sim) \cr
 intercept: intercept of the model obs ~ beta_0 + beta_1 * sim + error \cr
 slope: slope of the model obs ~ beta_0 + beta_1 * sim + error \cr
@@ -66,23 +73,23 @@ data(swpg)
 #' ## Linear model
 fit0 <- lm(lfgr ~ ftsw + I(ftsw^2), data = swpg)
 ias0 <- IA_tab(object = fit0)
-ias0$IA_tab
+ias0
 ## Nonlinear model
 fit1 <- nls(lfgr ~ SSblin(ftsw, a, b, xs, c), data = swpg)
 ias1 <- IA_tab(object = fit1)
-ias1$IA_tab
+ias1
 plot(ias1)
 ## Linear Mixed Models
 data(barley, package = "nlraa")
 fit2 <- lme(yield ~ NF + I(NF^2), random = ~ 1 | year, data = barley)
 ias2 <- IA_tab(object = fit2)
-ias2$IA_tab
+ias2
 ## Nonlinear Mixed Model
 barleyG <- groupedData(yield ~ NF | year, data = barley)
 fit3L <- nlsLMList(yield ~ SSquadp3(NF, a, b, c), data = barleyG)
 fit3 <- nlme(fit3L, random = pdDiag(a + b ~ 1))
 ias3 <- IA_tab(object = fit3)
-ias3$IA_tab
+ias3
 plot(ias3)
 ## Plotting model
 prds <- predict_nlme(fit3, interval = "conf", plevel = 0)
