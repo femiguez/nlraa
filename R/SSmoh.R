@@ -54,7 +54,7 @@ mohInit <- function(mCall, LHS, data, ...){
   cfs <- c(asym, xmin, k)
   op <- try(stats::optim(cfs, objfun), silent = TRUE)
   
-  if(class(op) != "try-error"){
+  if(!inherits(op, "try-error")){
     asym <- op$par[1]
     xmin <- op$par[2]
     k <- op$par[3]

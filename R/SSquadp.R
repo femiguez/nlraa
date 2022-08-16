@@ -47,7 +47,7 @@ quadpInit <- function(mCall, LHS, data, ...){
                                a = a, b = b,
                                c = c), silent = TRUE)
 
-  if(class(op.xs) != "try-error"){
+  if(!inherits(op.xs, "try-error")){
     xs <- op.xs$minimum
   }else{
     ## If it fails I use the mean

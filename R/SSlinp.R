@@ -50,7 +50,7 @@ linpInit <- function(mCall, LHS, data, ...){
                          upper = c(Inf, Inf, max(xy[,"x"])),
                          lower = c(-Inf, -Inf, min(xy[,"x"]))), silent = TRUE)
 
-  if(class(op) != "try-error"){
+  if(!inherits(op, "try-error")){
     a <- op$par[1]
     b <- op$par[2]
     xs <- op$par[3]

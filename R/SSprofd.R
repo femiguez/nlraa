@@ -54,7 +54,7 @@ profdInit <- function(mCall, LHS, data, ...){
                  algorithm = "port",
                  lower = c(0,0)), silent = TRUE)
   
-  if(class(fit) == "try-error"){
+  if(inherits(fit, "try-error")){
     c <- 0.5
     d <- 1
   }else{

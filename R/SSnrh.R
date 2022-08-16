@@ -56,7 +56,7 @@ nrhInit <- function(mCall, LHS, data, ...){
   cfs <- c(asym, phi, theta, rd)
   op <- try(stats::optim(cfs, objfun), silent = TRUE)
   
-  if(class(op) != "try-error"){
+  if(!inherits(op, "try-error")){
     asym <- op$par[1]
     phi <- op$par[2]
     theta <- op$par[3]

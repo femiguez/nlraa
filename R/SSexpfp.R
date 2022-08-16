@@ -42,9 +42,9 @@ expfpInit <- function(mCall, LHS, data, ...){
   ## Fit to half the data
   fit <- try(stats::lm(log(xy1[,"y"]) ~ xy1[,"x"]), silent = TRUE)
   
-  if(class(fit) == "try-error"){
+  if(inherits(fit, "try-error")){
     ## I don't see any reason why 'fit' should fail..., but in that case...
-    a <- xy1[1,"y"] ## First observation in the sorted data
+    a <- xy1[1, "y"] ## First observation in the sorted data
     c <- (xy1[nrow(xy1),"y"] - xy1[1,"y"])/(xy1[nrow(xy1),"x"] - xy1[1,"x"]) ## Average slope
   }else{
     a <- exp(coef(fit)[1])
@@ -61,7 +61,7 @@ expfpInit <- function(mCall, LHS, data, ...){
                          upper = c(Inf, Inf, max(xy[,"x"])),
                          lower = c(-Inf, -Inf, min(xy[,"x"]))), silent = TRUE)
 
-  if(class(op) != "try-error"){
+  if(!inherits(op, "try-error")){
     a <- op$par[1]
     c <- op$par[2]
     xs <- op$par[3]

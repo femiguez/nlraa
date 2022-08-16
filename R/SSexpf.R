@@ -38,7 +38,7 @@ expfInit <- function(mCall, LHS, data, ...){
   ## On the log scale for 'y'
   fit <- try(stats::lm(log(xy[,"y"]) ~ xy[,"x"], na.action = "na.omit"), silent = TRUE)
   
-  if(class(fit) == "try-error"){
+  if(inherits(fit, "try-error")){
     ## I don't see any reason why 'fit' should fail..., but in that case...
     a <- xy[1,"y"] ## First observation in the sorted data
     c <- (xy[nrow(xy),"y"] - xy[1,"y"])/(xy[nrow(xy),"x"] - xy[1,"x"]) ## Average slope

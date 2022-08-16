@@ -49,14 +49,14 @@ ratioInit <- function(mCall, LHS, data, ...){
   cfs <- c(1,1,1,1)
   op <- try(stats::optim(cfs, objfun), silent = TRUE)
   
-  if(class(op) != "try-error"){
+  if(!inherits(op, "try-error")){
     a <- op$par[1]
     b <- op$par[2]
     c <- op$par[3]
     d <- op$par[4]
   }else{
     op <- try(stats::optim(cfs, objfun, method = "SANN"), silent = TRUE)
-    if(class(op) != "try-error"){
+    if(!inherits(op, "try-error")){
       a <- op$par[1]
       b <- op$par[2]
       c <- op$par[3]

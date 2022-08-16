@@ -38,7 +38,7 @@ pexpfInit <- function(mCall, LHS, data, ...){
   ## Fit to second half of the data
   fit <- try(stats::lm(log(xy2[,"y"]) ~ xy2[,"x"]), silent = TRUE)
   
-  if(class(fit) == "try-error"){
+  if(inherits(fit, "try-error")){
     ## I don't see any reason why 'fit' should fail..., but in that case...
     c <- (xy2[nrow(xy2),"y"] - xy2[1,"y"])/(xy2[nrow(xy2),"x"] - xy2[1,"x"]) ## Average slope
   }else{
@@ -56,7 +56,7 @@ pexpfInit <- function(mCall, LHS, data, ...){
                          upper = c(Inf, max(xy[,"x"]),Inf),
                          lower = c(-Inf, min(xy[,"x"]),-Inf)), silent = TRUE)
  
-  if(class(op) != "try-error"){
+  if(!inherits(op, "try-error")){
     a <- op$par[1]
     xs <- op$par[2]
     c <- op$par[3]

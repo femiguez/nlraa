@@ -50,7 +50,7 @@ dlfInit <- function(mCall, LHS, data, ...){
   scal2 <- try(coef(nls(zz ~ SSlogis(-x1, asym, xmid, scal)))[3], silent = TRUE)
   ## If the previous line returns an error we are silent about it and maintain the crude 
   ## guess for scal
-  if(class(scal2) != "try-error")  scal <- -scal2
+  if(!inherits(scal2, "try-error"))  scal <- -scal2
   value <- c(asym, a2, xmid, scal)
   names(value) <- mCall[c("asym","a2","xmid","scal")]
   value

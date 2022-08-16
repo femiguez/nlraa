@@ -49,7 +49,7 @@ plinInit <- function(mCall, LHS, data, ...){
                          upper = c(Inf, max(xy[,"x"]), Inf),
                          lower = c(-Inf, min(xy[,"x"])), -Inf), silent = TRUE)
   
-  if(class(op) != "try-error"){
+  if(!inherits(op, "try-error")){
     a <- op$par[1]
     xs <- op$par[2]
     b <- op$par[3]
