@@ -73,6 +73,9 @@
 #' ## R2M for model 3
 #' R2M(fit3)
 #' 
+#' ## Using IA_tab without a model
+#' IA_tab(obs = swpg$lfgr, sim = fitted(fit0))
+#' 
 #' }
 #' 
 
@@ -112,15 +115,18 @@ IA_tab <- function(obs, sim, object, null.object){
   bias <- mean(obs - sim)
   ## correlation and correlation squared
   corr <- cor(obs, sim)
-  R2.1 <- cor(obs, sim)^2
+  R2.2 <- cor(obs, sim)^2
   ## Two different types of R-squared
-  if(inherits(object, c("nls", "lm", "gls", "gnls"))){
-    R2.2 <- nlraa::R2M(object)
+  if(!missing(object)){
+    if(inherits(object, c("nls", "lm", "gls", "gnls"))){
+      R2.1 <- nlraa::R2M(object)
+    }
+    
+    if(inherits(object, c("lme", "nlme"))){
+      R2 <- nlraa::R2M(object)
+    }    
   }
-  
-  if(inherits(object, c("lme", "nlme"))){
-    R2 <- nlraa::R2M(object)
-  }
+
   ## Nash-Sutclife Model Efficiency
   ## https://en.wikipedia.org/wiki/Nash%E2%80%93Sutcliffe_model_efficiency_coefficient
   mod.eff <- 1 - (sum((obs - sim)^2))/sum((obs - mean(obs))^2) 
@@ -140,12 +146,13 @@ IA_tab <- function(obs, sim, object, null.object){
   MSE <- RSS / length(obs)
   RMSE <- sqrt(MSE)
   
-  if(missing(object) || inherits(object, c("lm", "nls", "gls", "gnls"))){
+  if(missing(object)){
+    R2.1 <- summary(fit)$r.squared
     ia_tab <- data.frame(bias = bias, 
                          intercept = intercept,
                          slope = slope,
                          RSS = RSS, MSE = MSE, RMSE = RMSE,
-                         R2.1 = R2.1, R2.2 = R2.2$R2, 
+                         R2.1 = R2.1, R2.2 = R2.2, 
                          ME = mod.eff, NME = norm.mod.eff, Corr = corr,
                          ConCorr = concor)
   }else{
@@ -163,15 +170,25 @@ IA_tab <- function(obs, sim, object, null.object){
                            ME = mod.eff, NME = norm.mod.eff, Corr = corr,
                            ConCorr = concor) 
     }else{
-      ia_tab <- data.frame(bias = bias, 
-                           intercept = intercept,
-                           slope = slope,
-                           RSS = RSS, MSE = MSE, RMSE = RMSE,
-                           R2 = R2.1, 
-                           R2.marginal = R2$R2.marginal,
-                           R2.conditional = R2$R2.conditional,
-                           ME = mod.eff, NME = norm.mod.eff, Corr = corr,
-                           ConCorr = concor)      
+      if(inherits(object, c("lme", "nlme"))){
+        ia_tab <- data.frame(bias = bias, 
+                             intercept = intercept,
+                             slope = slope,
+                             RSS = RSS, MSE = MSE, RMSE = RMSE,
+                             R2 = R2.2, 
+                             R2.marginal = R2$R2.marginal,
+                             R2.conditional = R2$R2.conditional,
+                             ME = mod.eff, NME = norm.mod.eff, Corr = corr,
+                             ConCorr = concor)              
+      }else{
+        ia_tab <- data.frame(bias = bias, 
+                             intercept = intercept,
+                             slope = slope,
+                             RSS = RSS, MSE = MSE, RMSE = RMSE,
+                             R2.1 = R2.1$R2, R2.2 = R2.2, 
+                             ME = mod.eff, NME = norm.mod.eff, Corr = corr,
+                             ConCorr = concor)
+      }
     }
   }
 

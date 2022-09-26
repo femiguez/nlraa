@@ -104,6 +104,9 @@ R2M(fit2)
 ## R2M for model 3
 R2M(fit3)
 
+## Using IA_tab without a model
+IA_tab(obs = swpg$lfgr, sim = fitted(fit0))
+
 }
 
 }
