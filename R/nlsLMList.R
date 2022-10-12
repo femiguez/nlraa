@@ -113,7 +113,7 @@ nlsLMList.formula <-
   Call <- match.call()
   if (!missing(subset)) {
     data <-
-      data[eval(asOneSidedFormula(Call[["subset"]])[[2]], data),, drop = FALSE]
+      data[eval(stats::asOneSidedFormula(Call[["subset"]])[[2]], data),, drop = FALSE]
   }
   if (!is.data.frame(data)) data <- as.data.frame(data)
   data <- na.action(data)
@@ -121,7 +121,7 @@ nlsLMList.formula <-
     if (inherits(data, "groupedData")) {
       if (missing(level))
         level <- length(nlme::getGroupsFormula(data, asList = TRUE))
-      groups <- getGroups(data, level = level)[drop = TRUE]
+      groups <- nlme::getGroups(data, level = level)[drop = TRUE]
       grpForm <- nlme::getGroupsFormula(data)
     } else {
       stop("'data' must be a \"groupedData\" object if 'formula' does not include groups")
@@ -131,8 +131,8 @@ nlsLMList.formula <-
       level <- length(nlme::getGroupsFormula(model, asList = TRUE))
     model <- eval(substitute(Y ~ RHS,
 			     list(Y  = model[[2]],
-				  RHS= getCovariateFormula(model)[[2]])))
-    groups <- getGroups(data, form = grpForm, level = level)[drop = TRUE]
+				  RHS = nlme::getCovariateFormula(model)[[2]])))
+    groups <- nlme::getGroups(data, form = grpForm, level = level)[drop = TRUE]
   }
   if (is.null(start) && is.null(attr(data, "parameters"))) {
     ## no starting values
