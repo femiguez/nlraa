@@ -32,7 +32,9 @@
 #' @param level an optional integer specifying the level of grouping to be used when multiple nested levels of grouping are present.
 #' @param subset subset of rows to use
 #' @param na.action a function that indicates what should happen when the data contain NAs. The default action (na.fail) causes nlsList to print an error message and terminate if there are any incomplete observations.
-#' @param algorithm choice of algorithm. Default is 'LM' which uses 'nlsLM' from the \CRANpkg{minpack.lm} package. Other options are: \dQuote{default}, \dQuote{port} and \dQuote{plinear} (nls).
+#' @param algorithm choice of algorithm. Default is \sQuote{LM} which uses \sQuote{nlsLM} from the \CRANpkg{minpack.lm} package. Other options are: \dQuote{default}, \dQuote{port} and \dQuote{plinear} (nls).
+#' @param lower vectors of lower and upper bounds, replicated to be as long as start. If unspecified, all parameters are assumed to be unconstrained. Bounds can only be used with the \dQuote{port} algorithm. They are ignored, with a warning, if given for other algorithms.
+#' @param upper see \sQuote{lower}
 #' @param pool an optional logical value that is preserved as an attribute of the returned value. This will be used as the default for pool in calculations of standard deviations or standard errors for summaries.
 #' @param warn.nls logical indicating if nls errors (all of which are caught by tryCatch) should be signalled as a “summarizing” warning.
 #' @details See function \code{\link[nlme]{nlsList}} and \code{\link[minpack.lm]{nlsLM}}. This function is a copy of nlsList but with minor changes to use LM instead as the default algorithm. The authors of the original function are Pinheiro and Bates.
@@ -44,12 +46,14 @@ nlsLMList <-
   ## A list of nls objects
   function(model, data, start, control, level, subset, na.action = na.fail,
            algorithm = c("LM","default","port","plinear"),
+           lower = NULL, upper = NULL,
            pool = TRUE, warn.nls = NA) # Deprecation: will be 'TRUE'
       UseMethod("nlsLMList")
 
 nlsLMList.selfStart <-
   function (model, data, start, control, level, subset, na.action = na.fail,
             algorithm = c("LM","default","port","plinear"),
+            lower = NULL, upper = NULL,
             pool = TRUE, warn.nls = NA) # Deprecation: will be 'TRUE'
 {
     if(algorithm == "LM"){
@@ -70,7 +74,7 @@ nlsLMList.selfStart <-
 	## Build up a call to the model function
   m <- call(as.character(marg))
   args <- lapply(names(formals(eval(marg))), as.name)
-  args[[1]] <- getCovariateFormula(data)[[2]]
+  args[[1]] <- nlme::getCovariateFormula(data)[[2]]
   m[1 + seq_along(args)] <- args
   form <- formula(data)
   form[[3]][[2]] <- m
@@ -78,7 +82,7 @@ nlsLMList.selfStart <-
   do.call("nlsLMList.formula", mCall)
 }
 
-#' @title Formula method for nls 'LM' list method
+#' @title Formula method for nls \sQuote{LM} list method
 #' @name nlsLMList.formula
 #' @description formula method for nlsLMList
 #' @param model see \code{\link{nlsList}}
@@ -88,7 +92,7 @@ nlsLMList.selfStart <-
 #' @param level see \code{\link{nlsList}}
 #' @param subset see \code{\link{nlsList}}
 #' @param na.action see \code{\link{nlsList}}
-#' @param algorithm choice of algorithm default is 'LM' which uses 'nlsLM' from the minpack.lm package.
+#' @param algorithm choice of algorithm default is \sQuote{LM} which uses \sQuote{nlsLM} from the minpack.lm package.
 #' @param pool see \code{\link{nlsList}}
 #' @param warn.nls see \code{\link{nlsList}}
 #' @export
@@ -96,6 +100,7 @@ nlsLMList.formula <-
   function(model, data, start = NULL, control, level, subset,
            na.action = na.fail, 
            algorithm = c("LM","default","port","plinear"),
+           lower = NULL, upper = NULL,
            pool = TRUE,
            warn.nls = NA) # Deprecation: will be 'TRUE'
 {
@@ -112,18 +117,18 @@ nlsLMList.formula <-
   }
   if (!is.data.frame(data)) data <- as.data.frame(data)
   data <- na.action(data)
-  if (is.null(grpForm <- getGroupsFormula(model))) {
+  if (is.null(grpForm <- nlme::getGroupsFormula(model))) {
     if (inherits(data, "groupedData")) {
       if (missing(level))
-        level <- length(getGroupsFormula(data, asList = TRUE))
+        level <- length(nlme::getGroupsFormula(data, asList = TRUE))
       groups <- getGroups(data, level = level)[drop = TRUE]
-      grpForm <- getGroupsFormula(data)
+      grpForm <- nlme::getGroupsFormula(data)
     } else {
       stop("'data' must be a \"groupedData\" object if 'formula' does not include groups")
     }
   } else {
     if (missing(level))
-      level <- length(getGroupsFormula(model, asList = TRUE))
+      level <- length(nlme::getGroupsFormula(model, asList = TRUE))
     model <- eval(substitute(Y ~ RHS,
 			     list(Y  = model[[2]],
 				  RHS= getCovariateFormula(model)[[2]])))
@@ -147,15 +152,36 @@ nlsLMList.formula <-
                     data <- as.data.frame(dat)
                     if (is.null(start)) {
                       if(algorithm == "LM"){
-                        minpack.lm::nlsLM(model, data = data, control = controlvals)  
+                        if(is.null(lower) && is.null(upper)){
+                          minpack.lm::nlsLM(model, data = data, control = controlvals)    
+                        }else{
+                          minpack.lm::nlsLM(model, data = data, control = controlvals,
+                                            lower = lower, upper = upper)    
+                        }
                       }else{
-                        nls(model, data = data, control = controlvals, algorithm = algorithm)  
+                        if(is.null(lower) && is.null(upper)){
+                          nls(model, data = data, control = controlvals, algorithm = algorithm)    
+                        }else{
+                          nls(model, data = data, control = controlvals, algorithm = algorithm,
+                              lower = lower, upper = upper)    
+                        }
+                        
                       }
                     } else {
                       if(algorithm == "LM"){
-                        minpack.lm::nlsLM(model, data = data, control = controlvals, start = start)  
+                        if(is.null(lower) && is.null(upper)){
+                          minpack.lm::nlsLM(model, data = data, control = controlvals, start = start)    
+                        }else{
+                          minpack.lm::nlsLM(model, data = data, control = controlvals, start = start,
+                                            lower = lower, upper = upper)    
+                        }
                       }else{
-                        nls(model, data = data, control = controlvals, start = start, algorithm = algorithm)  
+                        if(is.null(lower) && is.null(upper)){
+                          nls(model, data = data, control = controlvals, start = start, algorithm = algorithm)    
+                        }else{
+                          nls(model, data = data, control = controlvals, start = start, algorithm = algorithm,
+                              lower = lower, upper = upper)    
+                        }
                       }
                     }
                   }, error = function(e) e))
