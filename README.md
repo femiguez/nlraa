@@ -43,6 +43,13 @@ This package supports the following publications:
 
 Some recent publications that cite this package:
 
+21\. McMaster ES, Chen SH, Yap J-YS, Rossetto M (2022) Conservation genomics of Persoonia hirsuta support of management. Research Centre for Ecosystem Resilience, Royal Botanic Garden Sydney.
+
+20\. Alejo Ruiz, Sotirios V. Archontoulis, Lucas Borrás,
+Kernel weight relevance in maize grain yield response to nitrogen fertilization,
+Field Crops Research, Volume 286, 2022, 108631,
+https://doi.org/10.1016/j.fcr.2022.108631.
+
 19\. Miguez, F. E., & Poffenbarger, H. (2022). How can we estimate optimum fertilizer rates with accuracy and precision? Agricultural & Environmental Letters, 7, e20075. https://doi.org/10.1002/ael2.20075
 
 18\. Pearce, A.W., Slaton, N.A., Lyons, S.E., Bolster, C.H., Bruulsema, T.W., Grove, J.H., Jones, J.D., McGrath, J.M., Miguez, F.E., Nelson, N.O., Osmond, D.L., Parvej, M.R., Pena-Yewtukhiw, E.M. and Spargo, J.T. (2022), Defining relative yield for soil test correlation and calibration trials in the fertilizer recommendation support tool. Soil Sci. Soc. Am. J.. Accepted Author Manuscript. https://doi.org/10.1002/saj2.20450
