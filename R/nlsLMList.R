@@ -52,7 +52,7 @@ nlsLMList <-
 
 nlsLMList.selfStart <-
   function (model, data, start, control, level, subset, na.action = na.fail,
-            algorithm = c("LM","default","port","plinear"),
+            algorithm = c("LM", "default", "port", "plinear"),
             lower = NULL, upper = NULL,
             pool = TRUE, warn.nls = NA) # Deprecation: will be 'TRUE'
 {
@@ -99,7 +99,7 @@ nlsLMList.selfStart <-
 nlsLMList.formula <-
   function(model, data, start = NULL, control, level, subset,
            na.action = na.fail, 
-           algorithm = c("LM","default","port","plinear"),
+           algorithm = c("LM", "default", "port", "plinear"),
            lower = NULL, upper = NULL,
            pool = TRUE,
            warn.nls = NA) # Deprecation: will be 'TRUE'
@@ -130,7 +130,7 @@ nlsLMList.formula <-
     if (missing(level))
       level <- length(nlme::getGroupsFormula(model, asList = TRUE))
     model <- eval(substitute(Y ~ RHS,
-			     list(Y  = model[[2]],
+			     list(Y = model[[2]],
 				  RHS = nlme::getCovariateFormula(model)[[2]])))
     groups <- nlme::getGroups(data, form = grpForm, level = level)[drop = TRUE]
   }
@@ -143,7 +143,6 @@ nlsLMList.formula <-
       stop("old-style self-starting model functions\nare no longer supported.\nNew selfStart functions are available.\nUse\n  SSfpl instead of fpl,\n  SSfol instead of first.order.log,\n  SSbiexp instead of biexp,\n  SSlogis instead of logistic.\nIf writing your own selfStart model, see\n  \"help(selfStart)\"\nfor the new form of the \"initial\" attribute.")
     }
   }
-
   controlvals <- nls.control()
   if(!missing(control)) controlvals[names(control)] <- control
   val <- lapply(split(data, groups),
@@ -162,6 +161,9 @@ nlsLMList.formula <-
                         if(is.null(lower) && is.null(upper)){
                           nls(model, data = data, control = controlvals, algorithm = algorithm)    
                         }else{
+                          iparms <- getInitial(model, data = data)
+                          if(is.null(lower)) lower <- rep(-Inf, length(iparms))
+                          if(is.null(upper)) upper <- rep(Inf, length(iparms))
                           nls(model, data = data, control = controlvals, algorithm = algorithm,
                               lower = lower, upper = upper)    
                         }
@@ -179,6 +181,8 @@ nlsLMList.formula <-
                         if(is.null(lower) && is.null(upper)){
                           nls(model, data = data, control = controlvals, start = start, algorithm = algorithm)    
                         }else{
+                          if(is.null(lower)) lower <- rep(-Inf, length(start))
+                          if(is.null(upper)) upper <- rep(Inf, length(start))
                           nls(model, data = data, control = controlvals, start = start, algorithm = algorithm,
                               lower = lower, upper = upper)    
                         }

@@ -2,7 +2,7 @@
 % Please edit documentation in R/nlsLMList.R
 \name{nlsLMList.formula}
 \alias{nlsLMList.formula}
-\title{Formula method for nls 'LM' list method}
+\title{Formula method for nls \sQuote{LM} list method}
 \usage{
 \method{nlsLMList}{formula}(
   model,
@@ -13,6 +13,8 @@
   subset,
   na.action = na.fail,
   algorithm = c("LM", "default", "port", "plinear"),
+  lower = NULL,
+  upper = NULL,
   pool = TRUE,
   warn.nls = NA
 )
@@ -32,7 +34,7 @@
 
 \item{na.action}{see \code{\link{nlsList}}}
 
-\item{algorithm}{choice of algorithm default is 'LM' which uses 'nlsLM' from the minpack.lm package.}
+\item{algorithm}{choice of algorithm default is \sQuote{LM} which uses \sQuote{nlsLM} from the minpack.lm package.}
 
 \item{pool}{see \code{\link{nlsList}}}
 

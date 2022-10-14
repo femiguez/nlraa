@@ -13,6 +13,8 @@ nlsLMList(
   subset,
   na.action = na.fail,
   algorithm = c("LM", "default", "port", "plinear"),
+  lower = NULL,
+  upper = NULL,
   pool = TRUE,
   warn.nls = NA
 )
@@ -32,7 +34,11 @@ nlsLMList(
 
 \item{na.action}{a function that indicates what should happen when the data contain NAs. The default action (na.fail) causes nlsList to print an error message and terminate if there are any incomplete observations.}
 
-\item{algorithm}{choice of algorithm. Default is 'LM' which uses 'nlsLM' from the \CRANpkg{minpack.lm} package. Other options are: \dQuote{default}, \dQuote{port} and \dQuote{plinear} (nls).}
+\item{algorithm}{choice of algorithm. Default is \sQuote{LM} which uses \sQuote{nlsLM} from the \CRANpkg{minpack.lm} package. Other options are: \dQuote{default}, \dQuote{port} and \dQuote{plinear} (nls).}
+
+\item{lower}{vectors of lower and upper bounds, replicated to be as long as start. If unspecified, all parameters are assumed to be unconstrained. Bounds can only be used with the \dQuote{port} algorithm. They are ignored, with a warning, if given for other algorithms.}
+
+\item{upper}{see \sQuote{lower}}
 
 \item{pool}{an optional logical value that is preserved as an attribute of the returned value. This will be used as the default for pool in calculations of standard deviations or standard errors for summaries.}
 
