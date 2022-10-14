@@ -164,10 +164,12 @@ nlsLMList.formula <-
                           iparms <- getInitial(model, data = data)
                           if(is.null(lower)) lower <- rep(-Inf, length(iparms))
                           if(is.null(upper)) upper <- rep(Inf, length(iparms))
+                          ## Check if names are in the right order
+                          check_parm_names(lower, iparms)
+                          check_parm_names(upper, iparms)
                           nls(model, data = data, control = controlvals, algorithm = algorithm,
                               lower = lower, upper = upper)    
                         }
-                        
                       }
                     } else {
                       if(algorithm == "LM"){
@@ -183,6 +185,9 @@ nlsLMList.formula <-
                         }else{
                           if(is.null(lower)) lower <- rep(-Inf, length(start))
                           if(is.null(upper)) upper <- rep(Inf, length(start))
+                          ## Check if names are in the right order
+                          check_parm_names(lower, start)
+                          check_parm_names(upper, start)
                           nls(model, data = data, control = controlvals, start = start, algorithm = algorithm,
                               lower = lower, upper = upper)    
                         }
@@ -206,4 +211,12 @@ nlsLMList.formula <-
             groupsForm = grpForm)
 }
 
-
+check_parm_names <- function(x, iparms){
+  if(!is.null(names(x)) && !is.null(names(iparms))){
+    if(!identical(names(iparms), names(x))){
+      cat("Names in", quote(x), ":", names(x), "\n")
+      cat("Names in model:", names(iparms), "\n")
+      stop("Names in 'lower or upper' do not match names in the model", call. = FALSE)
+    }
+  }
+}
