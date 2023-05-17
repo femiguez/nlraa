@@ -7,7 +7,7 @@
 #' @description Self starter for Collatz temperature response function 
 #' @param x input vector (x) which is normally \sQuote{temperature}.
 #' @param t.m medium temperature
-#' @param t.l low temparature
+#' @param t.l low temperature
 #' @param t.h high temperature
 #' @export
 #' @examples 
@@ -34,12 +34,12 @@ temp3Init <- function(mCall, LHS, data, ...){
   }
   
   meany <- mean(xy[,"y"], na.rm = TRUE)
-  ## t.m is actually the medium temparature, usually 25
+  ## t.m is actually the medium temperature, usually 25
   mdn.temp <- NLSstClosestX(xy, meany)
   min.temp <- min(xy[,"x"]) 
   max.temp <- max(xy[,"x"])
   
-  ## Eductaed guesses
+  ## Educated guesses
   t.m <- mdn.temp
   t.l <- (mdn.temp - min.temp)/2
   t.h <- mdn.temp + (max.temp - mdn.temp)/2

@@ -14,7 +14,7 @@ SStemp3(x, t.m, t.l, t.h)
 
 \item{t.m}{medium temperature}
 
-\item{t.l}{low temparature}
+\item{t.l}{low temperature}
 
 \item{t.h}{high temperature}
 }
