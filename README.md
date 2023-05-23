@@ -43,6 +43,24 @@ This package supports the following publications:
 
 Some recent publications that cite this package:
 
+27\. Love under lockdown:How changes in time with partner impacted stress and relationship outcomes during the COVID-19 pandemic. https://doi.org/10.1177/02654075231162599
+
+26\. Mitchell E. Baum, John E. Sawyer, Emerson D. Nafziger, Isaiah Huber, Peter J. Thorburn, Michael J. Castellano, Sotirios V. Archontoulis. Evaluating and improving APSIM's capacity in simulating long-term corn yield response to nitrogen in continuous- and rotated-corn systems, Agricultural Systems,
+Volume 207, 2023, https://doi.org/10.1016/j.agsy.2023.103629.
+
+25\. Physical Modes of Action of Fungicides Against Apple Scab: Timing is Everything, but Dose Matters
+Vincent Philion, Valentin Joubert, Marc Trapman, and Arne Stensvand.
+Published Online:23 Feb 2023https://doi.org/10.1094/PDIS-11-22-2758-RE
+
+24\. Song, S., Ding, Y., Li, W. et al. Mangrove reforestation provides greater blue carbon benefit than afforestation for mitigating global climate change. Nat Commun 14, 756 (2023). https://doi.org/10.1038/s41467-023-36477-1
+
+23\. Bonansea, S.; Ernst, O.R.; Mazzilli, S.R. Baseline for Brassica carinata Components of Nitrogen-Use
+Efficiency in Southern South America. Agronomy 2023, 13, 412. https://doi.org/10.3390/agronomy13020412
+
+22\. Gonzalo Carracelas, Nicolas Guilpart, Kenneth G. Cassman, Patricio Grassini,
+Distinguishing between yield plateaus and yield ceilings: A case study of rice in Uruguay,
+Field Crops Research, https://doi.org/10.1016/j.fcr.2023.108808.
+
 21\. McMaster ES, Chen SH, Yap J-YS, Rossetto M (2022) Conservation genomics of Persoonia hirsuta support of management. Research Centre for Ecosystem Resilience, Royal Botanic Garden Sydney.
 
 20\. Alejo Ruiz, Sotirios V. Archontoulis, Lucas Borrás,

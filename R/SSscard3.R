@@ -30,7 +30,7 @@ NULL
 card3Init<- function(mCall, LHS, data, ...) {
   
   xy <- sortedXyData(mCall[["x"]], LHS, data)
-  if(nrow(xy) < 5){
+  if(nrow(xy) < 3){
     stop("Too few distinct input values to fit this model.")
   }
   
@@ -52,8 +52,8 @@ card3Init<- function(mCall, LHS, data, ...) {
   cfs <- c(tb, to, tm)
   
   op <- try(stats::optim(cfs, objfun, method = "L-BFGS-B",
-                         upper = c(Inf, Inf, max(xy[,"x"])),
-                         lower = c(-Inf, -Inf, min(xy[,"x"]))), silent = TRUE)
+                         upper = c(max(xy[,"x"]), max(xy[,"x"]), max(xy[,"x"])),
+                         lower = c(min(xy[,"x"]), min(xy[,"x"]), min(xy[,"x"]))), silent = TRUE)
   
   if(!inherits(op, "try-error")){
     tb <- op$par[1]
@@ -98,7 +98,7 @@ SScard3 <- selfStart(card3,
 #' @param tb base temperature
 #' @param to optimum temperature
 #' @param tm maximum temperature
-#' @param c curvature (default is 2)
+#' @param curve curvature (default is 2)
 #' @author Caio dos Santos and Fernando Miguez
 #' @details This function is described in Archontoulis and Miguez (2015) - (doi:10.2134/agronj2012.0506) - Equation 5.1 in Table 1.
 #' @export
@@ -122,7 +122,7 @@ NULL
 scard3Init<- function(mCall, LHS, data, ...) {
   
   xy <- sortedXyData(mCall[["x"]], LHS, data)
-  if(nrow(xy) < 5){
+  if(nrow(xy) < 3){
     stop("Too few distinct input values to fit this model.")
   }
   
@@ -131,12 +131,14 @@ scard3Init<- function(mCall, LHS, data, ...) {
   tb <- mean(c(xy[1, 'x'], to))
   tm <- mean(c(xy[nrow(xy), 'x'], to))
   
+  crv <- mCall$curve
+  
   objfun <- function(cfs){
     pred <- scard3(xy[,"x"], 
-                        tb = cfs[1],
-                        to = cfs[2],
-                        tm = cfs[3]
-    )
+                   tb = cfs[1],
+                   to = cfs[2],
+                   tm = cfs[3],
+                   curve = crv)
     ans <- sum((xy[,"y"] - pred)^2)
     ans
   }
@@ -144,8 +146,8 @@ scard3Init<- function(mCall, LHS, data, ...) {
   cfs <- c(tb, to, tm)
   
   op <- try(stats::optim(cfs, objfun, method = "L-BFGS-B",
-                         upper = c(Inf, Inf, max(xy[,"x"])),
-                         lower = c(-Inf, -Inf, min(xy[,"x"]))), silent = TRUE)
+                         upper = c(max(xy[,"x"]), max(xy[,"x"]), max(xy[,"x"])),
+                         lower = c(min(xy[,"x"]), min(xy[,"x"]), min(xy[,"x"]))), silent = TRUE)
   
   
   if(!inherits(op, "try-error")){
@@ -165,12 +167,12 @@ scard3Init<- function(mCall, LHS, data, ...) {
 #' @return scard3: vector of the same length as x using a scard3 function
 #' @export
 #' 
-scard3 <- function(x, tb, to, tm, c = 2) {
+scard3 <- function(x, tb, to, tm, curve = 2) {
   .expr1 <- (tm - x) / (tm - to)
   .expr2 <- (x - tb) / (to - tb)
   .expr3 <- (to - tb) / (tm - to)
   .expr4 <- (.expr1 * .expr2) ^ .expr3
-  .expr5 <- .expr4 ^ c
+  .expr5 <- .expr4 ^ curve
   
   .expr6 <- ifelse(x < tb, 0, 
                    ifelse(x > tm, 0, 
