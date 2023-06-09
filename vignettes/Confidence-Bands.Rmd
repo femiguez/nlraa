@@ -442,6 +442,4 @@ https://errorstatistics.com/2020/01/20/s-senn-error-point-the-importance-of-know
 
 Wood, S. Generalized Additive Models. An Introduction with R. (2017) Second Edition. 
 
-http://sia.webpopix.org/index.html
-
 Gsteiger, Bretz and Liu (2011). Simultaneous confidence bands for nonlinear regression models with application to population pharmacokinetic analyses. Journal of Biopharmaceutical Statistics. DOI: 10.1080/10543406.2011.551332

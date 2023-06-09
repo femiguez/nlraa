@@ -439,8 +439,6 @@ URL: https://socialsciences.mcmaster.ca/jfox/Books/Companion/appendices/Appendix
 
 * Morris, J. S. (2002). The BLUPs Are Not ‘best’ When It Comes to Bootstrapping. Statistics & Probability Letters 56(4): 425–430. https://doi.org/10.1016/S0167-7152(02)00041-X.
 
-* http://sia.webpopix.org/nonlinearRegression.html#confidence-intervals-and-prediction-intervals
-
 * propagate: https://rmazing.wordpress.com/2013/08/31/introducing-propagate/
 
 * For linear mixed models: package 'lmeresampler':  https://CRAN.R-project.org/package=lmeresampler  

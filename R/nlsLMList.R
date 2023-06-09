@@ -93,6 +93,8 @@ nlsLMList.selfStart <-
 #' @param subset see \code{\link{nlsList}}
 #' @param na.action see \code{\link{nlsList}}
 #' @param algorithm choice of algorithm default is \sQuote{LM} which uses \sQuote{nlsLM} from the minpack.lm package.
+#' @param lower vectors of lower and upper bounds, replicated to be as long as start. If unspecified, all parameters are assumed to be unconstrained. Bounds can only be used with the \dQuote{port} algorithm. They are ignored, with a warning, if given for other algorithms.
+#' @param upper see \sQuote{lower}
 #' @param pool see \code{\link{nlsList}}
 #' @param warn.nls see \code{\link{nlsList}}
 #' @export

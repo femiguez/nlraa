@@ -5,9 +5,9 @@
 \alias{scard3}
 \title{self start for smooth cardinal temperature response}
 \usage{
-scard3(x, tb, to, tm, c = 2)
+scard3(x, tb, to, tm, curve = 2)
 
-SSscard3(x, tb, to, tm, c = 2)
+SSscard3(x, tb, to, tm, curve = 2)
 }
 \arguments{
 \item{x}{input vector (x) which is normally \sQuote{temperature}.}
@@ -18,7 +18,7 @@ SSscard3(x, tb, to, tm, c = 2)
 
 \item{tm}{maximum temperature}
 
-\item{c}{curvature (default is 2)}
+\item{curve}{curvature (default is 2)}
 }
 \value{
 scard3: vector of the same length as x using a scard3 function
