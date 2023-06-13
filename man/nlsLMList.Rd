@@ -2,9 +2,25 @@
 % Please edit documentation in R/nlsLMList.R
 \name{nlsLMList}
 \alias{nlsLMList}
+\alias{nlsLMList.selfStart}
 \title{Create a list of nls objects with the option of using nlsLM in addition to nls}
 \usage{
 nlsLMList(
+  model,
+  data,
+  start,
+  control,
+  level,
+  subset,
+  na.action = na.fail,
+  algorithm = c("LM", "default", "port", "plinear"),
+  lower = NULL,
+  upper = NULL,
+  pool = TRUE,
+  warn.nls = NA
+)
+
+\method{nlsLMList}{selfStart}(
   model,
   data,
   start,
@@ -43,6 +59,11 @@ nlsLMList(
 \item{pool}{an optional logical value that is preserved as an attribute of the returned value. This will be used as the default for pool in calculations of standard deviations or standard errors for summaries.}
 
 \item{warn.nls}{logical indicating if nls errors (all of which are caught by tryCatch) should be signalled as a “summarizing” warning.}
+}
+\value{
+an object of class \sQuote{nlsList}
+
+an object of class \sQuote{nlsList}
 }
 \description{
 This function is a copy of 'nlsList' from the 'nlme' package modified

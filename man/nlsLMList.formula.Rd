@@ -44,6 +44,9 @@
 
 \item{warn.nls}{see \code{\link{nlsList}}}
 }
+\value{
+an object of class \sQuote{nlsList}
+}
 \description{
 formula method for nlsLMList
 }
