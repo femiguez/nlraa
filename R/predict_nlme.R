@@ -53,7 +53,7 @@
 #'   geom_line(aes(y = predict(fm.G, level = 0), color = "Gompertz")) +
 #'   geom_line(aes(y = predict(fm.F, level = 0), color = "4P-Logistic")) +  
 #'   geom_line(aes(y = predict(fm.B, level = 0), color = "Beta")) +
-#'   geom_line(aes(y = prd, color = "Avg. Model"), size = 1.2)
+#'   geom_line(aes(y = prd, color = "Avg. Model"), linewidth = 1.2)
 #' }
 
 predict_nlme <- function(..., criteria = c("AIC", "AICc", "BIC"), 

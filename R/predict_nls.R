@@ -50,7 +50,7 @@
 #'   geom_line(aes(y = fitted(fm.QP), color = "Quadratic-plateau")) + 
 #'   geom_line(aes(y = fitted(fm.BL), color = "Bi-linear")) + 
 #'   geom_line(aes(y = fitted(fm.G), color = "GAM")) + 
-#'   geom_line(aes(y = prd, color = "Avg. Model"), size = 1.2)
+#'   geom_line(aes(y = prd, color = "Avg. Model"), linewidth = 1.2)
 #' }
 
 predict_nls <- function(..., criteria = c("AIC", "AICc", "BIC"), 
