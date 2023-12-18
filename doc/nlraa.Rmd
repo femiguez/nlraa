@@ -19,7 +19,7 @@ library(nlraa)
 
 # Nonlinear Regression
 
-For an introduction to this topic see the publication by Archontoulis and Miguez (https://doi.org/10.2134/agronj2012.0506) and the book chapter by Miguez, Archontoulis and Dokoohaki ( https://doi.org/10.2134/appliedstatistics.2016.0003.c15).
+For an introduction to this topic see the publication by Archontoulis and Miguez (https://doi.org/10.2134/agronj2012.0506) and the book chapter by Miguez, Archontoulis and Dokoohaki (https://doi.org/10.2134/appliedstatistics.2016.0003.c15). 
 
 One of the objectives of those publications was to introduce a large family of nonlinear functions to practicioners in the agricultural research area to a variety of tools that can use to fit data which does not conform to a linear relationship. The feature that distinguishes this approach from others such as ploynomials, splines or gams (to name a few) is that the parameters of the model have biologically meaningful interpretations. In R the approach that makes fitting nonlinear mixed models almost as easy as fitting linear mixed models is the use of self starting functions.
 
@@ -70,6 +70,9 @@ One of the objectives of those publications was to introduce a large family of n
 26. SStemp3 (temperature response function with 3 parameters)
 27. SSmoh (modified hyperbola)
 28. SSquadp3xs (quadratic-plateau with break-point)
+29. SScard3 (temperature response with cardinal temperatures)
+30. SSscard3 (smooth temperature response with cardinal temperatures)
+31. SSharm1 (harmonic regression - linear model)
 
 ## Documentation
 
@@ -285,7 +288,11 @@ Ritz C, Baty F, Streibig JC, Gerhard D
 (2015) Dose-Response Analysis Using R. PLoS ONE
 10(12): e0146021. \doi{10.1371/journal.pone.0146021}.
 
-This package actually has very useful functions, datasets and examples. In particular **drm** is an alternative to **nls**.
+This package has useful functions, datasets and examples. In particular **drm** is an alternative to **nls**.
+
+## **investr**
+
+Package for inverse estimation. It looks like it can produce intervals for the response variable. It also has functions **predFit** and **plotFit** for generating predictions and plots.
 
 ## **easynls** pacakge
 

@@ -43,7 +43,56 @@ This package supports the following publications:
 
 Some recent publications that cite this package:
 
-27\. Love under lockdown:How changes in time with partner impacted stress and relationship outcomes during the COVID-19 pandemic. https://doi.org/10.1177/02654075231162599
+51\. Moisture and nutrient management for sustainable dryland sun ower production. Loza et al. 2023. https://doi.org/10.21203/rs.3.rs-3697663/v1
+
+50\. Nitrogen fertilizer and pronitridine rates for corn production in the Midwest U.S. Kaur et al. 2023. https://doi.org/10.1016/j.fcr.2023.109200
+
+49\. The changing landscape of paddy cultivation in Andhra Pradesh: A statistical assessment of area, production, and productivity.  https://dx.doi.org/10.22271/maths.2023.v8.i6Sc.1373  
+
+48\. Assessment of Tissue Phosphorus Concentrations and Diagnostic Tools for Phosphorus Nutrition in Corn. Roa and Ruiz Diaz. 2023. 
+
+47\. A New Scenario Framework for Equitable and Climate-Compatible Futures. Ranjan et al. 2023
+
+46\. Microbial race to colonise leaf litter in a littoral-lake environment and its relation to nutrient dynamics. Madaschi et al. 2023. https://doi.org/10.1111/fwb.14173
+
+45\. Enhancing Our Understanding of Optimal Nitrogen Fertilizer Rates for Maize: A Synthesis of Long-Term Experimentation and Crop Modeling. Baum. PhD Thesis. 2023.
+
+44\. Spatial Applications for Improved Nutrient and Agronomic Management in Minnesota Cropping Systems. Nigon, Leanna. PhD Thesis. 2023. 
+
+43\. Genetic improvement of winter wheat (Triticum aestivum L.) grain yield in the Northern Great Plains of North America, 1959–2021, Boehm et al. 2023. https://doi.org/10.1002/csc2.21065
+
+42\. Background matching through fast and reversible melanin-based pigmentation plasticity in tadpoles comes with morphological and antioxidant changes. Liedtke et al. 2023. https://doi.org/10.1038/s41598-023-39107-4
+
+41\. Determining cardinal temperatures for eight cover crop species. Pessotto et al. 2023. https://doi.org/10.1002/agg2.20393
+
+40\. Maximizing winter wheat yield through planting date and seeding rate management. Copeland et al. 2023. https://doi.org/10.1002/cft2.20240
+
+39\. Accelerated leaf appearance and flowering in maize after four decades of commercial breeding. dos Santos et al. 2023. https://doi.org/10.1002/csc2.21044
+
+38\. Irrigated corn grain yield prediction in Florida using active sensors and plant height. Leitao et al. 2023. https://doi.org/10.1016/j.atech.2023.100276
+
+37\. Patterns of regional site index across a North American boreal forest gradient. Montesano et al. 2023. https://doi.org/10.1088/1748-9326/acdcab
+
+36\. Methods for Improving Potassium Fertilizer Recommendations for Corn in South Dakota. Andrew j. Ahlersmeyer. MS Thesis. 2023 
+
+35\. Hemp yield and cannabinoid concentrations under variable nitrogen and potassium fertilizer rates. James et al. 2023.  https://doi.org/10.1002/csc2.20966
+
+34\. Physical Modes of Action of Fungicides Against Apple Scab: Timing Is Everything, but Dose Matters. Vincent Philion, Valentin Joubert, Marc Trapman, and Arne Stensvand. https://doi.org/10.1094/PDIS-11-22-2758-RE
+
+33\. nlive: an R Package to facilitate the application of the sigmoidal and random change point mixed models. Capuano and Wagner. https://arxiv.org/pdf/2302.10836.pdf
+
+32\. The Effect of Harvest Date on Temporal Cannabinoid and Biomass Production in the Floral Hemp (Cannabis sativa L.) Cultivars BaOx and Cherry Wine. Linder et al. 2022. . https://doi.org/10.3390/horticulturae8100959
+
+31\. Establishing Transplant Date, Plant Spacing and Harvest Date Recommendations for Floral Hemp Production. Eric Linder. MS Thesis. 2022.
+
+30\. Estimating optimal sampling area for monitoring tropical forest restoration. Londe et al. (2022). Biological Conservation. 
+https://doi.org/10.1016/j.biocon.2022.109532
+
+29\. Establishment, Growth, and Morphology of Miscanthus× Giganteus in Farmed Ephemeral Wetlands. Alex Steiner. MS Thesis. 2021.
+
+28\. Anything but Simple: Using Models and Field Studies to Explore the Effects of Cropping System Diversification in the Upper Midwestern United States. Virginia Nichols. PhD Thesis. 2021.
+
+27\. Love under lockdown: How changes in time with partner impacted stress and relationship outcomes during the COVID-19 pandemic. https://doi.org/10.1177/02654075231162599
 
 26\. Mitchell E. Baum, John E. Sawyer, Emerson D. Nafziger, Isaiah Huber, Peter J. Thorburn, Michael J. Castellano, Sotirios V. Archontoulis. Evaluating and improving APSIM's capacity in simulating long-term corn yield response to nitrogen in continuous- and rotated-corn systems, Agricultural Systems,
 Volume 207, 2023, https://doi.org/10.1016/j.agsy.2023.103629.
@@ -54,8 +103,7 @@ Published Online:23 Feb 2023https://doi.org/10.1094/PDIS-11-22-2758-RE
 
 24\. Song, S., Ding, Y., Li, W. et al. Mangrove reforestation provides greater blue carbon benefit than afforestation for mitigating global climate change. Nat Commun 14, 756 (2023). https://doi.org/10.1038/s41467-023-36477-1
 
-23\. Bonansea, S.; Ernst, O.R.; Mazzilli, S.R. Baseline for Brassica carinata Components of Nitrogen-Use
-Efficiency in Southern South America. Agronomy 2023, 13, 412. https://doi.org/10.3390/agronomy13020412
+23\. Bonansea, S.; Ernst, O.R.; Mazzilli, S.R. Baseline for Brassica carinata Components of Nitrogen-Use Efficiency in Southern South America. Agronomy 2023, 13, 412. https://doi.org/10.3390/agronomy13020412
 
 22\. Gonzalo Carracelas, Nicolas Guilpart, Kenneth G. Cassman, Patricio Grassini,
 Distinguishing between yield plateaus and yield ceilings: A case study of rice in Uruguay,

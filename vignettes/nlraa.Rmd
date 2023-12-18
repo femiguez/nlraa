@@ -72,6 +72,7 @@ One of the objectives of those publications was to introduce a large family of n
 28. SSquadp3xs (quadratic-plateau with break-point)
 29. SScard3 (temperature response with cardinal temperatures)
 30. SSscard3 (smooth temperature response with cardinal temperatures)
+31. SSharm1 (harmonic regression - linear model)
 
 ## Documentation
 
