@@ -1,9 +1,11 @@
-#' Confidence interval methods for (non)-linear models 
+#' Confidence interval methods for (non)-linear models.
+#' Method \sQuote{wald} for objects of class \sQuote{nls} uses
+#'  \code{\link[stats]{confint.default}}
 #' 
 #' @title Confidence interval methods for (non)-linear models 
 #' @name confidence_intervals
 #' @param x object of class \code{\link[stats]{lm}}, \code{\link[stats]{nls}}, \code{\link[nlme]{nlme}}, \code{\link[nlme]{gls}} or \code{\link[nlme]{gnls}}
-#' @param method method or methods to use. Possible options are: \sQuote{Wald}, \sQuote{profile}, \sQuote{bootstrap}, \sQuote{all}
+#' @param method method or methods to use. Possible options are: \sQuote{wald}, \sQuote{profile}, \sQuote{bootstrap}, \sQuote{all}
 #' @param parm optional character string to select the parameter
 #' @param level probability level
 #' @param verbose logical (default FALSE) whether to print messages
@@ -25,7 +27,6 @@
 #' }
 #' 
 
-
 confidence_intervals <- function(x, 
                                  method = c("wald", "profile", "bootstrap", "simple-bayes", "all"), 
                                  parm,
@@ -37,6 +38,13 @@ confidence_intervals <- function(x,
   
   if(length(method) == 5) method <- "wald"
   
+  if(any(method == "bootstrap")){
+    if(!requireNamespace("car", quietly = TRUE)){
+      warning("The 'car' package is required for this method")
+      return(NULL)
+    }    
+  }
+
   ## Should test for objects which are not
   ## acceptable
   
@@ -47,6 +55,12 @@ confidence_intervals <- function(x,
     R <- xargs$R
   }else{
     R <- 999
+  } 
+  
+  if(!is.null(xargs$cores)){
+    cores <- xargs$cores
+  }else{
+    cores <- 1L
   } 
   
   j <- 0
@@ -110,26 +124,26 @@ confidence_intervals <- function(x,
       
       if(verbose){
         if(inherits(x, "lm"))
-          ans.bt <- try(boot_lm(x, R = R), silent = TRUE)  
+          ans.bt <- try(boot_lm(x, R = R, cores = cores), silent = TRUE)  
         if(inherits(x, "gls"))
-          ans.bt <- try(boot_gls(x, R = R), silent = TRUE)  
+          ans.bt <- try(boot_gls(x, R = R, cores = cores), silent = TRUE)  
         if(inherits(x, "gnls"))
-          ans.bt <- try(boot_gnls(x, R = R), silent = TRUE) 
+          ans.bt <- try(boot_gnls(x, R = R, cores = cores), silent = TRUE) 
         if(inherits(x, "lme") && !inherits(x, "nlme"))
-          ans.bt <- try(boot_lme(x, R = R), silent = TRUE) 
+          ans.bt <- try(boot_lme(x, R = R, cores = cores), silent = TRUE) 
         if(inherits(x, "nlme"))
-          ans.bt <- try(boot_nlme(x, R = R), silent = TRUE) 
+          ans.bt <- try(boot_nlme(x, R = R, cores = cores), silent = TRUE) 
       }else{
         if(inherits(x, "lm"))
-          ans.bt <- try(suppressMessages(boot_lm(x, R = R)), silent = TRUE)
+          ans.bt <- try(suppressMessages(boot_lm(x, R = R, cores = cores)), silent = TRUE)
         if(inherits(x, "gls"))
-          ans.bt <- try(suppressMessages(boot_gls(x, R = R)), silent = TRUE)
+          ans.bt <- try(suppressMessages(boot_gls(x, R = R, cores = cores)), silent = TRUE)
         if(inherits(x, "gnls"))
-          ans.bt <- try(suppressMessages(boot_gnls(x, R = R)), silent = TRUE)
+          ans.bt <- try(suppressMessages(boot_gnls(x, R = R, cores = cores)), silent = TRUE)
         if(inherits(x, "lme") && !inherits(x, "nlme"))
-          ans.bt <- try(suppressMessages(boot_lme(x, R = R)), silent = TRUE)
+          ans.bt <- try(suppressMessages(boot_lme(x, R = R, cores = cores)), silent = TRUE)
         if(inherits(x, "nlme"))
-          ans.bt <- try(suppressMessages(boot_nlme(x, R = R)), silent = TRUE)
+          ans.bt <- try(suppressMessages(boot_nlme(x, R = R, cores = cores)), silent = TRUE)
       }
       
       if(inherits(ans.bt, 'try-error'))
@@ -172,8 +186,13 @@ confidence_intervals <- function(x,
                           lower = NA, estimate = NA, upper = NA)
     
     if(any(method == "wald") || any(method == "all")){
-      require(nlstools)
-      ans <- nlstools::confint2(x)
+      
+      if(missing(parm)){
+        ans <- confint.default(x, level = level)  
+      }else{
+        ans <- confint.default(x, parm = parm, level = level)
+      }
+      
       for(i in seq_len(dim(ans)[1])){
         ans.dat[i, "method"] <- "wald"
         ans.dat[i, "parm"] <- row.names(ans)[i]
@@ -209,12 +228,10 @@ confidence_intervals <- function(x,
     
     if(any(method == "bootstrap") || any(method == "all")){
       
-      require(car)
-      
       if(verbose){
-        ans.bt <- try(boot_nls(x, R = R), silent = TRUE)  
+        ans.bt <- try(boot_nls(x, R = R, cores = cores), silent = TRUE)  
       }else{
-        ans.bt <- try(suppressMessages(boot_nls(x, R = R)), silent = TRUE)
+        ans.bt <- try(suppressMessages(boot_nls(x, R = R, cores = cores)), silent = TRUE)
       }
       
       if(inherits(ans.bt, 'try-error'))

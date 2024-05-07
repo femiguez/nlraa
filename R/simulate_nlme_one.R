@@ -230,10 +230,27 @@ simulate_nlme_one <- function(object, psim = 1, level = Q, asList = FALSE, na.ac
       fix <- MASS::mvrnorm(n = 1, mu = nlme::fixef(object), Sigma = vcov(object))
       
       if(is.null(object$modelStruct$corStruct)){
-        if(is.null(args$newdata) || is.null(object$modelStruct$varStruct)){
+        ### Possible options
+        ### 1) no 'newdata' and single residual variance
+        if(is.null(args$newdata) && is.null(object$modelStruct$varStruct)){
           rsds.std <- stats::rnorm(N, 0, 1)
-          rsds <- rsds.std * attr(object[["residuals"]], "std")       
-        }else{
+          rsds <- rsds.std * attr(object[["residuals"]], "std")[1] ## This last object is a single number in this case
+        }
+        ### 2) 'newdata' and single residual variance
+        if(!is.null(args$newdata) && is.null(object$modelStruct$varStruct)){
+          rsds.std <- stats::rnorm(nrow(newdata), 0, 1)  
+          rsds <- rsds.std * attr(object[["residuals"]], "std")[1]       
+        }
+        ### 3) no 'newdata' and different residual variance
+        if(is.null(args$newdata) && !is.null(object$modelStruct$varStruct)){
+          rsds.std <- stats::rnorm(N, 0, 1)
+          obj.std <- attr(object[["residuals"]], "std")
+          if(length(rsds.std) != length(obj.std))
+            stop("residual std vector length does not match")
+          rsds <- rsds.std * obj.std
+        }
+        ### 4) 'newdata' and different residual variance
+        if(!is.null(args$newdata) && !is.null(object$modelStruct$varStruct)){
           rsds.std <- stats::rnorm(nrow(newdata), 0, 1)
           rsds <- rsds.std * predict_varFunc(object, newdata = newdata)
         }      

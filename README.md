@@ -41,43 +41,41 @@ This package supports the following publications:
    as an example. Ecology and Evolution. \
    https://doi.org/10.1002/ece3.5543
 
-Some recent publications that cite this package:
+Some recent publications that cite this package (updated 2023-12-31):
 
-51\. Moisture and nutrient management for sustainable dryland sun ower production. Loza et al. 2023. https://doi.org/10.21203/rs.3.rs-3697663/v1
+50\. Moisture and nutrient management for sustainable dryland sunflower production. Loza et al. 2023. https://doi.org/10.21203/rs.3.rs-3697663/v1
 
-50\. Nitrogen fertilizer and pronitridine rates for corn production in the Midwest U.S. Kaur et al. 2023. https://doi.org/10.1016/j.fcr.2023.109200
+49\. Nitrogen fertilizer and pronitridine rates for corn production in the Midwest U.S. Kaur et al. 2023. https://doi.org/10.1016/j.fcr.2023.109200
 
-49\. The changing landscape of paddy cultivation in Andhra Pradesh: A statistical assessment of area, production, and productivity.  https://dx.doi.org/10.22271/maths.2023.v8.i6Sc.1373  
+48\. The changing landscape of paddy cultivation in Andhra Pradesh: A statistical assessment of area, production, and productivity.  https://dx.doi.org/10.22271/maths.2023.v8.i6Sc.1373  
 
-48\. Assessment of Tissue Phosphorus Concentrations and Diagnostic Tools for Phosphorus Nutrition in Corn. Roa and Ruiz Diaz. 2023. 
+47\. Assessment of Tissue Phosphorus Concentrations and Diagnostic Tools for Phosphorus Nutrition in Corn. Roa and Ruiz Diaz. 2023. 
 
-47\. A New Scenario Framework for Equitable and Climate-Compatible Futures. Ranjan et al. 2023
+46\. A New Scenario Framework for Equitable and Climate-Compatible Futures. Ranjan et al. 2023
 
-46\. Microbial race to colonise leaf litter in a littoral-lake environment and its relation to nutrient dynamics. Madaschi et al. 2023. https://doi.org/10.1111/fwb.14173
+45\. Microbial race to colonise leaf litter in a littoral-lake environment and its relation to nutrient dynamics. Madaschi et al. 2023. https://doi.org/10.1111/fwb.14173
 
-45\. Enhancing Our Understanding of Optimal Nitrogen Fertilizer Rates for Maize: A Synthesis of Long-Term Experimentation and Crop Modeling. Baum. PhD Thesis. 2023.
+44\. Enhancing Our Understanding of Optimal Nitrogen Fertilizer Rates for Maize: A Synthesis of Long-Term Experimentation and Crop Modeling. Baum. PhD Thesis. 2023.
 
-44\. Spatial Applications for Improved Nutrient and Agronomic Management in Minnesota Cropping Systems. Nigon, Leanna. PhD Thesis. 2023. 
+43\. Spatial Applications for Improved Nutrient and Agronomic Management in Minnesota Cropping Systems. Nigon, Leanna. PhD Thesis. 2023. 
 
-43\. Genetic improvement of winter wheat (Triticum aestivum L.) grain yield in the Northern Great Plains of North America, 1959–2021, Boehm et al. 2023. https://doi.org/10.1002/csc2.21065
+42\. Genetic improvement of winter wheat (Triticum aestivum L.) grain yield in the Northern Great Plains of North America, 1959–2021, Boehm et al. 2023. https://doi.org/10.1002/csc2.21065
 
-42\. Background matching through fast and reversible melanin-based pigmentation plasticity in tadpoles comes with morphological and antioxidant changes. Liedtke et al. 2023. https://doi.org/10.1038/s41598-023-39107-4
+41\. Background matching through fast and reversible melanin-based pigmentation plasticity in tadpoles comes with morphological and antioxidant changes. Liedtke et al. 2023. https://doi.org/10.1038/s41598-023-39107-4
 
-41\. Determining cardinal temperatures for eight cover crop species. Pessotto et al. 2023. https://doi.org/10.1002/agg2.20393
+40\. Determining cardinal temperatures for eight cover crop species. Pessotto et al. 2023. https://doi.org/10.1002/agg2.20393
 
-40\. Maximizing winter wheat yield through planting date and seeding rate management. Copeland et al. 2023. https://doi.org/10.1002/cft2.20240
+39\. Maximizing winter wheat yield through planting date and seeding rate management. Copeland et al. 2023. https://doi.org/10.1002/cft2.20240
 
-39\. Accelerated leaf appearance and flowering in maize after four decades of commercial breeding. dos Santos et al. 2023. https://doi.org/10.1002/csc2.21044
+38\. Accelerated leaf appearance and flowering in maize after four decades of commercial breeding. dos Santos et al. 2023. https://doi.org/10.1002/csc2.21044
 
-38\. Irrigated corn grain yield prediction in Florida using active sensors and plant height. Leitao et al. 2023. https://doi.org/10.1016/j.atech.2023.100276
+37\. Irrigated corn grain yield prediction in Florida using active sensors and plant height. Leitao et al. 2023. https://doi.org/10.1016/j.atech.2023.100276
 
-37\. Patterns of regional site index across a North American boreal forest gradient. Montesano et al. 2023. https://doi.org/10.1088/1748-9326/acdcab
+36\. Patterns of regional site index across a North American boreal forest gradient. Montesano et al. 2023. https://doi.org/10.1088/1748-9326/acdcab
 
-36\. Methods for Improving Potassium Fertilizer Recommendations for Corn in South Dakota. Andrew j. Ahlersmeyer. MS Thesis. 2023 
+35\. Methods for Improving Potassium Fertilizer Recommendations for Corn in South Dakota. Andrew j. Ahlersmeyer. MS Thesis. 2023 
 
-35\. Hemp yield and cannabinoid concentrations under variable nitrogen and potassium fertilizer rates. James et al. 2023.  https://doi.org/10.1002/csc2.20966
-
-34\. Physical Modes of Action of Fungicides Against Apple Scab: Timing Is Everything, but Dose Matters. Vincent Philion, Valentin Joubert, Marc Trapman, and Arne Stensvand. https://doi.org/10.1094/PDIS-11-22-2758-RE
+34\. Hemp yield and cannabinoid concentrations under variable nitrogen and potassium fertilizer rates. James et al. 2023.  https://doi.org/10.1002/csc2.20966
 
 33\. nlive: an R Package to facilitate the application of the sigmoidal and random change point mixed models. Capuano and Wagner. https://arxiv.org/pdf/2302.10836.pdf
 

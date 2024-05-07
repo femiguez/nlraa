@@ -16,7 +16,7 @@ confidence_intervals(
 \arguments{
 \item{x}{object of class \code{\link[stats]{lm}}, \code{\link[stats]{nls}}, \code{\link[nlme]{nlme}}, \code{\link[nlme]{gls}} or \code{\link[nlme]{gnls}}}
 
-\item{method}{method or methods to use. Possible options are: \sQuote{Wald}, \sQuote{profile}, \sQuote{bootstrap}, \sQuote{all}}
+\item{method}{method or methods to use. Possible options are: \sQuote{wald}, \sQuote{profile}, \sQuote{bootstrap}, \sQuote{all}}
 
 \item{parm}{optional character string to select the parameter}
 
@@ -27,7 +27,9 @@ confidence_intervals(
 \item{...}{additional arguments to be passed to function \code{\link[boot]{boot}}}
 }
 \description{
-Confidence interval methods for (non)-linear models
+Confidence interval methods for (non)-linear models.
+Method \sQuote{wald} for objects of class \sQuote{nls} uses
+ \code{\link[stats]{confint.default}}
 }
 \examples{
 \donttest{

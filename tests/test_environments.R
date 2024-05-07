@@ -1,5 +1,5 @@
 ## Test and learn scoping and environments
-## I need to refine this and add more notes related to whay I learned
+## I need to refine this and add more notes related to what I learned
 
 run.test.environments <- FALSE
 

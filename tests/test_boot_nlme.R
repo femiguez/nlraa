@@ -105,6 +105,7 @@ if(run.boot.test){
   fna <- function(x) fixef(x)[1] + fixef(x)[2] * fixef(x)[3]
 
   ## This takes much longer... 215-237 seconds on my laptop
+  ## On Dell Precision it takes 69 seconds
   system.time(fit.bar.nlme.bt <- boot_nlme(fit.bar.nlme, f = fna, R = 2000, cores = 4))
 
   confint(fit.bar.nlme.bt, type = "perc")
@@ -135,6 +136,7 @@ if(run.boot.test){
   ## system.time(fm1.bt <- boot_nlme(fm1, R = 10, cores = 4))
   ## What about the second model?
   ## This one takes about 39 sec (Mac and Windows?)
+  ## This takes 16s on Dell Precision
   system.time(fm2.bt <- boot_nlme(fm2, R = 1000, cores = 4))
   
   summary(fm2.bt)
@@ -165,8 +167,9 @@ if(run.boot.test){
 
   anova(fm2, fm3)
   ## Bootstrap the random effects
-  vcov_est <- function(x) diag(var_cov(x, type = "random"))
+  vcov_est <- function(x) diag(nlraa::var_cov(x, type = "random"))
   
+  ## This takes 7.55s on Dell Precision
   system.time(fm3.vc.bt2 <- boot_nlme(fm3, vcov_est, psim = 2, cores = 4))
   
   fm3.vc.bt2
