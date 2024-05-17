@@ -138,6 +138,11 @@ if(run.test.simulate.lme){
     geom_point(data = Orange, aes(x = age, y = circumference, color = Tree)) + 
     geom_line(data = Orange.newdata, aes(x = age, y = prd, color = Tree)) + 
     geom_ribbon(data = Orange.newdata, aes(x = age, ymin = lwr, ymax = upr, fill = Tree), alpha = 0.1)
+  
+  #### New data with prediction ----
+  prd11 <- predict_lme(fm1, plevel = 1, interval = "prediction", newdata = Orange.newdata)
+  
+  
 }
 
 if(run.test.simulate.lme){
