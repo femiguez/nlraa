@@ -29,7 +29,7 @@
 #' @param model either a nonlinear model formula, with the response on the left of a ~ operator and an expression involving parameters, covariates, and a grouping factor separated by the | operator on the right, or a selfStart function. 
 #' @param data a data frame
 #' @param start list with starting values
-#' @param control control list, see \code{\link{nls}}
+#' @param control control list, see \code{\link[stats]{nls}}
 #' @param level an optional integer specifying the level of grouping to be used when multiple nested levels of grouping are present.
 #' @param subset subset of rows to use
 #' @param na.action a function that indicates what should happen when the data contain NAs. The default action (na.fail) causes nlsList to print an error message and terminate if there are any incomplete observations.
@@ -39,8 +39,8 @@
 #' @param pool an optional logical value that is preserved as an attribute of the returned value. This will be used as the default for pool in calculations of standard deviations or standard errors for summaries.
 #' @param warn.nls logical indicating if nls errors (all of which are caught by tryCatch) should be signalled as a “summarizing” warning.
 #' @details See function \code{\link[nlme]{nlsList}} and \code{\link[minpack.lm]{nlsLM}}. This function is a copy of nlsList but with minor changes to use LM instead as the default algorithm. The authors of the original function are Pinheiro and Bates.
-#' @author Jose C. Pinheiro and Douglas M. Bates \email{bates@@stat.wisc.edu} wrote the original \code{\link[nlme]{nlsList}}. Fernando E. Miguez made minor changes to use \code{\link[minpack.lm]{nlsLM}} in addition to (optionally) \code{\link{nls}}. R-Core maintains copyright after 2006.
-#' @return an object of class \sQuote{nlsList}
+#' @author Jose C. Pinheiro and Douglas M. Bates \email{bates@@stat.wisc.edu} wrote the original \code{\link[nlme]{nlsList}}. Fernando E. Miguez made minor changes to use \code{\link[minpack.lm]{nlsLM}} in addition to (optionally) \code{\link[nlme]{nls}}. R-Core maintains copyright after 2006.
+#' @return an object of class \code{\link[nlme]{nlsList}}
 #' @export
 #' 
 
@@ -53,7 +53,7 @@ nlsLMList <-
       UseMethod("nlsLMList")
 
 #' @rdname nlsLMList
-#' @return an object of class \sQuote{nlsList}
+#' @return an object of class \code{\link[nlme]{nlsList}}
 #' @export
 nlsLMList.selfStart <-
   function (model, data, start, control, level, subset, na.action = na.fail,
@@ -90,19 +90,19 @@ nlsLMList.selfStart <-
 #' @title Formula method for nls \sQuote{LM} list method
 #' @name nlsLMList.formula
 #' @description formula method for nlsLMList
-#' @param model see \code{\link{nlsList}}
-#' @param data see \code{\link{nlsList}}
-#' @param start see \code{\link{nlsList}}
-#' @param control see \code{\link{nls}}
-#' @param level see \code{\link{nlsList}}
-#' @param subset see \code{\link{nlsList}}
-#' @param na.action see \code{\link{nlsList}}
+#' @param model see \code{\link[nlme]{nlsList}}
+#' @param data see \code{\link[nlme]{nlsList}}
+#' @param start see \code{\link[nlme]{nlsList}}
+#' @param control see \code{\link[stats]{nls}}
+#' @param level see \code{\link[nlme]{nlsList}}
+#' @param subset see \code{\link[nlme]{nlsList}}
+#' @param na.action see \code{\link[nlme]{nlsList}}
 #' @param algorithm choice of algorithm default is \sQuote{LM} which uses \sQuote{nlsLM} from the minpack.lm package.
 #' @param lower vectors of lower and upper bounds, replicated to be as long as start. If unspecified, all parameters are assumed to be unconstrained. Bounds can only be used with the \dQuote{port} algorithm. They are ignored, with a warning, if given for other algorithms.
 #' @param upper see \sQuote{lower}
-#' @param pool see \code{\link{nlsList}}
-#' @param warn.nls see \code{\link{nlsList}}
-#' @return an object of class \sQuote{nlsList}
+#' @param pool see \code{\link[nlme]{nlsList}}
+#' @param warn.nls see \code{\link[nlme]{nlsList}}
+#' @return an object of class \code{\link[nlme]{nlsList}}
 #' @export
 nlsLMList.formula <-
   function(model, data, start = NULL, control, level, subset,

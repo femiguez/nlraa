@@ -56,26 +56,46 @@ blinInit <- function(mCall, LHS, data, ...){
     ans <- sum((xy[,"y"] - pred)^2)
     ans
   }
-  cfs <- c(coef(fit1),mean(xy[,"x"]),coef(fit2)[2])
-  op <- try(stats::optim(cfs, objfun, method = "L-BFGS-B",
-                         upper = c(Inf, Inf, max(xy[,"x"]),Inf),
-                         lower = c(-Inf, -Inf, min(xy[,"x"])),-Inf), silent = TRUE)
   
-  if(!inherits(op, "try-error")){
-    a <- op$par[1]
-    b <- op$par[2]
-    xs <- op$par[3]
-    c <- op$par[4]
-  }else{
+  res <- list()
+  j <- 1
+  for(i in 1:10){
+    cfs <- c(coef(fit1), max(xy[,"x"])/i, coef(fit2)[2])
+    # op <- try(stats::optim(cfs, objfun, method = "L-BFGS-B",
+    #                        upper = c(Inf, Inf, max(xy[,"x"]), Inf),
+    #                        lower = c(-Inf, -Inf, min(xy[,"x"])), -Inf), silent = TRUE)
+    op <- try(stats::optim(cfs, objfun), silent = TRUE)
+    if(!inherits(op, "try-error")){
+      res[[j]] <- op
+      j <- j + 1
+    }
+  }
+  
+  if(all(sapply(res, \(x) inherits(x, 'try-error')))){
     ## If it fails I use the mean
     a <- coef(fit1)[1]
     b <- coef(fit1)[2]
     xs <- mean(xy[,"x"])
-    c <- coef(fit2)[2]
+    c <- coef(fit2)[2]     
+  }else{
+    vals <- sapply(res, \(x) x$value)
+    if(all(is.na(vals))){
+      a <- coef(fit1)[1]
+      b <- coef(fit1)[2]
+      xs <- mean(xy[,"x"])
+      c <- coef(fit2)[2]    
+    }else{
+      wminvals <- which.min(vals)
+      op <- res[[wminvals]]      
+      a <- op$par[1]
+      b <- op$par[2]
+      xs <- op$par[3]
+      c <- op$par[4] 
+    }
   }
-  
+
   value <- c(a, b, xs, c)
-  names(value) <- mCall[c("a","b","xs","c")]
+  names(value) <- mCall[c("a", "b", "xs", "c")]
   value
 }
 

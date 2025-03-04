@@ -1,4 +1,4 @@
-## Testing predict_gam
+## Testing predict_gam and predict2_gam
 require(nlraa)
 library(mgcv)
 require(minpack.lm)
@@ -54,7 +54,7 @@ if(Sys.info()[["user"]] == "fernandomiguez"){
     geom_line(aes(y = fitted(fsw.LP), color = "LP")) + 
     geom_line(aes(y = fitted(fsw.A), color = "A")) +
     geom_line(aes(y = fitted(fsw.C), color = "C")) +
-    geom_line(aes(y = Estimate, color = "Avg. model"), size = 1.2) +
+    geom_line(aes(y = Estimate, color = "Avg. model"), linewidth = 1.2) +
     geom_ribbon(aes(ymin = Q2.5, ymax = Q97.5), fill = "purple", alpha = 0.3)
   
   data(sm)

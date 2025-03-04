@@ -125,5 +125,5 @@ ggplot(data = Orange, aes(x = age, y = circumference)) +
 }
 }
 \seealso{
-\code{\link{predict.nlme}} \code{\link{predict.lme}} \code{\link{predict.gnls}}
+\code{\link[nlme]{predict.nlme}} \code{\link[nlme]{predict.lme}} \code{\link[nlme]{predict.gnls}}
 }

@@ -20,19 +20,19 @@
 )
 }
 \arguments{
-\item{model}{see \code{\link{nlsList}}}
+\item{model}{see \code{\link[nlme]{nlsList}}}
 
-\item{data}{see \code{\link{nlsList}}}
+\item{data}{see \code{\link[nlme]{nlsList}}}
 
-\item{start}{see \code{\link{nlsList}}}
+\item{start}{see \code{\link[nlme]{nlsList}}}
 
-\item{control}{see \code{\link{nls}}}
+\item{control}{see \code{\link[stats]{nls}}}
 
-\item{level}{see \code{\link{nlsList}}}
+\item{level}{see \code{\link[nlme]{nlsList}}}
 
-\item{subset}{see \code{\link{nlsList}}}
+\item{subset}{see \code{\link[nlme]{nlsList}}}
 
-\item{na.action}{see \code{\link{nlsList}}}
+\item{na.action}{see \code{\link[nlme]{nlsList}}}
 
 \item{algorithm}{choice of algorithm default is \sQuote{LM} which uses \sQuote{nlsLM} from the minpack.lm package.}
 
@@ -40,12 +40,12 @@
 
 \item{upper}{see \sQuote{lower}}
 
-\item{pool}{see \code{\link{nlsList}}}
+\item{pool}{see \code{\link[nlme]{nlsList}}}
 
-\item{warn.nls}{see \code{\link{nlsList}}}
+\item{warn.nls}{see \code{\link[nlme]{nlsList}}}
 }
 \value{
-an object of class \sQuote{nlsList}
+an object of class \code{\link[nlme]{nlsList}}
 }
 \description{
 formula method for nlsLMList

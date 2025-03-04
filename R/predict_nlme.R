@@ -18,7 +18,7 @@
 #' @return numeric vector of the same length as the fitted object.
 #' @note all the objects should be fitted to the same data. The weights are
 #' based on the IC value.
-#' @seealso \code{\link{predict.nlme}} \code{\link{predict.lme}} \code{\link{predict.gnls}}
+#' @seealso \code{\link[nlme]{predict.nlme}} \code{\link[nlme]{predict.lme}} \code{\link[nlme]{predict.gnls}}
 #' @export
 #' @examples
 #' \donttest{

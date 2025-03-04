@@ -1,4 +1,6 @@
 #' 
+#' 
+#' 
 #' @title Average predictions from several (non)linear models based on IC weights
 #' @name predict_nls
 #' @rdname predict_nls
@@ -85,7 +87,7 @@ predict_nls <- function(..., criteria = c("AIC", "AICc", "BIC"),
   
   for(i in seq_len(lobjs)){
     nls.obj <- nls.objs[[i]]
-    if(!inherits(nls.obj, c("nls","lm"))) stop("All objects should be of class 'nls' or 'lm'")
+    if(!inherits(nls.obj, c("nls","lm"))) stop("All objects should inherit class 'nls' or 'lm'")
     if(data.name != as.character(nls.obj$call$data)) stop("All models should be fitted to the same data")
     
     wtab$model[i] <- nls.nms[i]
@@ -356,9 +358,10 @@ predict_gam <- function(object, newdata=NULL, type="link", se.fit=TRUE, terms=NU
     if(missing(tvalue)){
       tvalue <- stats::qt(level, df = object$df.residual)
     }
-    lwr <- prd$fit - tvalue * sqrt(prd$se.fit^2 + sigma(object)^2)
-    upr <- prd$fit + tvalue * sqrt(prd$se.fit^2 + sigma(object)^2)
-    ans <- data.frame(Estimate = prd$fit, Est.Error = prd$se.fit, lwr = lwr, upr = upr)
+    se.fit.pred <- sqrt(prd$se.fit^2 + sigma(object)^2)
+    lwr <- prd$fit - tvalue * se.fit.pred
+    upr <- prd$fit + tvalue * se.fit.pred
+    ans <- data.frame(Estimate = prd$fit, Est.Error = se.fit.pred, lwr = lwr, upr = upr)
     names(ans) <- c("Estimate", "Est.Error", paste0("Q", 100*(1 - level)/2), paste0("Q", 100 * (1 - (1 - level)/2)))
   }
   return(ans)
@@ -445,7 +448,7 @@ predict2_nls <- function(object, newdata = NULL,
                          level = 0.95){
   
   if(!inherits(object, "nls"))
-    stop("This function is only for objects of class 'nls'")
+    stop("This function is only for objects which inherit class 'nls'")
   
   interval <- match.arg(interval)
   npar <- length(coef(object))

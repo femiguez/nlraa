@@ -26,17 +26,17 @@ a numeric vector of the same length as x containing parameter estimates for equa
 quadpq: vector of the same length as x using the quadratic-plateau-quadratic function
 }
 \description{
-Self starter for quadratic plateau function with (four) parameters a (intercept), b (slope), xs (break-point), dxs (difference between breakpoint and second break-point)
+Self starter for quadratic plateau function with (four) parameters a (intercept), b (slope), xs (break-point), ldxs (log of the difference between break-point and second break-point)
 }
 \details{
 The equation is, for a response (y) and a predictor (x): \cr
-  \eqn{y ~ (x <= xs) * (a + b * x + (-0.5 * b/xs) * x^2) + (x > xs) * (a + (b^2)/(-2 * b/xs))} \cr
+  \eqn{y ~ (x <= xs) * (a + b * x + (-0.5 * b/xs) * x^2) + 
+  (x > xs & x <= (xs + dxs)) * (a + (-b^2)/(4 * -0.5 * b/xs)) + 
+  (x > (xs + dxs)) * ((a + (-b^2)/(4 * -0.5 * b/xs)) + ((-0.5 * b/xs) * (x - (xs + dxs))^2))} \cr
   
-where the quadratic term is (c) is -0.5*b/xs \cr
-and the asymptote is (a + (b^2)/(4 * c)).
-
-This model does not estimate the quadratic parameter \sQuote{c} directly. 
-If this is required, the model \sQuote{SSquadp3} should be used instead.
+ This is a somewhat complicated equation. The interpretation of the parameters are simple.
+ The model is parameterized in terms of the log of dxs (or ldxs). The parameter is ensured
+ to be positive by taking the exponential.
 }
 \examples{
 \donttest{

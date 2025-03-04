@@ -42,7 +42,7 @@ nlsLMList(
 
 \item{start}{list with starting values}
 
-\item{control}{control list, see \code{\link{nls}}}
+\item{control}{control list, see \code{\link[stats]{nls}}}
 
 \item{level}{an optional integer specifying the level of grouping to be used when multiple nested levels of grouping are present.}
 
@@ -61,9 +61,9 @@ nlsLMList(
 \item{warn.nls}{logical indicating if nls errors (all of which are caught by tryCatch) should be signalled as a “summarizing” warning.}
 }
 \value{
-an object of class \sQuote{nlsList}
+an object of class \code{\link[nlme]{nlsList}}
 
-an object of class \sQuote{nlsList}
+an object of class \code{\link[nlme]{nlsList}}
 }
 \description{
 This function is a copy of 'nlsList' from the 'nlme' package modified
@@ -74,5 +74,5 @@ to use 'nls' as well
 See function \code{\link[nlme]{nlsList}} and \code{\link[minpack.lm]{nlsLM}}. This function is a copy of nlsList but with minor changes to use LM instead as the default algorithm. The authors of the original function are Pinheiro and Bates.
 }
 \author{
-Jose C. Pinheiro and Douglas M. Bates \email{bates@stat.wisc.edu} wrote the original \code{\link[nlme]{nlsList}}. Fernando E. Miguez made minor changes to use \code{\link[minpack.lm]{nlsLM}} in addition to (optionally) \code{\link{nls}}. R-Core maintains copyright after 2006.
+Jose C. Pinheiro and Douglas M. Bates \email{bates@stat.wisc.edu} wrote the original \code{\link[nlme]{nlsList}}. Fernando E. Miguez made minor changes to use \code{\link[minpack.lm]{nlsLM}} in addition to (optionally) \code{\link[nlme]{nls}}. R-Core maintains copyright after 2006.
 }

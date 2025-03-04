@@ -10,6 +10,7 @@ summary_simulate(
   robust = FALSE,
   data,
   by,
+  na.rm = FALSE,
   ...
 )
 }
@@ -26,9 +27,11 @@ If TRUE, the median and the median absolute deviation (MAD) are applied instead.
 \item{data}{the original data.frame used to fit the model. A data.frame will be
 returned instead of a matrix in this case.}
 
-\item{by}{opionally aggregate the results by some factor in the data.frame. It 
-will be coarced to a formula. This should either be a character or a formula (starting with \sQuote{~}).
+\item{by}{optionally aggregate the results by some factor in the data.frame. It 
+will be coerced to a formula. This should either be a character or a formula (starting with \sQuote{~}).
 The aggregation follows the \sQuote{robust} argument above.}
+
+\item{na.rm}{whether to remove missing values (default is FALSE).}
 
 \item{...}{additional arguments to be passed. (none used at the moment)}
 }

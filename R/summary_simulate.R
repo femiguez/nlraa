@@ -11,9 +11,10 @@
 #' If TRUE, the median and the median absolute deviation (MAD) are applied instead. 
 #' @param data the original data.frame used to fit the model. A data.frame will be
 #' returned instead of a matrix in this case.
-#' @param by opionally aggregate the results by some factor in the data.frame. It 
-#' will be coarced to a formula. This should either be a character or a formula (starting with \sQuote{~}).
+#' @param by optionally aggregate the results by some factor in the data.frame. It 
+#' will be coerced to a formula. This should either be a character or a formula (starting with \sQuote{~}).
 #' The aggregation follows the \sQuote{robust} argument above.
+#' @param na.rm whether to remove missing values (default is FALSE).
 #' @param ... additional arguments to be passed. (none used at the moment)
 #' @return By default it returns a matrix unless the \sQuote{data} argument is present and then
 #' it will return a data.frame
@@ -37,7 +38,7 @@
 #'
 
 summary_simulate <- function(object, probs = c(0.025, 0.975), robust = FALSE, 
-                             data, by, ...){
+                             data, by, na.rm = FALSE, ...){
   
   if(!inherits(object, "matrix")) stop("'object' should be a matrix")
   
@@ -49,14 +50,14 @@ summary_simulate <- function(object, probs = c(0.025, 0.975), robust = FALSE,
   upr.lbl <- paste0("Q", upr * 1e2)
   colnames(mat) <- c("Estimate", "Est.Error", lwr.lbl, upr.lbl)
   
-  mat[,1] <- apply(object, 1, mean)
-  mat[,2] <- apply(object, 1, stats::sd)
-  mat[,3] <- apply(object, 1, stats::quantile, probs = lwr)
-  mat[,4] <- apply(object, 1, stats::quantile, probs = upr)
+  mat[,1] <- apply(object, 1, mean, na.rm = na.rm)
+  mat[,2] <- apply(object, 1, stats::sd, na.rm = na.rm)
+  mat[,3] <- apply(object, 1, stats::quantile, probs = lwr, na.rm = na.rm)
+  mat[,4] <- apply(object, 1, stats::quantile, probs = upr, na.rm = na.rm)
 
   if(robust){
-    mat[,1] <- apply(object, 1, stats::median)
-    mat[,2] <- apply(object, 1, stats::mad)
+    mat[,1] <- apply(object, 1, stats::median, na.rm = na.rm)
+    mat[,2] <- apply(object, 1, stats::mad, na.rm = na.rm)
   } 
   
   if(!missing(by) && missing(data))
@@ -84,9 +85,9 @@ summary_simulate <- function(object, probs = c(0.025, 0.975), robust = FALSE,
       agf <- as.formula(paste0(c(agf0, paste0("~", by)), collapse = " "))
       
       if(!robust){
-        ans <- stats::aggregate(agf, data = dat, FUN = mean)
+        ans <- stats::aggregate(agf, data = dat, FUN = mean, na.rm = na.rm)
       }else{
-        ans <- stats::aggregate(agf, data = dat, FUN = median)
+        ans <- stats::aggregate(agf, data = dat, FUN = median, na.rm = na.rm)
       } 
     }
   } 

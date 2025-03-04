@@ -1,17 +1,17 @@
 #' 
 #' The equation is, for a response (y) and a predictor (x): \cr
-#'   \eqn{y ~ (x <= xs) * (a + b * x + (-0.5 * b/xs) * x^2) + (x > xs) * (a + (b^2)/(-2 * b/xs))} \cr
+#'   \eqn{y ~ (x <= xs) * (a + b * x + (-0.5 * b/xs) * x^2) + 
+#'   (x > xs & x <= (xs + dxs)) * (a + (-b^2)/(4 * -0.5 * b/xs)) + 
+#'   (x > (xs + dxs)) * ((a + (-b^2)/(4 * -0.5 * b/xs)) + ((-0.5 * b/xs) * (x - (xs + dxs))^2))} \cr
 #'   
-#' where the quadratic term is (c) is -0.5*b/xs \cr
-#' and the asymptote is (a + (b^2)/(4 * c)).
-#' 
-#' This model does not estimate the quadratic parameter \sQuote{c} directly. 
-#' If this is required, the model \sQuote{SSquadp3} should be used instead.
-#' 
+#'  This is a somewhat complicated equation. The interpretation of the parameters are simple.
+#'  The model is parameterized in terms of the log of dxs (or ldxs). The parameter is ensured
+#'  to be positive by taking the exponential.
+#'  
 #' @title self start for quadratic-plateau-quadratic function (xs)
 #' @name SSquadpq
 #' @rdname SSquadpq
-#' @description Self starter for quadratic plateau function with (four) parameters a (intercept), b (slope), xs (break-point), dxs (difference between breakpoint and second break-point)
+#' @description Self starter for quadratic plateau function with (four) parameters a (intercept), b (slope), xs (break-point), ldxs (log of the difference between break-point and second break-point)
 #' @param x input vector 
 #' @param a the intercept
 #' @param b the slope
@@ -50,7 +50,52 @@ quadpqInit <- function(mCall, LHS, data, ...){
   c <- coef(fit)[3]
   xs <- -0.5 * b/c
   ldxs <- log(max(xy[, "x"], na.rm = TRUE) * 0.25)
-  ## If I fix a and b maybe I can try to optimze xs only
+  
+  objfun <- function(cfs){
+    pred <- quadpq(xy[,"x"], a=cfs[1], b=cfs[2], xs=cfs[3], ldxs = cfs[4])
+    ans <- sum((xy[,"y"] - pred)^2)
+    ans
+  }
+  
+  res <- list()
+  j <- 1
+  for(i in 1:5){
+    cfs <- c(a, b, max(xy[,"x"])/i, log(0.3 * max(xy[,"x"])/i))
+    op <- try(stats::optim(cfs, objfun), silent = TRUE)
+    if(!inherits(op, "try-error")){
+      res[[j]] <- op
+      j <- j + 1
+    }
+  }
+  
+  if(all(sapply(res, \(x) inherits(x, 'try-error')))){
+    ## If all fail
+    a <- coef(fit)[1]
+    b <- coef(fit)[2]
+    c <- coef(fit)[3]
+    xs <- -0.5 * b/c
+    ldxs <- log(max(xy[, "x"], na.rm = TRUE) * 0.25)   
+  }else{
+    vals <- sapply(res, \(x) x$value)
+    if(all(is.na(vals))){
+      a <- coef(fit)[1]
+      b <- coef(fit)[2]
+      c <- coef(fit)[3]
+      xs <- -0.5 * b/c
+      ldxs <- log(max(xy[, "x"], na.rm = TRUE) * 0.25)   
+    }else{
+      wminvals <- which.min(vals)
+      op <- res[[wminvals]]      
+      a <- op$par[1]
+      b <- op$par[2]
+      xs <- op$par[3]
+      ldxs <- op$par[4] 
+      if(ldxs > log(diff(range(xy[, "x"])))){
+        ldxs <- log(max(xy[, "x"], na.rm = TRUE) * 0.25)   
+      }
+    }
+  }
+  
   value <- c(a, b, xs, ldxs)
   names(value) <- mCall[c("a", "b", "xs", "ldxs")]
   value
@@ -67,6 +112,7 @@ quadpq <- function(x, a, b, xs, ldxs){
     (x > (xs + dxs)) * ((a + (-b^2)/(4 * -0.5 * b/xs)) + ((-0.5 * b/xs) * (x - (xs + dxs))^2))
  
   ## Derivative with respect to a
+  ## The derivative is always 1, regardless of the phase?
   .exp1 <- 1
   
   ## Derivative with respect to b
@@ -107,8 +153,16 @@ quadpq <- function(x, a, b, xs, ldxs){
   .exp4 <- ifelse(x < (xs + dxs), 0, -(.expr10 * (2 * .expr12)))
   ## print(.exp4)
   
-  .actualArgs <- as.list(match.call()[c("a","b","xs","ldxs")])
+  .actualArgs <- as.list(match.call()[c("a", "b", "xs", "ldxs")])
   
+  if(FALSE){
+    cat("Gradients... a:", round(.exp1, 3), 
+        "_ b:", round(.exp2, 3),
+        "_ xs:", round(.exp3, 3),
+        "_ ldxs:", round(.exp4, 3), "\n")
+  }
+  
+  ## Try to only return a gradient if the values are good?
   ## Something wrong with the gradient, need to fix it
   ##  Gradient
   # if (all(unlist(lapply(.actualArgs, is.name)))) {
