@@ -41,7 +41,151 @@ This package supports the following publications:
    as an example. Ecology and Evolution. \
    https://doi.org/10.1002/ece3.5543
 
-Some recent publications that cite this package (updated 2023-12-31):
+Some recent publications that cite this package (updated 2025-3-8):
+
+87\. Individual Growth of Sonoran Desert Tortoises (Gopherus morafkai) 
+in an Arizona Population: Implications for Conservation and Management.
+Roy C. Averill-Murray. https://doi.org/10.2744/CCB-1642.1
+
+86\. Leaf phosphorus concentration as a diagnostic tool for predicting 
+grape composition in subtropical viticulture. Stefanello et al. (2025).
+https://doi.org/10.1016/j.eja.2025.127555
+
+85\. Chevalère, J., Berthon, M., Rocher, N. et al. A digital safe space 
+for learning: how computer-assisted instruction supports students with 
+lower academic self-concept. Educ Inf Technol (2025).
+https://doi.org/10.1007/s10639-025-13424-9
+
+84\. Approximately 15% of Miscanthus yield is lost at current
+commercial cutting heights in Iowa. Petersen et al. (2025).
+https://doi.org/10.1002/agg2.70039
+
+83\. Velocity as an overlooked driver in the echolocation behavior of aerial 
+hawking vespertilionid bats. Jakobsen, Lasse et al.
+Current Biology, Volume 35, Issue 4, 918 - 926.e4.
+ https://doi.org/10.1016/j.cub.2024.12.042
+
+82\. Sorghum leaves more residue with a higher decomposition rate than maize.
+Parra et al. (2025). European Journal of Agronomy. https://doi.org/10.1016/j.eja.2025.127515
+
+81\. Energy requirements for sustainable human development. 
+Ranjan and Kanitkar. (2025). https://doi.org/10.1016/j.esd.2024.101648
+
+80\. Della Chiesa, T., Northrup, D., Miguez, F.E. et al. Reducing greenhouse 
+gas emissions from North American soybean production. 
+Nat Sustain 7, 1608–1615 (2024). https://doi.org/10.1038/s41893-024-01458-9
+
+79\. The roots of the rotation effect run deep. Nichols et al. (2024).
+Field Crops Research. https://doi.org/10.1016/j.fcr.2024.109640
+
+78\. Abramov, A.A., Lakomkin, V.L., Lukoshkova, E.V. et al. Pulmonary 
+Arterial Hypertntion Causes Disregultion of Systemic Circulation via 
+Supressesion of Baroceptor Control of the Heart Rhytm. 
+J Evol Biochem Phys 60, 2098–2115 (2024). 
+https://doi.org/10.1134/S0022093024050338
+
+77\. Historical increases of maize leaf area index in the US 
+Corn Belt due primarily to plant density increases. George Kalogeropoulos et al.
+Field Crops Research (2024). https://doi.org/10.1016/j.fcr.2024.109615
+
+76\. Efficacy of Essential Oil for Maintaining Postharvest Quality 
+and Reducing Decay of Peach Fruit. Yuru Chang. (2024).
+University of Florida. MS Thesis. 
+
+75\. Carson, R.G., Leemans, A. Quantitative metrics commonly derived 
+from diffusion tractography covary with streamline length: 
+a characterization and method of adjustment. 
+Brain Struct Funct 229, 2431–2444 (2024). 
+https://doi.org/10.1007/s00429-024-02854-9
+
+74\. Glocker, B., Mastný, J., Picek, T. et al. Environmental Effects on 
+Assimilated Carbon Quantity and Quality in Two Different 
+Wet Grassland Plants. Wetlands 44, 91 (2024). 
+https://doi.org/10.1007/s13157-024-01853-0
+
+73\. Multistart nonlinear least squares fitting with {gslnls}.
+https://jchau.org/2024/07/31/multistart-nonlinear-least-squares-with-gslnls/
+
+72\. Transit Board Diversity and Pandemic Service Cuts in Vulnerable Communities.
+Voulgaris et al. (2024). https://doi.org/10.1177/03611981241263346
+
+71\. Planting Practices for Improved Stand Establishment and Yield Potential in Winter Wheat.
+James Copeland. (2024). Michigan State University. MS Thesis.
+
+70\. Stomatal behaviour and water relations in ferns and lycophytes across 
+habits and habitats. Prats et al. (2024). https://doi.org/10.1093/aobpla/plae041
+
+69\. Increasing Wheat Protein and Yield through Sulfur Fertilization
+and Its Relationship with Nitrogen. Roa et al. (2024). 
+https://doi.org/10.3390/nitrogen5030037
+
+68\. The finger weeder cultivator for intra-row mechanical weed
+control: Effects of uprooting force on selected weed species.
+Asaf et al. (2024). Weed Research. https://doi.org/10.1111/wre.12652
+
+67\. Models and sufficiency interpretation for estimating critical soil
+test values for the Fertilizer Recommendation Support Tool. Slaton et al.
+(2024).  https://doi.org/10.1002/saj2.20704
+
+66\. Developing aboveground biomass yield curves for dominant boreal 
+tree species from time series remote sensing data. (2024).
+Tompalski et al. https://doi.org/10.1016/j.foreco.2024.121894
+
+65\. Kinetic modelling of anthocyanins and vitamin C degradation in a 
+maqui-citrus beverage during storage for different sweeteners and 
+pasteurization treatments. (2024). Hernandez-Prieto et al. 
+https://doi.org/10.1016/j.lwt.2024.116082
+
+64\. Modelling the dynamics of microbial populations and Salmonella spp. 
+in milk kefir. Caballero et al. (2024) https://doi.org/10.1016/j.fbp.2024.04.002
+
+63\. Performance Evaluation of Predictive Models for Coconut Crop Production 
+in Karnataka Using Weather Parameters. Harshith et al. (2024).
+https://doi.org/10.9734/ijecc/2024/v14i34073
+
+62\. In Vitro Antifungal Activity of White Thyme, Oregano, and Savory Oils 
+Against Five Monilinia fructicola Isolates from the Southeastern United States.
+Chang et al. (2024). https://doi.org/10.1094/PHP-12-23-0111-RS
+
+61\. Tractography derived quantitative estimates of tissue microstructure 
+depend on streamline length: A characterization and method of adjustment. 
+Richard G. Carsona and Alexander Leemans. https://arxiv.org/pdf/2403.02102
+
+60\. Identifying existing pattern in area and production of
+major food grains in Karnataka using linear and nonlinear statistical models.
+Ragini HR and Harshith KV. https://dx.doi.org/10.22271/maths.2024.v9.i1b.1615
+
+59\. Do newer maize hybrids grow roots faster and deeper? Sciarresi et al.
+Crop Science (2024).  https://doi.org/10.1002/csc2.21208
+
+58\. Functional principal component analysis as an alternative to mixed-effect models for describing 
+sparse repeated measures in presence of missing data. arXiv:2402.10624v1 [stat.ME] 16 Feb 2024.
+
+57\. Schöpke, B., Wesche, K., Tschan, G.F. et al. Plant species richness increase across crop
+field–dry grassland edges masks diverging patterns in generalists and specialists. 
+Landsc Ecol 39, 39 (2024). https://doi.org/10.1007/s10980-024-01843-x
+
+56\. Fitting Power-Law Relationships in Watershed Science and Analysis, 
+with an Example Using the R Language. R. Dan Moore (2024).  
+https://doi.org/10.22230/jwsm.2024v7n1a53
+
+55\. Genetic gains in short-season corn hybrids: Grain yield, yield
+components, and grain quality traits. King et al. (2024). 
+Crop Scences. https://doi.org/10.1002/csc2.21199
+
+54\. High-throughput phenotyping reveals multiple drought responses of wild and cultivated Phaseolinae beans.
+Verheyen et al. Volume 15 - 2024 | https://doi.org/10.3389/fpls.2024.1385985
+
+53\. Matavel, C.E., Meyer-Aurich, A. & Piepho, HP. Model-averaging as an accurate approach for ex-post economic 
+optimum nitrogen rate estimation. Precision Agric 25, 1324–1339 (2024). 
+https://doi.org/10.1007/s11119-024-10113-4
+
+52\. From a point to a range of optimum estimates for maize plant
+density and nitrogen rate recommendations. King et al. (2023).
+https://doi.org/10.1002/agj2.21516
+
+51\. Askarieh, A., del Río, M., Aldea, J. et al. Radial increment dynamics of Maritime pine (Pinus pinaster Ait.) in pure and mixed stands with Scots pine (Pinus sylvestris L.) under changing environmental conditions. 
+Eur J Forest Res 143, 671–686 (2024). https://doi.org/10.1007/s10342-023-01650-0
 
 50\. Moisture and nutrient management for sustainable dryland sunflower production. Loza et al. 2023. https://doi.org/10.21203/rs.3.rs-3697663/v1
 
