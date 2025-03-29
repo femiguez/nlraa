@@ -9,7 +9,7 @@
 #' @param b parameter controlling the spread (associated with a cubic term)
 #' @param xc centering parameter
 #' @return a numeric vector of the same length as x containing parameter estimates for equation specified
-#' @details This function is described in Archontoulis and Miguez (2015) - (doi:10.2134/agronj2012.0506). One example application is Hammer et al. (2009) (doi:10.2135/cropsci2008.03.0152).
+#' @details This function is described in Archontoulis and Miguez (2015) - \doi{10.2134/agronj2012.0506}. One example application is Hammer et al. (2009) \doi{10.2135/cropsci2008.03.0152}.
 #' @export
 #' @examples 
 #' \donttest{

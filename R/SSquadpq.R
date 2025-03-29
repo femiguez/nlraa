@@ -8,14 +8,14 @@
 #'  The model is parameterized in terms of the log of dxs (or ldxs). The parameter is ensured
 #'  to be positive by taking the exponential.
 #'  
-#' @title self start for quadratic-plateau-quadratic function (xs)
+#' @title self start for quadratic-plateau-quadratic (QPQ) function 
 #' @name SSquadpq
 #' @rdname SSquadpq
 #' @description Self starter for quadratic plateau function with (four) parameters a (intercept), b (slope), xs (break-point), ldxs (log of the difference between break-point and second break-point)
 #' @param x input vector 
 #' @param a the intercept
 #' @param b the slope
-#' @param xs break-point
+#' @param xs first break-point
 #' @param ldxs log of the difference between break-point and second break-point
 #' @return a numeric vector of the same length as x containing parameter estimates for equation specified
 #' @export
