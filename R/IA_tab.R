@@ -1,12 +1,19 @@
-#' This function returns several indexes that might be useful for interpretation
+#' This function returns several indexes that might be useful for interpretation.
+#' Notice that bias (mean), rss, mse and rmse are model-free
+#' 
+#' The intercept, slope, reg.rss, reg.mse and reg.rmse are based on a
+#' regression model
 #' 
 #' For objects of class \sQuote{lm} and \sQuote{nls} \cr
 #' bias: mean(obs - sim) \cr
 #' intercept: intercept of the model obs ~ beta_0 + beta_1 * sim + error \cr
 #' slope: slope of the model obs ~ beta_0 + beta_1 * sim + error \cr
-#' RSS (deviance): residual sum of squares of the previous model \cr
-#' MSE (RSS / n): mean squared error; where n is the number of observations \cr
-#' RMSE: squared root of the previous index \cr
+#' rss: residual sum of squares (model free) \cr
+#' mse: mean squared error (model free) \cr
+#' rmse: root mean squared error (model free) \cr
+#' reg. rss (deviance): residual sum of squares of the previous model \cr
+#' reg. mse (reg. rss / n): mean squared error; where n is the number of observations \cr
+#' reg. rmse: squared root of the previous index \cr
 #' R2.1: R-squared extracted from an \sQuote{lm} object \cr
 #' R2.2: R-squared computed as the correlation between observed and simulated to the power of 2. \cr
 #' ME: model efficiency \cr
@@ -14,9 +21,7 @@
 #' Corr: correlation between observed and simulated \cr
 #' ConCorr: concordance correlation  \cr
 #' 
-#' For objects of class \sQuote{gls}, \sQuote{gnls}, \sQuote{lme} or \sQuote{nlme} there
-#' are additional metrics such as:
-#' 
+#' For objects of class \sQuote{lme} or \sQuote{nlme} there is the marginal and conditional R2.
 #'
 #'  \url{https://en.wikipedia.org/wiki/Coefficient_of_determination} \cr
 #'  \url{https://en.wikipedia.org/wiki/Nash-Sutcliffe_model_efficiency_coefficient} \cr
@@ -115,6 +120,9 @@ IA_tab <- function(obs, sim, object, null.object){
   bias <- mean(obs - sim)
   ## correlation and correlation squared
   corr <- cor(obs, sim)
+  rss <- rss(obs, sim) ## These are model-free
+  mse <- rss / length(obs)
+  rmse <- rmse(obs, sim) ## This is model-free
   R2.2 <- cor(obs, sim)^2
   ## Two different types of R-squared
   if(!missing(object)){
@@ -142,16 +150,17 @@ IA_tab <- function(obs, sim, object, null.object){
   fit <- lm(obs ~ sim)
   intercept <- as.vector(coef(fit)[1])
   slope <- as.vector(coef(fit)[2])
-  RSS <- deviance(fit)
-  MSE <- RSS / length(obs)
-  RMSE <- sqrt(MSE)
+  reg.rss <- deviance(fit)
+  reg.mse <- reg.rss / length(obs)
+  reg.rmse <- sqrt(reg.mse)
   
   if(missing(object)){
     R2.1 <- summary(fit)$r.squared
     ia_tab <- data.frame(bias = bias, 
                          intercept = intercept,
                          slope = slope,
-                         RSS = RSS, MSE = MSE, RMSE = RMSE,
+                         rss = rss, mse = mse, rmse = rmse,
+                         reg.rss = reg.rss, reg.mse = reg.mse, reg.rmse = reg.rmse,
                          R2.1 = R2.1, R2.2 = R2.2, 
                          ME = mod.eff, NME = norm.mod.eff, Corr = corr,
                          ConCorr = concor)
@@ -163,7 +172,8 @@ IA_tab <- function(obs, sim, object, null.object){
       ia_tab <- data.frame(bias = bias, 
                            intercept = intercept,
                            slope = slope,
-                           RSS = RSS, MSE = MSE, RMSE = RMSE,
+                           rss = rss, mse = mse, rmse = rmse,
+                           reg.rss = reg.rss, reg.mse = reg.mse, reg.rmse = reg.rmse,
                            R2 = NA, 
                            R2.marginal = NA,
                            R2.conditional = NA,
@@ -174,7 +184,8 @@ IA_tab <- function(obs, sim, object, null.object){
         ia_tab <- data.frame(bias = bias, 
                              intercept = intercept,
                              slope = slope,
-                             RSS = RSS, MSE = MSE, RMSE = RMSE,
+                             rss = rss, mse = mse, rmse = rmse,
+                             reg.rss = reg.rss, reg.mse = reg.mse, reg.rmse = reg.rmse,
                              R2 = R2.2, 
                              R2.marginal = R2$R2.marginal,
                              R2.conditional = R2$R2.conditional,
@@ -184,7 +195,8 @@ IA_tab <- function(obs, sim, object, null.object){
         ia_tab <- data.frame(bias = bias, 
                              intercept = intercept,
                              slope = slope,
-                             RSS = RSS, MSE = MSE, RMSE = RMSE,
+                             rss = rss, mse = mse, rmse = rmse,
+                             reg.rss = reg.rss, reg.mse = reg.mse, reg.rmse = reg.rmse,
                              R2.1 = R2.1$R2, R2.2 = R2.2, 
                              ME = mod.eff, NME = norm.mod.eff, Corr = corr,
                              ConCorr = concor)
@@ -366,6 +378,20 @@ R2M.lme <- function(x, ...){
 #' @export
 R2M.nlme <- R2M.lme
 
+## RMSE
+## https://en.wikipedia.org/wiki/Root_mean_square_deviation
+rmse <- function(x, y){
+  n <- length(x)
+  ssd <- sum((x - y)^2)
+  ans <- sqrt((1/n) * ssd)
+  ans
+}
 
+## RSS
+## https://en.wikipedia.org/wiki/Errors_and_residuals
+rss <- function(x, y){
+  ans <- sum((x - y)^2)
+  ans
+}
 
 
