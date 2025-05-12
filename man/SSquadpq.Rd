@@ -3,7 +3,7 @@
 \name{SSquadpq}
 \alias{SSquadpq}
 \alias{quadpq}
-\title{self start for quadratic-plateau-quadratic function (xs)}
+\title{self start for quadratic-plateau-quadratic (QPQ) function}
 \usage{
 quadpq(x, a, b, xs, ldxs)
 
@@ -16,7 +16,7 @@ SSquadpq(x, a, b, xs, ldxs)
 
 \item{b}{the slope}
 
-\item{xs}{break-point}
+\item{xs}{first break-point}
 
 \item{ldxs}{log of the difference between break-point and second break-point}
 }

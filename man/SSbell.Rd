@@ -29,7 +29,7 @@ bell: vector of the same length as x using a bell-shaped curve
 Self starter for a type of bell-shaped curve
 }
 \details{
-This function is described in Archontoulis and Miguez (2015) - (doi:10.2134/agronj2012.0506). One example application is Hammer et al. (2009) (doi:10.2135/cropsci2008.03.0152).
+This function is described in Archontoulis and Miguez (2015) - \doi{10.2134/agronj2012.0506}. One example application is Hammer et al. (2009) \doi{10.2135/cropsci2008.03.0152}.
 }
 \examples{
 \donttest{

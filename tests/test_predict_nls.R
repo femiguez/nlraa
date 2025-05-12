@@ -139,3 +139,35 @@ if(run.predict.nls){
 
 }
 
+### Testing predict2_nls and also using newdata with a function which is not an SS
+
+if(run.predict.nls){
+ 
+  require(ggplot2)
+  require(nlme)
+  data(Soybean)
+  
+  SoyF <- subset(Soybean, Variety == "F" & Year == 1988)
+  fm1 <- nls(weight ~ SSlogis(Time, Asym, xmid, scal), data = SoyF)
+  ## The SSlogis also supplies analytical derivatives
+  ## therefore the predict function returns the gradient too
+  prd1 <- predict(fm1, newdata = SoyF)
+  
+  ## Gradient
+  head(attr(prd1, "gradient"))
+  ## Prediction method using gradient
+  prds <- predict2_nls(fm1, interval = "conf")
+  SoyFA <- cbind(SoyF, prds)
+  ggplot(data = SoyFA, aes(x = Time, y = weight)) + 
+    geom_point() + 
+    geom_line(aes(y = Estimate)) + 
+    geom_ribbon(aes(ymin = Q2.5, ymax = Q97.5), fill = "purple", alpha = 0.3) +
+    ggtitle("95% Confidence Bands")
+  
+  ### Without using a SS function
+  fm11 <- nls(weight ~ Asym / (xmid - Time)/scal, 
+              start = c(Asym = 21, xmid = 45, scal = 10),
+              data = SoyF)
+  
+   
+}

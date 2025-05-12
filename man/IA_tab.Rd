@@ -40,15 +40,22 @@ printing function for IA_tab
 plotting function for a IA_tab, it requires \sQuote{ggplot2}
 }
 \details{
-This function returns several indexes that might be useful for interpretation
+This function returns several indexes that might be useful for interpretation.
+Notice that bias (mean), rss, mse and rmse are model-free
+
+The intercept, slope, reg.rss, reg.mse and reg.rmse are based on a
+regression model
 
 For objects of class \sQuote{lm} and \sQuote{nls} \cr
 bias: mean(obs - sim) \cr
 intercept: intercept of the model obs ~ beta_0 + beta_1 * sim + error \cr
 slope: slope of the model obs ~ beta_0 + beta_1 * sim + error \cr
-RSS (deviance): residual sum of squares of the previous model \cr
-MSE (RSS / n): mean squared error; where n is the number of observations \cr
-RMSE: squared root of the previous index \cr
+rss: residual sum of squares (model free) \cr
+mse: mean squared error (model free) \cr
+rmse: root mean squared error (model free) \cr
+reg. rss (deviance): residual sum of squares of the previous model \cr
+reg. mse (reg. rss / n): mean squared error; where n is the number of observations \cr
+reg. rmse: squared root of the previous index \cr
 R2.1: R-squared extracted from an \sQuote{lm} object \cr
 R2.2: R-squared computed as the correlation between observed and simulated to the power of 2. \cr
 ME: model efficiency \cr
@@ -56,9 +63,7 @@ NME: Normalized model efficiency \cr
 Corr: correlation between observed and simulated \cr
 ConCorr: concordance correlation  \cr
 
-For objects of class \sQuote{gls}, \sQuote{gnls}, \sQuote{lme} or \sQuote{nlme} there
-are additional metrics such as:
-
+For objects of class \sQuote{lme} or \sQuote{nlme} there is the marginal and conditional R2.
 
  \url{https://en.wikipedia.org/wiki/Coefficient_of_determination} \cr
  \url{https://en.wikipedia.org/wiki/Nash-Sutcliffe_model_efficiency_coefficient} \cr

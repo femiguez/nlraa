@@ -462,12 +462,16 @@ predict2_nls <- function(object, newdata = NULL,
     grd <- attr(prd, "gradient") ## retrieves the gradient  
     if(is.null(grd)){
       if(is.null(newdata)){
+        ### I guess this works because although the gradient 
+        ### is not available as an attribute, it will still be computed
         grd <- object$m$gradient()
         colnames(grd) <- names(coef(object))
       }else{
         ## Need to approximate the gradient numerically
         form <- object$m$formula()
-        grd0 <- with(newdata, numericDeriv(form[[3]], names(coef(object))))
+        cfs <- as.list(coef(object))
+        nenv <- list2env(c(cfs, unclass(newdata)))
+        grd0 <- stats::numericDeriv(form[[3]], names(coef(object)), rho = nenv)
         grd <- attr(grd0, "gradient")
       }
     }
