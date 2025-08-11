@@ -17,21 +17,21 @@
 #' set.seed(1234)
 #' x <- seq(3, 30)
 #' y <- moh(x, 35, 3, 0.83) + rnorm(length(x), 0, 0.5)
-#' dat <- data.frame(x = x, y = y)
-#' fit <- nls(y ~ SSmoh(x, asym, xmin, k), data = dat)
+#' dat1 <- data.frame(x = x, y = y)
+#' fit <- nls(y ~ SSmoh(x, asym, xmin, k), data = dat1)
 #' ## Visualize observed and simulated
-#' ggplot(data = dat, aes(x = x, y = y)) + 
+#' ggplot(data = dat1, aes(x = x, y = y)) + 
 #'   geom_point() + 
 #'   geom_line(aes(y = fitted(fit)))
 #' ## Testing predict function
 #' prd <- predict_nls(fit, interval = "confidence")
-#' datA <- cbind(dat, prd)
+#' dat1A <- cbind(dat1, prd)
 #' ## Plotting
-#' ggplot(data = datA, aes(x = x, y = y)) + 
-#'   geom_point() + 
-#'   geom_line(aes(y = fitted(fit))) + 
-#'   geom_ribbon(aes(ymin = Q2.5, ymax = Q97.5), 
-#'   fill = "purple", alpha = 0.3)
+#' ggplot(data = dat1A, aes(x = x, y = y)) + 
+#'    geom_point() + 
+#'    geom_line(aes(y = fitted(fit))) + 
+#'    geom_ribbon(aes(ymin = Q2.5, ymax = Q97.5), 
+#'    fill = "purple", alpha = 0.3)
 #' }
 NULL
 

@@ -66,8 +66,8 @@ require(mgcv)
 ## These count data are from GAM book by Simon Wood (pg. 132) - see reference
 y <- c(12, 14, 33, 50, 67, 74, 123, 141, 165, 204, 253, 246, 240)
 t <- 1:13
-dat <- data.frame(y = y, t = t)
-fit <- gam(y ~ t + I(t^2), family = poisson, data = dat)
+dat8 <- data.frame(y = y, t = t)
+fit <- gam(y ~ t + I(t^2), family = poisson, data = dat8)
 sims <- simulate_gam(fit, nsim = 100, value = "data.frame")
 
 ggplot(data = sims) + 

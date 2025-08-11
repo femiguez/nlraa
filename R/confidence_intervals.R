@@ -152,9 +152,9 @@ confidence_intervals <- function(x,
       if(!inherits(ans.bt, 'try-error')){
         
         if(missing(parm)){
-          ans <- suppressWarnings(car:::confint.boot(ans.bt, level = level))
+          ans <- suppressWarnings(car::Confint(ans.bt, level = level))
         }else{
-          ans <- suppressWarnings(car:::confint.boot(ans.bt, parm = parm, level = level))  
+          ans <- suppressWarnings(car::Confint(ans.bt, parm = parm, level = level))  
         }
         
         if(inherits(x, "lme")){
@@ -240,9 +240,9 @@ confidence_intervals <- function(x,
       if(!inherits(ans.bt, 'try-error')){
         
         if(missing(parm)){
-          ans <- suppressWarnings(car:::confint.boot(ans.bt, level = level))
+          ans <- suppressWarnings(car::Confint(ans.bt, level = level))
         }else{
-          ans <- suppressWarnings(car:::confint.boot(ans.bt, parm = parm, level = level))  
+          ans <- suppressWarnings(car::Confint(ans.bt, parm = parm, level = level))  
         }
         
         for(i in seq_len(dim(ans)[1])){

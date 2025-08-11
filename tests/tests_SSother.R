@@ -312,7 +312,8 @@ if(test.other.examples){
   ggplot(data = Roszman1, aes(x = x, y = y)) + geom_point() + geom_line(aes(y = fitted(fit)))
   
   ## Blinear is not actually a terrible fit
-  fit <- nls(y ~ SSblin(x, a, b, xs, c), data = Roszman1)
+  fit <- nlsLM(y ~ SSblin(x, a, b, xs, c), data = Roszman1,
+               start = c(a = 0, b = 0, xs = -2000, c = 5.4))
   ggplot(data = Roszman1, aes(x = x, y = y)) + geom_point() + geom_line(aes(y = fitted(fit)))
   
   data(Thurber)

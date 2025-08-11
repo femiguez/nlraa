@@ -11,14 +11,14 @@
 #' resamples the random effects (only relevant for \sQuote{lme} or \sQuote{nlme} objects.)
 #' @param level probability level for the interval (default 0.95)
 #' @param nsim number of simulations to perform for intervals. Default 1000.
-#' @param plevel parameter level prediction to be passed to prediciton functions.
+#' @param plevel parameter level prediction to be passed to prediction functions.
 #' @param newdata new data frame for predictions
 #' @param weights vector of weights of the same length as the number of models. It should sum up to one and 
 #' it will override the information-criteria based weights. The weights should match the order of the models.
 #' @return numeric vector of the same length as the fitted object.
 #' @note all the objects should be fitted to the same data. The weights are
 #' based on the IC value.
-#' @seealso \code{\link[nlme]{predict.nlme}} \code{\link[nlme]{predict.lme}} \code{\link[nlme]{predict.gnls}}
+#' @seealso [nlme::predict.nlme()] [nlme::predict.lme()] [nlme::predict.gnls()]
 #' @export
 #' @examples
 #' \donttest{

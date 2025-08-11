@@ -57,9 +57,19 @@ simulate_nls <- function(object,
   }else{
     sim.mat <- matrix(ncol = nsim, nrow = nrow(list(...)$newdata))  
   } 
-  
+
   for(i in seq_len(nsim)){
-      sim.mat[,i] <- as.vector(simulate_nls_one(object, psim = psim, resid.type = resid.type, data = data, ...))
+    sim1 <- try(simulate_nls_one(object, psim = psim, resid.type = resid.type, data = data, ...), silent = TRUE)
+    if(inherits(sim1, 'try-error')){
+      warning(paste("Simulation", i,  "failed"))
+    }else{
+      if(length(sim1) != nrow(sim.mat)){
+        ## browser()
+        cat("Length of sim1:", length(sim1), "\n")
+        print(sim1)
+      }
+      sim.mat[,i] <- as.vector(sim1)
+    }
   }
   
   if(value == "matrix"){

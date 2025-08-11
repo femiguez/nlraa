@@ -1,9 +1,13 @@
 #' 
+#' # This is a modification of an equation that appears in the paper in the details.
+#' # It is not clear how useful it is. 
+#' 
 #' @title self start for a generalized Michaelis-Menten function
 #' @name SSgmicmen
 #' @rdname SSgmicmen
 #' @description Self starter for a Michealis-Menten function with parameters  
 #' @param x input vector 
+#' @param y0 the lowest value
 #' @param ymax the maximum value
 #' @param c parameter controlling the shape of the function
 #' @param k parameter controlling the time for maximum value
@@ -26,9 +30,9 @@
 #' confint(fit)
 #' 
 #' ## Different value for c
-#' y <- gmicmen(x, 10, 5, 10) + rnorm(30, 0, 0.01)
+#' y <- gmicmen(x, 1, 10, 5, 10) + rnorm(30, 0, 0.01)
 #' dat <- data.frame(x = x, y = y)
-#' fit <- nls(y ~ SSgmicmen(x, ymax, c, k), data = dat)
+#' fit <- nls(y ~ SSgmicmen(x, y0, ymax, c, k), data = dat)
 #' ## plot
 #' ggplot(data = dat, aes(x = x, y = y)) + 
 #'   geom_point() + 
@@ -74,7 +78,7 @@ gmicmenInit <- function(mCall, LHS, data, ...){
 }
 
 #' @rdname SSgmicmen
-#' @return plin: vector of the same length as x using the plateau-linear function
+#' @return gmicmen: vector of the same length as x using the modified Michaelis-Menten function
 #' @export
 gmicmen <- function(x, y0, ymax, c, k){
   

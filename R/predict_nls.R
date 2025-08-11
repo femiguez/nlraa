@@ -19,8 +19,8 @@
 #' a data.frame with columns named (for a 0.95 level) \sQuote{Estimate}, \sQuote{Est.Error}, \sQuote{Q2.5} and \sQuote{Q97.5}
 #' @note all the objects should be fitted to the same data. Weights are
 #' based on the chosen IC value (exp(-0.5 * delta IC)). 
-#' For models of class \code{\link[mgcv]{gam}} there is very limited support.
-#' @seealso \code{\link[stats]{predict.lm}}, \code{\link[stats]{predict.nls}}, \code{\link[mgcv]{predict.gam}}, \code{\link{simulate_nls}}, \code{\link{simulate_gam}}
+#' For models of class [mgcv::gam()] there is very limited support.
+#' @seealso [stats::predict.lm()], [stats::predict.nls()], [mgcv::predict.gam()], [simulate_nls()], [simulate_gam()]
 #' @export
 #' @examples
 #' \donttest{

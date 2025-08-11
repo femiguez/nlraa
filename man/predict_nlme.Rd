@@ -64,7 +64,7 @@ resamples the random effects (only relevant for \sQuote{lme} or \sQuote{nlme} ob
 
 \item{nsim}{number of simulations to perform for intervals. Default 1000.}
 
-\item{plevel}{parameter level prediction to be passed to prediciton functions.}
+\item{plevel}{parameter level prediction to be passed to prediction functions.}
 
 \item{newdata}{new data frame for predictions}
 
@@ -125,5 +125,5 @@ ggplot(data = Orange, aes(x = age, y = circumference)) +
 }
 }
 \seealso{
-\code{\link[nlme]{predict.nlme}} \code{\link[nlme]{predict.lme}} \code{\link[nlme]{predict.gnls}}
+[nlme::predict.nlme()] [nlme::predict.lme()] [nlme::predict.gnls()]
 }

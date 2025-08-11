@@ -73,6 +73,7 @@ One of the objectives of those publications was to introduce a large family of n
 29. SScard3 (temperature response with cardinal temperatures)
 30. SSscard3 (smooth temperature response with cardinal temperatures)
 31. SSharm1 (harmonic regression - linear model)
+32. SSquadpq (quadratic-plateau-quadratic)
 
 ## Documentation
 
@@ -225,7 +226,7 @@ This can be caused by the presence of missing data, which your model cannot hand
 
 ## Barley example
 
-For background see: (http://miguezlab.agron.iastate.edu/OldWebsite/Research/Talks/ASA_Miguez.pdf).
+<!-- For background see: (http://miguezlab.agron.iastate.edu/OldWebsite/Research/Talks/ASA_Miguez.pdf). -->
 
 ```{r barleyG}
 library(nlme)

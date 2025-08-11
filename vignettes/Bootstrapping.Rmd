@@ -431,11 +431,12 @@ I can see how in the linear case often the random part can be of substantial int
 
 * J. Fox and S. Weisberg. An R Companion to Applied Regression. Sage, Thousand Oaks CA, 2nd edition, 2011. URL http://z.umn.edu/carbook.
 
-* J. Fox and S. Weisberg. Bootstrapping regression models in R. Technical report, 2017. URL: https://socialsciences.mcmaster.ca/jfox/Books/Companion-2E/appendix/Appendix-Bootstrapping.pdf
+* J. Fox and S. Weisberg. Bootstrapping regression models in R. Technical report, 2017. URL: 
+<!-- https://socialsciences.mcmaster.ca/jfox/Books/Companion-2E/appendix/Appendix-Bootstrapping.pdf -->
 
 * J. Fox and S. Weisberg. Nonlinear Regression, Nonlinear Least Squares, and Nonlinear
 Mixed Models in R. Appendix, 2018. 
-URL: https://socialsciences.mcmaster.ca/jfox/Books/Companion/appendices/Appendix-Nonlinear-Regression.pdf
+<!-- URL: https://socialsciences.mcmaster.ca/jfox/Books/Companion/appendices/Appendix-Nonlinear-Regression.pdf -->
 
 * Morris, J. S. (2002). The BLUPs Are Not ‘best’ When It Comes to Bootstrapping. Statistics & Probability Letters 56(4): 425–430. https://doi.org/10.1016/S0167-7152(02)00041-X.
 

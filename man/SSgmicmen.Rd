@@ -12,6 +12,8 @@ SSgmicmen(x, y0, ymax, c, k)
 \arguments{
 \item{x}{input vector}
 
+\item{y0}{the lowest value}
+
 \item{ymax}{the maximum value}
 
 \item{c}{parameter controlling the shape of the function}
@@ -21,12 +23,15 @@ SSgmicmen(x, y0, ymax, c, k)
 \value{
 a numeric vector of the same length as x containing parameter estimates for equation specified
 
-plin: vector of the same length as x using the plateau-linear function
+gmicmen: vector of the same length as x using the modified Michaelis-Menten function
 }
 \description{
 Self starter for a Michealis-Menten function with parameters
 }
 \details{
+# This is a modification of an equation that appears in the paper in the details.
+# It is not clear how useful it is.
+
 Source: A generalized Michaelis-Menten equation for the analysis of growth. Lopez et al. J. Anim. Sci. 2000. 78:1816-1828.
 }
 \examples{
@@ -45,9 +50,9 @@ ggplot(data = dat, aes(x = x, y = y)) +
 confint(fit)
 
 ## Different value for c
-y <- gmicmen(x, 10, 5, 10) + rnorm(30, 0, 0.01)
+y <- gmicmen(x, 1, 10, 5, 10) + rnorm(30, 0, 0.01)
 dat <- data.frame(x = x, y = y)
-fit <- nls(y ~ SSgmicmen(x, ymax, c, k), data = dat)
+fit <- nls(y ~ SSgmicmen(x, y0, ymax, c, k), data = dat)
 ## plot
 ggplot(data = dat, aes(x = x, y = y)) + 
   geom_point() + 

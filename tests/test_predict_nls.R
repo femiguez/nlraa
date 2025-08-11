@@ -1,5 +1,6 @@
 ## Example of a bad model vs. uncertainty vs. model averaging
 require(nlraa)
+packageVersion("nlraa")
 require(car)
 require(ggplot2)
 
@@ -139,7 +140,7 @@ if(run.predict.nls){
 
 }
 
-### Testing predict2_nls and also using newdata with a function which is not an SS
+### Testing predict2_nls and also using newdata with a function which is not an SS ----
 
 if(run.predict.nls){
  
@@ -165,9 +166,169 @@ if(run.predict.nls){
     ggtitle("95% Confidence Bands")
   
   ### Without using a SS function
-  fm11 <- nls(weight ~ Asym / (xmid - Time)/scal, 
+  getInitial(weight ~ SSlogis(Time, Asym, xmid, scal), data = SoyF)
+  
+  fm11 <- nls(weight ~ Asym / (1 + exp((xmid - Time)/scal)), 
               start = c(Asym = 21, xmid = 45, scal = 10),
               data = SoyF)
   
-   
+  SoyF2 <- subset(Soybean, Variety == "F" & Year == 1989)
+
+  #### Using Monte Carlo method  
+  prds2 <- predict_nls(fm11, interval = "conf", newdata = SoyF2)
+  SoyFA2 <- cbind(SoyF2, prds2)
+  ggplot(data = SoyFA2, aes(x = Time, y = weight)) + 
+    geom_point() + 
+    geom_line(aes(y = Estimate)) + 
+    geom_ribbon(aes(ymin = Q2.5, ymax = Q97.5), fill = "purple", alpha = 0.3) +
+    ggtitle("Newdata: 95% Confidence Bands")
+  
+  #### Using Delta method
+  prds3 <- predict2_nls(fm11, interval = "conf", newdata = SoyF2)
+  SoyFA3 <- cbind(SoyF2, prds3)
+  ggplot(data = SoyFA3, aes(x = Time, y = weight)) + 
+    geom_point() + 
+    geom_line(aes(y = Estimate)) + 
+    geom_ribbon(aes(ymin = Q2.5, ymax = Q97.5), fill = "purple", alpha = 0.3) +
+    ggtitle("Newdata: 95% Confidence Bands")
+
+  #### Monte Carlo vs. Delta Method
+  ggplot() +
+    geom_point(aes(x = SoyFA2$Estimate, y = SoyFA3$Estimate)) + 
+    xlab("Monte Carlo method") + 
+    ylab("Delta method") + 
+    geom_abline(intercept = 0, slope = 1) + 
+    ggtitle("Estimates are identical as they should be")
+
+  ggplot() +
+    geom_point(aes(x = SoyFA2$Q2.5, y = SoyFA3$Q2.5)) + 
+    xlab("Monte Carlo method") + 
+    ylab("Delta method") + 
+    geom_abline(intercept = 0, slope = 1) + 
+    ggtitle("Lower bounds are similar")
+  
+  ggplot() +
+    geom_point(aes(x = SoyFA2$Q97.5, y = SoyFA3$Q97.5)) + 
+    xlab("Monte Carlo method") + 
+    ylab("Delta method") + 
+    geom_abline(intercept = 0, slope = 1) + 
+    ggtitle("Upper bounds are similar")
+  
+  ggplot() + 
+    geom_point(aes(x = SoyFA2$Time, y = SoyFA2$Q2.5, color = "Monte Carlo")) + 
+    geom_point(aes(x = SoyFA3$Time, y = SoyFA3$Q2.5, color = "Delta method")) + 
+    geom_point(aes(x = SoyFA2$Time, y = SoyFA2$Q97.5, color = "Monte Carlo")) + 
+    geom_point(aes(x = SoyFA3$Time, y = SoyFA3$Q97.5, color = "Delta method")) + 
+    geom_line(aes(x = SoyFA2$Time, y = SoyFA2$Q2.5, color = "Monte Carlo")) + 
+    geom_line(aes(x = SoyFA3$Time, y = SoyFA3$Q2.5, color = "Delta method")) + 
+    geom_line(aes(x = SoyFA2$Time, y = SoyFA2$Q97.5, color = "Monte Carlo")) + 
+    geom_line(aes(x = SoyFA3$Time, y = SoyFA3$Q97.5, color = "Delta method")) + 
+    xlab("Time") + ylab("weight")
+  
+  #### It appears that Monte Carlo is narrower so it might be underestimating
+  #### the uncertainty
+  #### Another example
+  data(Orange)
+  head(Orange)
+  
+  Orange1 <- subset(Orange, Tree == 1)  
+  
+  fm111 <- nls(circumference ~ Asym / (1 + exp((xmid - age)/scal)),
+               start = c(Asym = 145, xmid = 922, scal = 200),
+               data = Orange1)
+  
+  prds111 <- predict2_nls(fm111, interval = "conf")
+  Orange1A <- cbind(Orange1, prds111)
+  
+  ggplot(data = Orange1A, aes(x = age, y = circumference)) + 
+    geom_point() + 
+    geom_line(aes(y = fitted(fm111))) + 
+    geom_ribbon(aes(ymin = Q2.5, ymax = Q97.5), fill = "purple", alpha = 1/3) + 
+    ggtitle("Using the Delta method but no newdata")
+  
+  
+  prds112 <- predict_nls(fm111, interval = "conf")
+  Orange1A2 <- cbind(Orange1, prds112)
+  
+  ggplot(data = Orange1A2, aes(x = age, y = circumference)) + 
+    geom_point() + 
+    geom_line(aes(y = fitted(fm111))) + 
+    geom_ribbon(aes(ymin = Q2.5, ymax = Q97.5), fill = "purple", alpha = 1/3) + 
+    ggtitle("Using the Monte Carlo method but no newdata")
+  
+  fgm <- gam(circumference ~ s(age, k = 7), data = Orange1)
+  
+  prds113 <- predict_gam(fgm, interval = "conf")
+  Orange1A3 <- cbind(Orange1, prds113)
+  
+  fm <- lm(circumference ~ age + I(age^2), data = Orange1)
+  
+  prds114 <- predict_nls(fm, interval = "conf")
+  Orange1A4 <- cbind(Orange1, prds114)
+  
+  ggplot() + 
+    geom_point(aes(x = Orange1A2$age, y = Orange1A2$Q2.5, color = "Monte Carlo")) + 
+    geom_point(aes(x = Orange1A$age, y = Orange1A$Q2.5, color = "Delta method")) + 
+    geom_point(aes(x = Orange1A3$age, y = Orange1A3$Q2.5, color = "GAM")) + 
+    geom_point(aes(x = Orange1A4$age, y = Orange1A4$Q2.5, color = "LM")) + 
+    geom_point(aes(x = Orange1A2$age, y = Orange1A2$Q97.5, color = "Monte Carlo")) + 
+    geom_point(aes(x = Orange1A$age, y = Orange1A$Q97.5, color = "Delta method")) + 
+    geom_point(aes(x = Orange1A3$age, y = Orange1A3$Q97.5, color = "GAM")) + 
+    geom_point(aes(x = Orange1A4$age, y = Orange1A4$Q97.5, color = "LM")) + 
+    geom_line(aes(x = Orange1A2$age, y = Orange1A2$Q2.5, color = "Monte Carlo")) + 
+    geom_line(aes(x = Orange1A$age, y = Orange1A$Q2.5, color = "Delta method")) + 
+    geom_line(aes(x = Orange1A3$age, y = Orange1A3$Q2.5, color = "GAM")) + 
+    geom_line(aes(x = Orange1A4$age, y = Orange1A4$Q2.5, color = "LM")) + 
+    geom_line(aes(x = Orange1A2$age, y = Orange1A2$Q97.5, color = "Monte Carlo")) + 
+    geom_line(aes(x = Orange1A$age, y = Orange1A$Q97.5, color = "Delta method")) + 
+    geom_line(aes(x = Orange1A3$age, y = Orange1A3$Q97.5, color = "GAM")) + 
+    geom_line(aes(x = Orange1A4$age, y = Orange1A4$Q97.5, color = "LM")) + 
+    xlab("age") + ylab("circumference")
+  
+  ### With New data
+  Orange2 <- subset(Orange, Tree == 2)
+  
+  prds121 <- predict2_nls(fm111, interval = "conf", newdata = Orange2)
+  Orange2A <- cbind(Orange2, prds121)
+    
+  ggplot(data = Orange2A, aes(x = age, y = circumference)) + 
+    geom_point() + 
+    geom_line(aes(y = Estimate)) + 
+    geom_ribbon(aes(ymin = Q2.5, ymax = Q97.5), fill = "purple", alpha = 1/3) + 
+    ggtitle("Using the Delta method with newdata")
+  
+  prds122 <- predict_nls(fm111, interval = "conf")
+  Orange2A2 <- cbind(Orange1, prds122)
+  
+  ggplot(data = Orange2A2, aes(x = age, y = circumference)) + 
+    geom_point() + 
+    geom_line(aes(y = fitted(fm111))) + 
+    geom_ribbon(aes(ymin = Q2.5, ymax = Q97.5), fill = "purple", alpha = 1/3) + 
+    ggtitle("Using the Monte Carlo method with newdata")
+  
+  prds123 <- predict_gam(fgm, interval = "conf", newdata = Orange2)
+  Orange2A3 <- cbind(Orange2, prds123)
+  
+  prds124 <- predict_nls(fm, interval = "conf")
+  Orange2A4 <- cbind(Orange2, prds124)
+  
+  ggplot() + 
+    geom_point(aes(x = Orange2A2$age, y = Orange2A2$Q2.5, color = "Monte Carlo")) + 
+    geom_point(aes(x = Orange2A$age, y = Orange2A$Q2.5, color = "Delta method")) + 
+    geom_point(aes(x = Orange2A3$age, y = Orange2A3$Q2.5, color = "GAM")) + 
+    geom_point(aes(x = Orange2A4$age, y = Orange2A4$Q2.5, color = "LM")) + 
+    geom_point(aes(x = Orange2A2$age, y = Orange2A2$Q97.5, color = "Monte Carlo")) + 
+    geom_point(aes(x = Orange2A$age, y = Orange2A$Q97.5, color = "Delta method")) + 
+    geom_point(aes(x = Orange2A3$age, y = Orange2A3$Q97.5, color = "GAM")) + 
+    geom_point(aes(x = Orange2A4$age, y = Orange2A4$Q97.5, color = "LM")) + 
+    geom_line(aes(x = Orange2A2$age, y = Orange2A2$Q2.5, color = "Monte Carlo")) + 
+    geom_line(aes(x = Orange2A$age, y = Orange2A$Q2.5, color = "Delta method")) + 
+    geom_line(aes(x = Orange2A3$age, y = Orange2A3$Q2.5, color = "GAM")) + 
+    geom_line(aes(x = Orange2A4$age, y = Orange2A4$Q2.5, color = "LM")) + 
+    geom_line(aes(x = Orange2A2$age, y = Orange2A2$Q97.5, color = "Monte Carlo")) + 
+    geom_line(aes(x = Orange2A$age, y = Orange2A$Q97.5, color = "Delta method")) + 
+    geom_line(aes(x = Orange2A3$age, y = Orange2A3$Q97.5, color = "GAM")) + 
+    geom_line(aes(x = Orange2A4$age, y = Orange2A4$Q97.5, color = "LM")) + 
+    xlab("age") + ylab("circumference")
+  
 }

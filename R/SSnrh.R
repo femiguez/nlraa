@@ -17,17 +17,17 @@
 #' set.seed(1234)
 #' x <- seq(0, 2000, 100)
 #' y <- nrh(x, 35, 0.04, 0.83, 2) + rnorm(length(x), 0, 0.5)
-#' dat <- data.frame(x = x, y = y)
-#' fit <- nls(y ~ SSnrh(x, asym, phi, theta, rd), data = dat)
+#' dat9 <- data.frame(x = x, y = y)
+#' fit <- nls(y ~ SSnrh(x, asym, phi, theta, rd), data = dat9)
 #' ## Visualize observed and simulated
-#' ggplot(data = dat, aes(x = x, y = y)) + 
+#' ggplot(data = dat9, aes(x = x, y = y)) + 
 #'   geom_point() + 
 #'   geom_line(aes(y = fitted(fit)))
 #' ## Testing predict function
 #' prd <- predict_nls(fit, interval = "confidence")
-#' datA <- cbind(dat, prd)
+#' dat9A <- cbind(dat9, prd)
 #' ## Plotting
-#' ggplot(data = datA, aes(x = x, y = y)) + 
+#' ggplot(data = dat9A, aes(x = x, y = y)) + 
 #'   geom_point() + 
 #'   geom_line(aes(y = fitted(fit))) + 
 #'   geom_ribbon(aes(ymin = Q2.5, ymax = Q97.5), 

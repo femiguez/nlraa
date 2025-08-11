@@ -1,7 +1,7 @@
 #' 
 #' The equation is, for a response (y) and a predictor (x): \cr
-#'   \eqn{y ~ (x <= xs) * (a + b * x + (-0.5 * b/xs) * x^2) + 
-#'   (x > xs & x <= (xs + dxs)) * (a + (-b^2)/(4 * -0.5 * b/xs)) + 
+#'   \deqn{y ~ (x <= xs) * (a + b * x + (-0.5 * b/xs) * x^2) + 
+#'   (x > xs \text{\&} x <= (xs + dxs)) * (a + (-b^2)/(4 * -0.5 * b/xs)) + 
 #'   (x > (xs + dxs)) * ((a + (-b^2)/(4 * -0.5 * b/xs)) + ((-0.5 * b/xs) * (x - (xs + dxs))^2))} \cr
 #'   
 #'  This is a somewhat complicated equation. The interpretation of the parameters are simple.
@@ -68,7 +68,7 @@ quadpqInit <- function(mCall, LHS, data, ...){
     }
   }
   
-  if(all(sapply(res, \(x) inherits(x, 'try-error')))){
+  if(all(sapply(res, function(x) inherits(x, 'try-error')))){
     ## If all fail
     a <- coef(fit)[1]
     b <- coef(fit)[2]
@@ -76,7 +76,7 @@ quadpqInit <- function(mCall, LHS, data, ...){
     xs <- -0.5 * b/c
     ldxs <- log(max(xy[, "x"], na.rm = TRUE) * 0.25)   
   }else{
-    vals <- sapply(res, \(x) x$value)
+    vals <- sapply(res, function(x) x$value)
     if(all(is.na(vals))){
       a <- coef(fit)[1]
       b <- coef(fit)[2]

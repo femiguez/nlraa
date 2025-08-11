@@ -71,14 +71,14 @@ blinInit <- function(mCall, LHS, data, ...){
     }
   }
   
-  if(all(sapply(res, \(x) inherits(x, 'try-error')))){
+  if(all(sapply(res, function(x) inherits(x, 'try-error')))){
     ## If it fails I use the mean
     a <- coef(fit1)[1]
     b <- coef(fit1)[2]
     xs <- mean(xy[,"x"])
     c <- coef(fit2)[2]     
   }else{
-    vals <- sapply(res, \(x) x$value)
+    vals <- sapply(res, function(x) x$value)
     if(all(is.na(vals))){
       a <- coef(fit1)[1]
       b <- coef(fit1)[2]
