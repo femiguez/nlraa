@@ -332,3 +332,54 @@ if(run.predict.nls){
     xlab("age") + ylab("circumference")
   
 }
+
+if(run.predict.nls){
+  
+  set.seed(123)
+  x <- 1:30
+  y <- linp(x, 0, 1, 20) + rnorm(30, 0, 0.5)
+  dat <- data.frame(x = x, y = y)
+  fit <- nls(y ~ SSlinp(x, a, b, xs), data = dat)
+  
+  prds <- predict_nls(fit, interval = "conf")
+  
+  ### What happens if I nullify 'dat'
+  dat <- NULL
+  sim1 <- try(simulate_nls(fit, nsim = 10), silent = TRUE)
+  
+  if(inherits(smi1, 'try-error')){
+    message("The previous code caused an error which is the correct message")
+  }
+  
+  prds <- try(predict_nls(fit, interval = "conf"), silent = TRUE)
+  
+  if(inherits(prds, 'try-error')){
+    message("This previous code caused an error which is the correct message")
+  }
+  
+  set.seed(123)
+  x <- 1:30
+  y <- linp(x, 0, 1, 20) + rnorm(30, 0, 0.5)
+  dat <- data.frame(x = x, y = y)
+  fit <- nls(y ~ SSlinp(x, a, b, xs), data = dat)
+  
+  sim1 <- simulate_nls(fit, nsim = 10)
+  prds <- predict_nls(fit, interval = "conf")
+  
+  ### What if I change the data?
+  dat <- dat[-1,]
+  
+  sim1 <- simulate_nls(fit, nsim = 10)
+  
+  if(inherits(smi1, 'try-error')){
+    message("The previous code caused an error which is the correct message")
+  }
+  
+  prds <- predict_nls(fit, interval = "conf")
+  
+  if(inherits(prds, 'try-error')){
+    message("This previous code caused an error which is the correct message")
+  }
+  
+  
+}

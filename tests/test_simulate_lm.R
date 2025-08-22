@@ -108,3 +108,37 @@ if(run.simulte.lm.test){
   res1 <- f1()
   
 }
+
+### Testing the effect of changing the data or making it NULL
+if(run.simulte.lm.test){
+ 
+  require(ggplot2)
+  data(Orange)
+  fit <- lm(circumference ~ age, data = Orange)
+  sims <- simulate_lm(fit, nsim = 100, value = "data.frame")
+  
+  ggplot(data = sims) + 
+    geom_line(aes(x = age, y = sim.y, group = ii), 
+              color = "gray", alpha = 0.5) + 
+    geom_point(aes(x = age, y = circumference)) 
+  
+  ### What happens if we nullify 'Orange'?
+  Orange <- NULL
+  
+  sims <- try(simulate_lm(fit, nsim = 100, value = "data.frame"), silent = TRUE)
+  
+  if(inherits(sims, 'try-error')){
+    message("The previous code caused an error which is the correct message")
+  }
+  
+  ### What happens if we modify Orange?
+  data(Orange)
+  
+  dim(Orange)
+  
+  Orange <- Orange[-c(1:10),]
+  sims <- simulate_lm(fit, nsim = 1, value = "data.frame")
+  
+  ### This seems to work no matter what... interesting
+  
+}

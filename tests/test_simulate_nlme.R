@@ -326,3 +326,30 @@ if(run.test.simulate.nlme){
     geom_ribbon(data = nprdA, aes(x = age, ymin = lwr, ymax = upr), alpha = 0.3) + 
     ggtitle("90% Prediction Interval for a NEW Tree regression")
 }
+
+#### Testing the feature of changing the data ----
+
+if(run.test.simulate.nlme){
+ 
+  data(Orange)
+  
+  fitL <- nlsList(circumference ~ SSlogis(age, Asym, xmid, scal), data = Orange)
+  
+  fmm <- nlme(fitL, random = pdDiag(Asym + xmid + scal ~ 1))
+  
+  ### What happens if we nullify the Orange object?
+  Orange <- NULL
+  
+  sim1 <- simulate_nlme(fmm, nsim = 10)  
+  
+  data(Orange)
+
+  Orange <- Orange[-c(1:5),]  
+  
+  sim1 <- try(simulate_nlme(fmm, nsim = 10), silent = TRUE)
+  
+  if(inherits(sim1, 'try-error')){
+    message("The previous code returns an error as it should be.")
+  }
+  
+}

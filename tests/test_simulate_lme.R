@@ -303,3 +303,30 @@ if(run.test.simulate.lme){
     geom_ribbon(aes(ymin = pQ2.5, ymax = pQ97.5), fill = "blue", alpha = 0.2)
     
 }
+
+
+
+if(run.test.simulate.lme){
+  
+  ## Use datasets to evaluate the variance: total, fixed, random, residual
+  data(Orange)
+  
+  fit0 <- lme(circumference ~ age + I(age^2) + I(age^3), 
+              random = ~ 1 | Tree, data = Orange)
+  
+  sim1 <- simulate_lme(fit0, nsim = 10)
+
+  ### What happens if we nullify Orange?
+  Orange <- NULL
+  
+  sim1 <- simulate_lme(fit0, nsim = 10)
+  
+  ### Somehow the code above works just fine...?
+  data(Orange)
+
+  Orange <- Orange[-c(1:5),]  
+  sim1 <- simulate_lme(fit0, nsim = 10)
+  
+  ### This also works fine...
+  
+}

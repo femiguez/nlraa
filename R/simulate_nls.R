@@ -58,18 +58,25 @@ simulate_nls <- function(object,
     sim.mat <- matrix(ncol = nsim, nrow = nrow(list(...)$newdata))  
   } 
 
+  j <- 0
+  
   for(i in seq_len(nsim)){
     sim1 <- try(simulate_nls_one(object, psim = psim, resid.type = resid.type, data = data, ...), silent = TRUE)
     if(inherits(sim1, 'try-error')){
+      j <- j + 1
       warning(paste("Simulation", i,  "failed"))
     }else{
       if(length(sim1) != nrow(sim.mat)){
-        ## browser()
         cat("Length of sim1:", length(sim1), "\n")
-        print(sim1)
+        cat("Number of rows in simulation matrix:", nrow(sim.mat), "\n")
+        stop("Simulation length and data number of rows do not match. Has the 'data' changed?", call. = FALSE)
       }
       sim.mat[,i] <- as.vector(sim1)
     }
+  }
+  
+  if(j == nsim){
+    stop("All simulations failed. It is possible that there is an issue with the 'data' object.", call. = FALSE)
   }
   
   if(value == "matrix"){

@@ -81,10 +81,16 @@ simulate_nlme_one <- function(object, psim = 1, level = Q, asList = FALSE, na.ac
       newdata <- try(nlme::getData(object), silent = TRUE)
       if(inherits(newdata, "try-error") || is.null(newdata)) 
         stop("'data' argument is required. It is likely you are using simulate_nlme_one inside another function")
+      if(object$dims$N != nrow(newdata)){
+        stop("Number of rows in data argument does not match the original data 
+              The data argument should only be used to pass the same data.frame  
+              used to fit the model",
+             call. = FALSE)
+      }
     }else{
       if(object$dims$N != nrow(data)){
-        stop("Number of rows in data argument does not match the original data \n
-              The data argument should only be used to pass the same data.frame \n 
+        stop("Number of rows in data argument does not match the original data 
+              The data argument should only be used to pass the same data.frame 
               used to fit the model",
              call. = FALSE)
       }
